@@ -16,6 +16,42 @@ function generateSlug(title: string): string {
 
 // The full project list with generated slugs
 export const allProjects = [
+    // Bombs Per Minute (BPM) //
+    {
+        title: "Bombs Per Minute",
+        slug: "bpm",
+        banner: "/images/bpm logo.png",
+        icon: "/images/bpm logo.png",
+        date: "2025-10-06",
+        displayDate: formatDisplayDate("2025-10-06"),
+        platform: "Itch.io",
+        description:
+        "Bombs Per Minute is a rhythm game made in godot",
+
+        href: "https://fortnite.com",
+        github: "https://github.com/Linkerpink/Bombs-Per-Minute",
+
+        technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+
+        media: [
+        { type: "image", src: "/images/bpm logo.png" },
+        { type: "youtubeId", src: "NfxPphgsxag", title: "Launch Trailer" },
+        ],
+
+        featured: true,
+
+        codeSnippets: [
+            {
+                name: "",
+                language: "GDScript",
+                description:
+                "",
+                code:'fortnite'
+            }
+        ]
+    },
+
+
   // Robo Rebellion: Dawn of the Machine //
   {
     title: "Robo Rebellion: Dawn of the Machine",
@@ -2068,7 +2104,7 @@ public void WinRace()
       { type: "image", src: "/images/eng.png" },
     ],
 
-    featured: true,
+    featured: false,
 
     codeSnippets: [
       
