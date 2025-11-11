@@ -13,7 +13,7 @@ import CodeBlock from "../code-block";
   // and plain URLs like https://example.com
   function renderDescription(text?: string) {
     if (!text) return null;
-  const nodes: any[] = [];
+  const nodes: Array<React.ReactNode> = [];
     let cursor = 0;
     let keyId = 0;
 

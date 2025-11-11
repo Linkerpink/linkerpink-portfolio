@@ -34,7 +34,7 @@ const nonHomepageSidebarItems: SidebarItem[] = [
 ];
 
 export default function Sidebar() {
-  const { theme, setTheme, secretUnlocked, setSecretUnlocked } = useTheme();
+  const { theme } = useTheme();
   const pathname = usePathname();
   const [selectedLabel, setSelectedLabel] = useState('Home');
   const [lastPage, setLastPage] = useState<string | null>(null);
