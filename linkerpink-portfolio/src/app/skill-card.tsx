@@ -31,15 +31,40 @@ export default function SkillCard({ name, description, logo }: SkillCardProps) {
         >
           {/* Icon */}
           <div className="w-16 h-16 flex items-center justify-center overflow-hidden">
-            <Image
-              src={logo}
-              alt={name}
-              width={64}
-              height={64}
-              className="w-full h-full object-contain select-none"
-              draggable={false}
-              style={isSecretTheme ? { borderRadius: '75%' } : {}}
-            />
+            {/* Apply theme-aware filters to raster/SVG logos so they match the theme */}
+            {(() => {
+              const baseStyle: React.CSSProperties = { width: '100%', height: '100%' };
+              // Only apply color-changing filters to a small whitelist of SVG logos
+              const isSvg = typeof logo === 'string' && logo.toLowerCase().includes('.svg');
+              const whitelist = [
+                '/next.svg',
+                'gamemaker studio logo.svg',
+                'gamemaker studio logo',
+              ];
+              const lowerLogo = typeof logo === 'string' ? logo.toLowerCase() : '';
+              const isWhitelisted = isSvg && whitelist.some((w) => lowerLogo.includes(w));
+              const themeFilter: React.CSSProperties = isWhitelisted
+                ? isDarkTheme
+                  ? { filter: 'brightness(0) invert(1)' } // make whitelisted SVG icons light in dark mode
+                  : isSecretTheme
+                  ? { filter: 'grayscale(100%) sepia(1) saturate(6) hue-rotate(-40deg) contrast(0.95)' } // pinkish tint for secret
+                  : {}
+                : {};
+              const borderStyle: React.CSSProperties = isSecretTheme ? { borderRadius: '75%' } : {};
+              const imgStyle = { ...baseStyle, ...themeFilter, ...borderStyle };
+
+              return (
+                <Image
+                  src={logo}
+                  alt={name}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain select-none"
+                  draggable={false}
+                  style={imgStyle}
+                />
+              );
+            })()}
           </div>
 
           {/* Text */}

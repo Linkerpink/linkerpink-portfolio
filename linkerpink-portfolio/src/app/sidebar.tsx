@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTheme } from './theme-context';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,6 +34,7 @@ const nonHomepageSidebarItems: SidebarItem[] = [
 ];
 
 export default function Sidebar() {
+  const { theme, setTheme, secretUnlocked, setSecretUnlocked } = useTheme();
   const pathname = usePathname();
   const [selectedLabel, setSelectedLabel] = useState('Home');
   const [lastPage, setLastPage] = useState<string | null>(null);
@@ -148,23 +150,63 @@ export default function Sidebar() {
 
   if (!mounted) return null;
 
+  // Theme-based styles
+  const sidebarBg = theme === 'dark'
+    ? 'bg-[#232323]'
+    : theme === 'secret'
+      ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]'
+      : 'bg-[#E4E4E4]';
+  const sidebarText = theme === 'dark'
+    ? 'text-[#fafafa]'
+    : theme === 'secret'
+      ? 'text-[#232323]'
+      : 'text-[#3f3f3f]';
+
   return (
     <>
       {/* Desktop Sidebar */}
-      <nav className="hidden md:flex fixed top-0 left-0 h-full flex-col items-center w-[10.5%] bg-transparent z-1000">
+  <nav className="hidden md:flex fixed top-0 left-0 h-full flex-col items-center w-[10.5%] bg-transparent z-1000">
         {sidebarItems.map((item, idx) => {
           const isSelected = item.label === selectedLabel;
           const base =
-            'sidebar-item w-full py-4 px-0 bg-[#E4E4E4] text-center text-3xl transition-colors duration-300 text-[#3f3f3f] shadow-[5px_0px_5px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center flex-1 border-b-0 border-[#dedede] select-none no-underline cursor-default';
+            `sidebar-item w-full py-4 px-0 ${sidebarBg} text-center text-3xl transition-colors duration-150 ${sidebarText} shadow-[5px_0px_5px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center flex-1 border-b-0 border-[#dedede] select-none no-underline cursor-default`;
           const selected = isSelected ? 'text-[#F57C00]' : '';
           const first = idx === 0 ? 'rounded-tr-[35%]' : '';
+          // For the last sidebar item (Settings) keep a gradient background but allow hover to change it
           const last = item.last
-            ? 'rounded-br-[35%] bg-gradient-to-r from-[#545454] to-[#323232] text-[#fafafa]'
+            ? (theme === 'dark'
+                // darker default for dark theme; hover will be lighter
+                ? 'rounded-br-[35%] bg-gradient-to-r from-[#070707] to-[#000000] text-[#fafafa]'
+                : theme === 'secret'
+                  ? 'rounded-br-[35%] bg-gradient-to-r from-[#ffb86f] to-[#ff79c6] text-[#232323]'
+                  : // For light (and other) themes use the normal dark gradient to avoid the orange look
+                    'rounded-br-[35%] bg-gradient-to-r from-[#545454] to-[#323232] text-[#fafafa]')
             : '';
-          const hover = item.last
-            ? 'hover:from-[#FFB86F] hover:to-[#FFB86F]'
-            : 'hover:bg-[#FFB86F]';
-          const className = [base, selected, first, last, hover].join(' ');
+          
+          let hoverBg = '';
+          // For the Settings item, only change text color on hover (no background change)
+          // Hover: change the background gradient for Settings and other items (only background, not text)
+          if (item.label === 'Settings') {
+            if (theme === 'dark') {
+              hoverBg = 'hover:bg-gradient-to-r hover:from-[#3f3f3f] hover:to-[#232323]';
+            } else if (theme === 'secret') {
+              hoverBg = 'hover:bg-gradient-to-r hover:from-[#ffd89a] hover:to-[#ff79c6]';
+            } else {
+              hoverBg = 'hover:bg-gradient-to-r hover:from-[#fff4e6] hover:to-[#ffe0b2]';
+            }
+          } else {
+            if (theme === 'dark') {
+              hoverBg = 'hover:bg-[#333845]';
+            } else if (theme === 'secret') {
+              hoverBg = 'hover:bg-gradient-to-r hover:from-[#ffb86f] hover:to-[#ff79c6]';
+            } else {
+              hoverBg = 'hover:bg-[#ffe0b2]';
+            }
+          }
+
+          const hover = `${hoverBg} transition-colors duration-150`;
+          const special = item.label === 'Settings' ? ' settings-item' : '';
+          const className = [base, selected, first, last, hover, special].join(' ');
 
           const content = (
             <>
@@ -256,10 +298,10 @@ export default function Sidebar() {
       </nav>
 
       {/* Mobile Menu Toggle Button */}
-      <div className="fixed top-4 left-4 z-[100] md:hidden isolate">
+  <div className="fixed top-4 left-4 z-[100] md:hidden isolate">
         <motion.button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="w-16 h-16 bg-white rounded-full flex items-center justify-center relative z-[101]"
+            className={`w-16 h-16 rounded-full flex items-center justify-center relative z-[101] ${theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]' : 'bg-white'}`}
           aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           animate={{
             boxShadow: isMobileMenuOpen
@@ -314,7 +356,7 @@ export default function Sidebar() {
               animate={{ scale: circleScale}}
               exit={{ scale: 1 }}
               transition={{ duration: 0.5, ease: [0.4, 0.25, 0.1, 1] }}
-              className="fixed top-4 left-4 w-16 h-16 bg-white rounded-full z-50 origin-center"
+              className={`fixed top-4 left-4 w-16 h-16 rounded-full z-50 origin-center ${theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]' : 'bg-white'}`}
               style={{ transformOrigin: 'middle center' }}
             />
 
@@ -325,7 +367,7 @@ export default function Sidebar() {
               animate={{ opacity: 1, scale: '150%', x: 0, y: 0 }}
               exit={{ opacity: 0, scale: '0%', x: '-80%', y: '-80%'  }}
               transition={{duration: 0.5, ease: [0.4, 0.25, 0.1, 1], delay: 0.05}}
-              className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-transparent md:hidden space-y-6"
+              className={`fixed inset-0 z-50 flex flex-col items-center justify-center md:hidden space-y-6 ${sidebarBg}`}
             >
               {sidebarItems.map((item) => {
                 const isSelected = item.label === selectedLabel;
@@ -344,9 +386,7 @@ export default function Sidebar() {
                         setIsMobileMenuOpen(false);
                       }
                     }}
-                    className={`text-2xl font-semibold ${
-                      isSelected ? 'text-[#F57C00]' : 'text-gray-700'
-                    }`}
+                    className={`text-2xl font-semibold ${isSelected ? 'text-[#F57C00]' : sidebarText}`}
                   >
                     {item.label}
                   </a>

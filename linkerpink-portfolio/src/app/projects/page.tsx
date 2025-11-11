@@ -23,7 +23,7 @@ export default function AllProjectsPage() {
       <div className="mb-8 flex flex-wrap gap-4 justify-center items-center">
         <label className="text-lg font-semibold">Sort by:</label>
         <select
-          className={`px-4 py-2 rounded-lg shadow focus:outline-none ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}
+          className={`px-4 py-2 rounded-lg shadow focus:outline-none ${theme === 'dark' ? 'bg-[#232323] text-white' : theme === 'secret' ? 'bg-pink-200 text-pink-900' : 'bg-white'}`}
           value={sortType}
           onChange={e => setSortType(e.target.value as typeof sortType)}
         >

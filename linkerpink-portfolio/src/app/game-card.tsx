@@ -23,6 +23,7 @@ const GameCard: React.FC<GameCardProps> = ({
   const isMedium = size === "medium";
   const { theme } = useTheme();
   const isSecretTheme = theme === "secret";
+  const dateColor = theme === 'dark' ? '#A0A0A0' : theme === 'secret' ? '#a01546' : '#5F5F5F';
 
   return (
     <div
@@ -86,7 +87,7 @@ const GameCard: React.FC<GameCardProps> = ({
         {title}
         {displayDate && (
           <div>
-            <small className="block text-xs text-[#5F5F5F] mt-1 select-none">{displayDate}</small>
+            <small className="block text-xs mt-1 select-none" style={{ color: dateColor }}>{displayDate}</small>
           </div>
         )}
       </h2>

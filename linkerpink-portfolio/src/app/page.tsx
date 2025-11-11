@@ -198,13 +198,19 @@ export default function Home() {
               Hello there, my name is
               <p></p>
               <span className="text-[#F57C00]"> Noah van Uunen</span>
+              <p className="text-lg sm:text-xl mt-2 text-gray-600 dark:text-gray-400">
+                (<span className="font-semibold text-[#F57C00]">linkerpink</span>)
+              </p>
             </h1>
             <h3 className="text-base sm:text-lg">
               I am an {CalculateTimeYearOnly("2007-04-20")}-year-old game developer from the Netherlands. I&apos;ve been
               making games for {CalculateTime("2022-01-20")} (primarily in Unity using C#). I enjoy
               programming and bringing ideas to life. I&apos;m currently studying game
-              development at Grafisch Lyceum Utrecht. Outside of game dev, I enjoy
-              writing, editing videos, and playing games.
+              development at Grafisch Lyceum Utrecht. 
+              
+              <br /> <br />
+              Outside of game dev, I enjoy
+              playing guitar, editing videos, listening to music and playing games.
             </h3>
           </div>
         </div>

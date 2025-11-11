@@ -171,3 +171,24 @@ html.secret .interactable-object {
 .card-gradient-secret {
   @apply bg-gradient-to-t from-[#ff16ea] to-[#faecb7];
 }
+
+/* Settings item hover tweaks per theme: change only the gradient background on hover, keep text color */
+.settings-item {
+  /* ensure transitions are smooth */
+  transition: background 200ms ease-in-out;
+}
+
+html.dark .settings-item:hover {
+  /* lighter hover for dark theme (hover makes it lighter than the darker default) */
+  background: linear-gradient(90deg, #2e2e2e 0%, #232323 100%) !important;
+}
+
+.settings-item:hover {
+  /* default hover gradient: use dark gradient so light theme doesn't show orange */
+  background: linear-gradient(90deg, #3f3f3f 0%, #232323 100%) !important;
+}
+
+html.secret .settings-item:hover {
+  /* secret theme hover gradient */
+  background: linear-gradient(90deg, #ffd89a 0%, #ff79c6 100%) !important;
+}

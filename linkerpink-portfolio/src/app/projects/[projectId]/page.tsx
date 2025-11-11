@@ -1,31 +1,117 @@
   "use client";
 
-  import MediaCard from "../media-card"; // adjust path as needed
-  import { allProjects } from "../all-projects";
-  import { useParams } from "next/navigation";
-  import Image from "next/image";
 
-  import CodeBlock from "../code-block";
+import MediaCard from "../media-card"; // adjust path as needed
+import { allProjects } from "../all-projects";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import { useTheme } from "../../theme-context";
+import CodeBlock from "../code-block";
 
-  export default function ProjectDetails() {
-    const { projectId } = useParams() as { projectId: string };
-    const project = allProjects.find((p) => p.slug === projectId);
+  // Small helper to render descriptions with clickable links.
+  // Supports Markdown-style links: [label](https://...)
+  // and plain URLs like https://example.com
+  function renderDescription(text?: string) {
+    if (!text) return null;
+  const nodes: any[] = [];
+    let cursor = 0;
+    let keyId = 0;
 
-    if (!project) {
-      return (
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-red-600">Project not found</h1>
-        </div>
-      );
+    const mdRe = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/;
+    const urlRe = /(https?:\/\/[^\s)]+)/;
+
+    while (cursor < text.length) {
+      const rest = text.slice(cursor);
+      const mdMatch = mdRe.exec(rest);
+      const urlMatch = urlRe.exec(rest);
+
+      // find earliest match (if any)
+      let nextType: "md" | "url" | null = null;
+      let match: RegExpExecArray | null = null;
+      if (mdMatch && urlMatch) {
+        nextType = mdMatch.index <= urlMatch.index ? "md" : "url";
+        match = nextType === "md" ? mdMatch : urlMatch;
+      } else if (mdMatch) {
+        nextType = "md";
+        match = mdMatch;
+      } else if (urlMatch) {
+        nextType = "url";
+        match = urlMatch;
+      }
+
+      if (!nextType || !match) {
+        // no more links
+        nodes.push(rest);
+        break;
+      }
+
+      // push text before the match
+      if (match.index > 0) {
+        nodes.push(rest.slice(0, match.index));
+      }
+
+      if (nextType === "md") {
+        const [, label, href] = match;
+        nodes.push(
+          <a
+            key={`desc-link-${keyId++}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#3B82F6] underline"
+          >
+            {label}
+          </a>
+        );
+        cursor += match.index + match[0].length;
+      } else {
+        // plain url
+        const [url] = match;
+        nodes.push(
+          <a
+            key={`desc-link-${keyId++}`}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#3B82F6] underline"
+          >
+            {url}
+          </a>
+        );
+        cursor += match.index + url.length;
+      }
     }
 
-    const screenshots = (project.media ?? []).filter((m) => m.type === "image");
-    const videoLikeMedia = (project.media ?? []).filter((m) =>
-      ["video", "gif", "youtubeId"].includes(m.type)
-    );
+    return nodes.map((n, i) => (typeof n === "string" ? <span key={i}>{n}</span> : n));
+  }
 
+export default function ProjectDetails() {
+  const { projectId } = useParams() as { projectId: string };
+  const { theme } = useTheme();
+  const project = allProjects.find((p) => p.slug === projectId);
+
+  if (!project) {
     return (
-      <div className="min-h-screen relative px-6">
+      <div className="p-6">
+        <h1 className="text-2xl font-bold text-red-600">Project not found</h1>
+      </div>
+    );
+  }
+
+  const screenshots = (project.media ?? []).filter((m) => m.type === "image");
+  const videoLikeMedia = (project.media ?? []).filter((m) =>
+    ["video", "gif", "youtubeId"].includes(m.type)
+  );
+
+  // Theme-based card classes
+  const cardBgClass = theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-pink-200' : 'bg-white';
+  const borderClass = theme === 'dark' ? 'border-gray-700' : theme === 'secret' ? 'border-pink-400' : 'border-white';
+  const textColor = theme === 'dark' ? '#FFFFFF' : theme === 'secret' ? '#be194e' : '#000000';
+  const descriptionTextColor = theme === 'dark' ? '#ffffffff' : theme === 'secret' ? '#a01546' : '#5F5F5F';
+  const hrBorderColor = theme === 'dark' ? '#555555' : theme === 'secret' ? '#ec4899' : '#BEBEBE';
+
+  return (
+    <div className="min-h-screen relative px-6" style={{ color: textColor }}>
         {/* Banner */}
         {project.banner && (
           <div className="w-full mb-10 rounded-3xl overflow-hidden aspect-[10/3] shadow-[0px_3px_6px_rgba(0,0,0,0.5)] select-none">
@@ -42,56 +128,57 @@
         )}
 
         {/* Title + Icon + Date */}
-        <header className="mb-10 flex flex-col md:flex-row gap-4 items-center">
-          {/* Left: Icon + Title Block */}
-          <div className="flex-1 bg-white rounded-3xl p-5">
-            <div className="flex items-center gap-4">
-              {project.icon && (
-                <Image
-                  src={project.icon}
-                  alt={`${project.title} Icon`}
-                  width={512}
-                  height={512}
-                  className="w-38 h-38 object-cover rounded-3xl border-8 border-white shadow-[0px_0px_6px_rgba(0,0,0,0.5)] aspect-[1/1] banner-animate select-none"
-                  draggable={false}
-                />
-              )}
-              <div>
-                <h1 className="text-2xl font-extrabold leading-tight">
-                  {project.title}
-                </h1>
-                <p className="text-sm text-[#5F5F5F] mt-2">
-                  {project.displayDate}
-                </p>
 
-                {project.technologies.length > 0 && (
-                  <div className="mt-3 flex gap-2 flex-wrap">
-                    {project.technologies.map((icon, i) => (
-                      <Image
-                        key={i}
-                        src={icon}
-                        alt="tech"
-                        width={512}
-                        height={512}
-                        className="w-8 h-8 object-contain"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
+      <header className="mb-10 flex flex-col md:flex-row gap-4 items-center">
+        {/* Left: Icon + Title Block */}
+        <div className={`flex-1 ${cardBgClass} rounded-3xl p-5 ${theme === 'secret' ? 'border-4 border-pink-400' : ''}`}>
+          <div className="flex items-center gap-4">
+            {project.icon && (
+              <Image
+                src={project.icon}
+                alt={`${project.title} Icon`}
+                width={512}
+                height={512}
+                className={`w-38 h-38 object-cover rounded-3xl border-8 ${borderClass} shadow-[0px_0px_6px_rgba(0,0,0,0.5)] aspect-[1/1] banner-animate select-none`}
+                draggable={false}
+              />
+            )}
+            <div>
+              <h1 className="text-2xl font-extrabold leading-tight">
+                {project.title}
+              </h1>
+              <p className="text-sm mt-2" style={{ color: descriptionTextColor }}>
+                {project.displayDate}
+              </p>
+
+              {project.technologies.length > 0 && (
+                <div className="mt-3 flex gap-2 flex-wrap">
+                  {project.technologies.map((icon, i) => (
+                    <Image
+                      key={i}
+                      src={icon}
+                      alt="tech"
+                      width={512}
+                      height={512}
+                      className="w-8 h-8 object-contain"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Right: Button Container */}
-          {(project.href || project.github) && (
-            <div className="w-full md:w-[250px] shrink-0 bg-white rounded-3xl p-6 flex flex-col gap-4 self-center">
+        {/* Right: Button Container */}
+        {(project.href || project.github) && (
+          <div className={`w-full md:w-[250px] shrink-0 ${cardBgClass} rounded-3xl p-6 flex flex-col gap-4 self-center ${theme === 'secret' ? 'border-4 border-pink-400' : ''}`}>
               {/* View Project (dynamic platform) */}
               {project.href && (
                 <a
                   href={project.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold interactable-object select-none"
+                  className={`flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold interactable-object select-none ${theme === 'secret' ? 'ring-2 ring-pink-400' : ''}`}
                   draggable={false}
                 >
                   <Image
@@ -116,7 +203,7 @@
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-gray-500 to-gray-900 text-white font-semibold interactable-object select-none"
+                  className={`flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-gray-500 to-gray-900 text-white font-semibold interactable-object select-none ${theme === 'secret' ? 'ring-2 ring-pink-400' : ''}`}
                   draggable={false}
                 >
                   <Image
@@ -140,10 +227,12 @@
             <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
             Software Description
           </h2>
-          <hr className="border-t-2 border-[#BEBEBE] mb-6" />
-          <p className="text-[#5F5F5F] leading-relaxed whitespace-pre-line">
-            {project.description}
-          </p>
+          <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
+          <div className={`${cardBgClass} rounded-3xl p-6 ${theme === 'secret' ? 'border-4 border-pink-400' : ''}`}>
+            <p className="leading-relaxed whitespace-pre-line" style={{ color: descriptionTextColor }}>
+              {renderDescription(project.description)}
+            </p>
+          </div>
         </section>
 
         {/* Code Snippets */}
@@ -152,7 +241,7 @@
             <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
             Code Snippets
           </h2>
-          <hr className="border-t-2 border-[#BEBEBE] mb-6" />
+          <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
 
           {project.codeSnippets && project.codeSnippets.length > 0 && (
             <section className="mb-8">
@@ -183,7 +272,7 @@
               <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
               Screenshots
             </h2>
-            <hr className="border-t-2 border-[#BEBEBE] mb-6" />
+            <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
             <div className="flex flex-wrap justify-center gap-6">
               {screenshots.map((img, i) => (
                 <MediaCard
@@ -204,7 +293,7 @@
               <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
               Related Videos
             </h2>
-            <hr className="border-t-2 border-[#BEBEBE] mb-6" />
+            <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
             <div className="flex flex-wrap justify-center gap-6">
               {videoLikeMedia.map((mediaItem, i) => {
                 switch (mediaItem.type) {

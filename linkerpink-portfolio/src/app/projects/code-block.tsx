@@ -3,7 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Highlight from "react-highlight";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTheme } from "../theme-context";
 import "highlight.js/styles/kimbie-light.css";
+import "highlight.js/styles/atom-one-dark.css";
+import "highlight.js/styles/an-old-hope.css";
 
 interface CodeBlockProps {
   language: string;
@@ -35,6 +38,61 @@ export default function CodeBlock({
   const [hasOpened, setHasOpened] = useState(false);
   const isMobile = useIsMobile();
   const blockRef = useRef<HTMLElement | null>(null);
+  const { theme } = useTheme();
+
+  // Theme-based classes
+  const headerBgClass = theme === 'dark' ? 'bg-gradient-to-r from-[#232323] to-[#1a1a1a]' : theme === 'secret' ? 'bg-gradient-to-r from-pink-300 to-pink-400' : 'bg-gradient-to-r from-gray-50 to-gray-100';
+  const headerTextClass = theme === 'dark' ? 'text-white' : theme === 'secret' ? 'text-pink-900' : 'text-gray-900';
+  const headerHoverClass = theme === 'dark' ? 'hover:bg-gradient-to-r hover:from-orange-700 hover:to-orange-800' : theme === 'secret' ? 'hover:bg-gradient-to-r hover:from-pink-400 hover:to-pink-500' : 'hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200';
+  const borderClass = theme === 'dark' ? 'border-gray-700' : theme === 'secret' ? 'border-pink-400' : 'border-gray-300';
+  const descriptionBgClass = theme === 'dark' ? 'bg-[#232323] text-gray-200' : theme === 'secret' ? 'bg-pink-200 text-pink-900' : 'bg-gray-100 text-[#5F5F5F]';
+  const codeBgClass = theme === 'dark' ? 'bg-[#1a1a1a] text-gray-300' : theme === 'secret' ? 'bg-pink-100 text-pink-900' : 'bg-gray-50 text-[#5F5F5F]';
+  const containerBgClass = theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-pink-100' : 'bg-white';
+  const accentColor = theme === 'dark' ? '#FF8C00' : theme === 'secret' ? '#ec4899' : '#F57C00';
+  const buttonColor = theme === 'dark' ? '#FF8C00' : theme === 'secret' ? '#be194e' : '#F57C00';
+
+  // Dynamically apply highlight.js theme based on current theme
+  useEffect(() => {
+    const styleId = 'highlight-theme-style';
+    let style = document.getElementById(styleId) as HTMLStyleElement;
+    
+    if (!style) {
+      style = document.createElement('style');
+      style.id = styleId;
+      document.head.appendChild(style);
+    }
+
+    if (theme === 'dark') {
+      // Disable other highlight themes and enable dark
+      document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
+        (link as HTMLLinkElement).disabled = true;
+      });
+      style.textContent = `
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
+      `;
+    } else if (theme === 'secret') {
+      // Disable other highlight themes and enable an old hope (dark theme with warm colors)
+      document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
+        (link as HTMLLinkElement).disabled = true;
+      });
+      style.textContent = `
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/an-old-hope.min.css");
+      `;
+    } else {
+      // Light theme - enable default kimbie-light
+      document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
+        (link as HTMLLinkElement).disabled = false;
+      });
+      style.textContent = '';
+    }
+
+    return () => {
+      // Clean up
+      if (style && !style.textContent) {
+        style.remove();
+      }
+    };
+  }, [theme]);
 
   // Track if block was ever opened (on mobile)
   useEffect(() => {
@@ -58,11 +116,11 @@ export default function CodeBlock({
   const content = (
     <article className="flex flex-col">
       {description && (
-        <div className="text-[#5F5F5F] whitespace-pre-line bg-gray-100 px-6 py-3 border-b border-gray-200 text-sm leading-relaxed">
+        <div className={`${descriptionBgClass} whitespace-pre-line px-6 py-3 border-b ${borderClass} text-sm leading-relaxed`}>
           {description}
         </div>
       )}
-      <div className="p-6 bg-gray-50 text-[#5F5F5F] whitespace-pre-line text-sm leading-relaxed font-mono">
+      <div className={`${codeBgClass} p-6 whitespace-pre-line text-sm leading-relaxed font-mono`}>
         <Highlight className={language}>{children.trim()}</Highlight>
       </div>
     </article>
@@ -72,7 +130,7 @@ export default function CodeBlock({
     <section
       ref={blockRef}
       aria-label={`${language} code block: ${name}`}
-      className="relative border border-gray-300 rounded-3xl overflow-hidden bg-white"
+      className={`relative rounded-3xl overflow-hidden border ${borderClass} ${containerBgClass}`}
     >
       <header
         role="button"
@@ -84,8 +142,8 @@ export default function CodeBlock({
             setIsOpen((v) => !v);
           }
         }}
-        className={`flex justify-between items-center px-5 py-3 bg-gradient-to-r from-gray-50 to-gray-100 font-black cursor-pointer select-none rounded-t-xl shadow-sm hover:bg-gradient-to-r hover:from-orange-0 hover:to-orange-200 transition-colors duration-300 ease-in-out
-          ${isOpen && !isMobile ? " sticky top-0 z-50 bg-white" : ""}`}
+        className={`flex justify-between items-center px-5 py-3 font-black cursor-pointer select-none rounded-t-xl shadow-sm transition-colors duration-300 ease-in-out ${headerBgClass} ${headerTextClass} ${headerHoverClass}
+          ${isOpen && !isMobile ? " sticky top-0 z-50" : ""}`}
         style={{
           borderTopLeftRadius: "1.5rem",
           borderTopRightRadius: "1.5rem",
@@ -99,7 +157,8 @@ export default function CodeBlock({
 
         <motion.button
           aria-label={isOpen ? "Collapse code" : "Expand code"}
-          className="text-[#F57C00] font-bold text-2xl leading-none select-none cursor-pointer"
+          className="font-bold text-2xl leading-none select-none cursor-pointer"
+          style={{ color: buttonColor }}
           animate={{ rotate: isOpen ? 0 : 90, scale: isOpen ? 1 : 1.2 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
           onClick={(e) => {
@@ -123,7 +182,8 @@ export default function CodeBlock({
               animate={{ width: "100%" }}
               exit={{ width: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="h-1 bg-[#F57C00] rounded-full"
+              className="h-1 rounded-full"
+              style={{ backgroundColor: accentColor }}
             />
 
             <motion.div
@@ -164,7 +224,7 @@ export default function CodeBlock({
               transition={{ type: "spring", stiffness: 250, damping: 20 }}
               className="fixed inset-0 z-[999] bg-white flex flex-col"
             >
-              <header className="relative flex items-center px-5 py-6 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-900 font-mono text-base font-semibold shadow-md">
+              <header className={`relative flex items-center px-5 py-6 ${headerBgClass} ${headerTextClass} font-mono text-base font-semibold shadow-md`}>
                 <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
                   {language} — {name}
                 </span>
@@ -180,11 +240,11 @@ export default function CodeBlock({
               <div className="flex-1 overflow-auto">
                 <article className="min-h-full flex flex-col">
                   {description && (
-                    <div className="text-[#5F5F5F] leading-relaxed whitespace-pre-line bg-gray-100 px-6 py-3 border-b border-gray-200 text-sm">
+                    <div className={`${descriptionBgClass} leading-relaxed whitespace-pre-line px-6 py-3 border-b ${borderClass} text-sm`}>
                       {description}
                     </div>
                   )}
-                  <div className="p-6 bg-gray-50 text-[#5F5F5F] leading-relaxed whitespace-pre-line text-sm font-mono">
+                  <div className={`${codeBgClass} p-6 leading-relaxed whitespace-pre-line text-sm font-mono`}>
                     <Highlight className={language}>{children.trim()}</Highlight>
                   </div>
                 </article>

@@ -47,7 +47,7 @@ export default function LinkCard({ logo, href }: LinkCardProps) {
               : { borderRadius: '10px' }
           }
         >
-          <div className="w-2/2 h-2/2 flex items-center justify-center overflow-hidden">
+          <div className="w-2/2 h-2/2 flex items-center justify-center overflow-hidden relative">
             <Image
               src={logo}
               alt=""
@@ -57,6 +57,30 @@ export default function LinkCard({ logo, href }: LinkCardProps) {
               draggable={false}
               style={isSecretTheme ? { borderRadius: '75%' } : {}}
             />
+            {/* Apply theme-aware filters to SVG logos (GitHub, etc.) */}
+            {(() => {
+              const isSvg = typeof logo === 'string' && logo.toLowerCase().includes('.svg');
+              if (!isSvg) return null;
+              const baseStyle: React.CSSProperties = { width: '100%', height: '100%' };
+              const themeFilter: React.CSSProperties = isDarkTheme
+                ? { filter: 'brightness(0) invert(1)' }
+                : isSecretTheme
+                ? { filter: 'grayscale(100%) sepia(1) saturate(6) hue-rotate(-40deg) contrast(0.95)' }
+                : {};
+              const borderStyle: React.CSSProperties = isSecretTheme ? { borderRadius: '75%' } : {};
+              const imgStyle = { ...baseStyle, ...themeFilter, ...borderStyle };
+              return (
+                <Image
+                  src={logo}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain select-none absolute"
+                  draggable={false}
+                  style={imgStyle}
+                />
+              );
+            })()}
           </div>
         </div>
       </a>

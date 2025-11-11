@@ -1,4 +1,3 @@
-// Helper to format date as 'Month Year' or 'Not Released'
 function formatDisplayDate(date: string): string {
   if (date.toLowerCase() === "not released") return "Not Released";
   const d = new Date(date);
@@ -6,7 +5,6 @@ function formatDisplayDate(date: string): string {
   return d.toLocaleString("default", { month: "long", year: "numeric" });
 }
 
-// Helper to create slugs from titles
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -14,44 +12,10 @@ function generateSlug(title: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-// The full project list with generated slugs
+// All projects
 export const allProjects = [
-    // Bombs Per Minute (BPM) //
-    {
-        title: "Bombs Per Minute",
-        slug: "bpm",
-        banner: "/images/bpm logo.png",
-        icon: "/images/bpm logo.png",
-        date: "2025-10-06",
-        displayDate: formatDisplayDate("2025-10-06"),
-        platform: "Itch.io",
-        description:
-        "Bombs Per Minute is a rhythm game made in godot",
-
-        href: "https://fortnite.com",
-        github: "https://github.com/Linkerpink/Bombs-Per-Minute",
-
-        technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
-
-        media: [
-        { type: "image", src: "/images/bpm logo.png" },
-        { type: "youtubeId", src: "NfxPphgsxag", title: "Launch Trailer" },
-        ],
-
-        featured: true,
-
-        codeSnippets: [
-            {
-                name: "",
-                language: "GDScript",
-                description:
-                "",
-                code:'fortnite'
-            }
-        ]
-    },
-
-
+    
+    
   // Robo Rebellion: Dawn of the Machine //
   {
     title: "Robo Rebellion: Dawn of the Machine",
@@ -61,8 +25,8 @@ export const allProjects = [
     date: "2024-07-10",
     displayDate: formatDisplayDate("2024-07-10"),
     platform: "Itch.io",
-    description:
-      "Robo Rebellion Dawn of the Machine, is a top down TwinStick game made by a team of 6 people. 3 Artists and 3 Developers, the game was made as a school project within a short timespan of 4 weeks with it's end goal being a sci-fi based top down shooter.\n\nFEATURES\n\nThe game build supports both QWERTY keyboards and controller. Realistic gun bass! Trigger warning. (Headphone users be warned.) \n\nthe player was made with multiple people, so I will only be showing the parts I made, and are also interesting. \n\nWhat I made: \n- Player Movement, dashing and rotation \n- Player Interaction \n- Pickups \n- Keycards & inventory \n- Keycard stacking UI \n- Weapon switching \n- Player Camera, camera switching and screenshake \n- GameManager, rumble and game state management \n- Tutorial popups \n- Main Menu camera switching \n- Weapon, Ammo & Health UI",
+        description:
+            "Robo Rebellion Dawn of the Machine, is a top down TwinStick game made by a team of 6 people. 3 Artists and 3 Developers, the game was made as a school project within a short timespan of 4 weeks with it's end goal being a sci-fi based top down shooter.\n\nFEATURES\n\nThe game build supports both QWERTY keyboards and controller. Realistic gun bass! Trigger warning. (Headphone users be warned.) \n\nthe player was made with multiple people, so I will only be showing the parts I made, and are also interesting. \n\nDevelopers: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nWhat I made: \n- Player Movement, dashing and rotation \n- Player Interaction \n- Pickups \n- Keycards & inventory \n- Keycard stacking UI \n- Weapon switching \n- Player Camera, camera switching and screenshake \n- GameManager, rumble and game state management \n- Tutorial popups \n- Main Menu camera switching \n- Weapon, Ammo & Health UI",
 
     href: "https://lulaobobao.itch.io/robo-rebellion-dawn-of-the-machine",
     github: "https://github.com/GLU-Gaming/twinstick-2024-arcane-interactive",
@@ -114,44 +78,44 @@ private void Awake()
     robotSwordSlash = GameObject.Find("P_RobotSwordSlash");
     robotRifleRun = GameObject.Find("P_RobotRifleRun");
     robotRifleIdle = GameObject.Find("P_RobotRifleIdle");
-}
-
+    }
+    
 private void MoveInput(Vector2 direction)
 {
     if (state != PlayerState.Dash)
     {
-        state = PlayerState.Move;
+    state = PlayerState.Move;
         moveDirection = new Vector3(direction.x, 0f, direction.y);
     }     
-}
+    }
 
-private void DashInput()
-{
+    private void DashInput()
+    {
     
     if (canDash && state != PlayerState.Dash)
     {
-        state = PlayerState.Dash;
+    state = PlayerState.Dash;
         audioSource.PlayOneShot(dashClip, 1);
         dashTimer = 0f;
         dashDirection = lastMoveDirection;
         dashCoolDown = initialDashCoolDown;
     }
-
+    
 }
 
 private void Start()
 {
     //States
     state = PlayerState.Idle;
-
+    
     //Dash
     initialDashStrength = dashStrength;
     initialDashCoolDown = dashCoolDown;
     dashTrail.SetActive(false);
-
+    
     //Camera
     cameraManager = FindObjectOfType<CameraManager>();
-
+    
     //Animations / model swaps
     robotSwordSlash.SetActive(false);
     robotRifleRun.SetActive(false);
@@ -162,7 +126,7 @@ private void Update()
 {
     if (!gameManager.gamePaused)
     {
-        switch (state)
+    switch (state)
         {
             case PlayerState.Idle:
                 IdleState();
@@ -177,164 +141,164 @@ private void Update()
                 DeadState();
                 break;
         }
-
+        
         if (state != PlayerState.Dead)
         {
-            if (moveDirection != Vector3.zero)
+        if (moveDirection != Vector3.zero)
             {
                 lastMoveDirection = moveDirection;
                 dashDirection = lastMoveDirection;
             }
-
+            
             //Input
             aim = controls.Player.Aim.ReadValue<Vector2>();
 
             RotatePlayer();
-
+            
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 //cameraManager.ScreenShake(10f, 2f, 0.2f);
-            }
+                }
 
             if (dashCoolDown > 0f)
             {
-                dashCoolDown -= Time.deltaTime;
+            dashCoolDown -= Time.deltaTime;
                 canDash = false;
             }
             else
             {
-                canDash = true;
+            canDash = true;
             }
-        }
-
-        //Debug
-        //if (Input.GetKeyDown(KeyCode.B)) enableDebugText = !enableDebugText;
+            }
+            
+            //Debug
+            //if (Input.GetKeyDown(KeyCode.B)) enableDebugText = !enableDebugText;
     }        
-}
+    }
 
 private void FixedUpdate()
 {
     if (state != PlayerState.Dash)
     {
-        rb.velocity = moveDirection * moveSpeed;
+    rb.velocity = moveDirection * moveSpeed;
     }
-}
-
+    }
+    
 private void IdleState()
 {
     moveDirection = Vector3.zero;
 
     if (!melee.isPerformingMelee)
     {
-        //Animations / model swaps
-        robotSwordSlash.SetActive(false);
+    //Animations / model swaps
+    robotSwordSlash.SetActive(false);
         robotRifleRun.SetActive(false);
         robotRifleIdle.SetActive(true);
     }
     
-}
+    }
 
-private void MoveState()
-{
-    if (moveDirection == Vector3.zero) 
+    private void MoveState()
     {
+        if (moveDirection == Vector3.zero) 
+        {
         state = PlayerState.Idle;
     }
-
+    
     if (!melee.isPerformingMelee)
     {
-        //Animations / model swaps
-        robotSwordSlash.SetActive(false);
-        robotRifleRun.SetActive(true);
-        robotRifleIdle.SetActive(false);
+    //Animations / model swaps
+    robotSwordSlash.SetActive(false);
+    robotRifleRun.SetActive(true);
+    robotRifleIdle.SetActive(false);
     }
-}
-
-private void DashState()
+    }
+    
+    private void DashState()
 {
     dashTrail.SetActive(true);
     dashStrength = initialDashStrength;
-
+    
     float dashDistance = dashStrength * dashDuration;
-
+    
     LayerMask layerMask = LayerMask.GetMask("environmentLayer");
-
+    
     RaycastHit hit;
-
+    
     if (Physics.Raycast(transform.position, dashDirection, out hit, 2f, layerMask))
     {
-        rb.position = hit.point - dashDirection * 0.1f;
+    rb.position = hit.point - dashDirection * 0.1f;
         state = PlayerState.Move;
         dashTrail.SetActive(false);
         return;
-    }
-
-    rb.velocity = dashDirection * dashStrength;
-
-    if (dashTimer < dashDuration)
-    {
+        }
+        
+        rb.velocity = dashDirection * dashStrength;
+        
+        if (dashTimer < dashDuration)
+        {
         dashTimer += Time.deltaTime;
-    }
-    else
-    {
+        }
+        else
+            {
         state = PlayerState.Move;
         dashTrail.SetActive(false);
     }
-}
+    }
 
-private void RotatePlayer()
-{
+    private void RotatePlayer()
+    {
         if (isGamepad)
         {
-            //Controller rotation
-            if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
-            {
-                Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
-
-                if (playerDirection.sqrMagnitude > 0.0f)
+        //Controller rotation
+        if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
+        {
+        Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
+        
+        if (playerDirection.sqrMagnitude > 0.0f)
                 {
                     Quaternion newRotation = Quaternion.LookRotation(playerDirection, Vector3.up);
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, controllerRotationSmoothing * Time.deltaTime);
                 }
-            }
+                }
         }
         else
         {
-            //Mouse rotation
-            Ray ray = Camera.main.ScreenPointToRay(aim);
+        //Mouse rotation
+        Ray ray = Camera.main.ScreenPointToRay(aim);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
             float rayDistance;
 
             if (groundPlane.Raycast(ray, out rayDistance))
             {
-                Vector3 point = ray.GetPoint(rayDistance);
-                LookAt(point);
+            Vector3 point = ray.GetPoint(rayDistance);
+            LookAt(point);
             }
-        }   
-}
-
-private void LookAt(Vector3 _point)
-{
-    Vector3 heightCorrectedPoint = new Vector3(_point.x, transform.position.y, _point.z);
-    transform.LookAt(heightCorrectedPoint);
-}
-
-//Input
-public void OnDeviceChange(PlayerInput _input)
-{
+            }   
+            }
+            
+            private void LookAt(Vector3 _point)
+            {
+                Vector3 heightCorrectedPoint = new Vector3(_point.x, transform.position.y, _point.z);
+                transform.LookAt(heightCorrectedPoint);
+                }
+                
+                //Input
+                public void OnDeviceChange(PlayerInput _input)
+                {
     isGamepad = _input.currentControlScheme.Equals("Gamepad") ? true : false;
-}
-
-private void OnTriggerEnter(Collider other)
+    }
+    
+    private void OnTriggerEnter(Collider other)
 {
     if (other.gameObject.CompareTag("Shotgun Pickup"))
     {
-        cameraManager.ChangeCamera(cameraManager.currentCam, cameraManager.playerCamZoomedSmall);
+    cameraManager.ChangeCamera(cameraManager.currentCam, cameraManager.playerCamZoomedSmall);
     }
-}
-
+    }
+    
         `,
-      },
+    },
 
       {
         name: "PlayerInteraction.cs",
@@ -355,7 +319,7 @@ private void OnTriggerStay(Collider other)
             KeyCard keyCard = other.GetComponent<KeyCard>();
             if (keyCard != null && interactionIcon != null)
             {
-                inventory.AddKeyCard(keyCard.GetKeyCardType());
+            inventory.AddKeyCard(keyCard.GetKeyCardType());
                 playerAudioSource.PlayOneShot(keycardPickUpClip, 1);
                 Destroy(interactionIcon.gameObject);
                 Destroy(keyCard.gameObject);
@@ -364,32 +328,32 @@ private void OnTriggerStay(Collider other)
             Door door = other.GetComponent<Door>();
             if (door == null)
             {
-                return;
+            return;
             }
-
+            
             else if (inventory.ContainsKeyCard(door.GetKeyCardType()))
             {
-                inventory.RemoveKeyCard(door.GetKeyCardType());
+            inventory.RemoveKeyCard(door.GetKeyCardType());
                 door.OpenAllDoors(door.GetKeyCardType());
                 playerAudioSource.PlayOneShot(doorOpenClip, 1);
             }
             
             if (!inventory.ContainsKeyCard(door.GetKeyCardType()))
             {
-                door.PlayLockedAnimation(door);
+            door.PlayLockedAnimation(door);
             }
         }
-
+        
         if (other.gameObject.tag == "Shotgun Pickup")
         {
-            playerAudioSource.PlayOneShot(shotgunPickUpClip, 1);
+        playerAudioSource.PlayOneShot(shotgunPickUpClip, 1);
             inventory.AddWeapon(Weapons.Shotgun);
             Destroy(other.gameObject);
             cameraManager.ChangeCamera(cameraManager.currentCam, cameraManager.playerCam);
         }
-    }
+        }
 }
-        `,
+`,
       },
 
       {
@@ -398,8 +362,8 @@ private void OnTriggerStay(Collider other)
         description:
           "This script shows the player inventory / weapon switching",
         code: `
-public enum Weapons
-{
+        public enum Weapons
+        {
     Rifle,
     Shotgun,
 }
@@ -421,12 +385,12 @@ public void AddKeyCard(KeyCard.KeyCardType keyCardType)
 {
     if (!keyCardList.Contains(keyCardType))
     {
-        Debug.Log("Added KeyCard: " + keyCardType);
-        keyCardList.Add(keyCardType);
-        OnKeysChanged?.Invoke(this, EventArgs.Empty);
+    Debug.Log("Added KeyCard: " + keyCardType);
+    keyCardList.Add(keyCardType);
+    OnKeysChanged?.Invoke(this, EventArgs.Empty);
     }
     else
-    {
+        {
         Debug.Log("KeyCard already in inventory: " + keyCardType);
     }
 }
@@ -437,29 +401,29 @@ public void RemoveKeyCard(KeyCard.KeyCardType keyCardType)
     Debug.Log("Removed KeyCard: " + keyCardType);
     keyCardList.Remove(keyCardType);
     OnKeysChanged?.Invoke(this, EventArgs.Empty);
-}
+    }
 
-public bool ContainsKeyCard(KeyCard.KeyCardType keyCardType)
+    public bool ContainsKeyCard(KeyCard.KeyCardType keyCardType)
 {
     return keyCardList.Contains(keyCardType);
-}
-
-public void AddWeapon(Weapons weapon)
-{
-    if (!weaponsList.Contains(weapon))
+    }
+    
+    public void AddWeapon(Weapons weapon)
     {
+        if (!weaponsList.Contains(weapon))
+        {
         Debug.Log("Added Weapon: " + weapon);
         weaponsList.Add(weapon);
-    }
-    else
+        }
+        else
     {
         Debug.Log("KeyCard already in inventory: " + weapon);
     }
-}
-
-public Weapons GetSelectedWeapon()
-{
-    return selectedWeapon;
+    }
+    
+    public Weapons GetSelectedWeapon()
+    {
+        return selectedWeapon;
 }
 
 private void SwitchWeapon()
@@ -474,20 +438,20 @@ private void SwitchWeapon()
                 playerShootingRaycast = GetComponent<PlayerShootingRaycast>();
                 playerShootingRaycast.shootingEffect = shotgunMuzzleFlash;
                 break;
-
-            case Weapons.Shotgun:
-                audioSource.PlayOneShot(shotgunSwitch, 1);
-                selectedWeapon = Weapons.Rifle;
-                playerShootingRaycast = GetComponent<PlayerShootingRaycast>();
+                
+                case Weapons.Shotgun:
+                    audioSource.PlayOneShot(shotgunSwitch, 1);
+                    selectedWeapon = Weapons.Rifle;
+                    playerShootingRaycast = GetComponent<PlayerShootingRaycast>();
                 playerShootingRaycast.shootingEffect = rifleMuzzleFlash;
 
                 break;
-        }
-    }
+                }
+                }
 }
-        `,
+`,
       },
-
+      
       {
         name: "KeyUI.cs",
         language: "C#",
@@ -496,57 +460,57 @@ private void SwitchWeapon()
 private void Awake()
 {
     playerInventory = GameObject.Find("Player").GetComponent<PlayerInventory>();
-
+    
     container = transform.Find("Container");
     keyCardTemplate = container.Find("Key Card Template");
     keyCardTemplate.gameObject.SetActive(false);
-}
-
+    }
+    
 private void Start()
 {
     playerInventory.OnKeysChanged += PlayerInventory_OnKeysChanged;
     UpdateVisual(); // Initial update
-}
+    }
 
 private void PlayerInventory_OnKeysChanged(object sender, System.EventArgs e)
 {
     UpdateVisual();
-}
-
-private void UpdateVisual()
-{
-    // Clean up old keys
-    foreach (Transform child in container)
-    {
-        if (child == keyCardTemplate) continue;
-        Destroy(child.gameObject);
     }
+    
+    private void UpdateVisual()
+    {
+        // Clean up old keys
+        foreach (Transform child in container)
+        {
+            if (child == keyCardTemplate) continue;
+        Destroy(child.gameObject);
+        }
 
     // Instantiate current key list
     List<KeyCard.KeyCardType> keyCardList = playerInventory.GetKeyCardList();
     for (int i = 0; i < keyCardList.Count; i++)
     {
-        KeyCard.KeyCardType keyCardType = keyCardList[i];
-        Transform keyCardTransform = Instantiate(keyCardTemplate, container);
-        keyCardTransform.gameObject.SetActive(true);
-        keyCardTransform.GetComponent<RectTransform>().anchoredPosition = new Vector2(distanceX * i, 0);
-        Image keyCardImage = keyCardTransform.Find("Key Card Background").GetComponent<Image>();
-
+    KeyCard.KeyCardType keyCardType = keyCardList[i];
+    Transform keyCardTransform = Instantiate(keyCardTemplate, container);
+    keyCardTransform.gameObject.SetActive(true);
+    keyCardTransform.GetComponent<RectTransform>().anchoredPosition = new Vector2(distanceX * i, 0);
+    Image keyCardImage = keyCardTransform.Find("Key Card Background").GetComponent<Image>();
+    
         switch (keyCardType)
         {
             default:
-            case KeyCard.KeyCardType.red: keyCardImage.color = Color.red; break;
+                case KeyCard.KeyCardType.red: keyCardImage.color = Color.red; break;
             case KeyCard.KeyCardType.green: keyCardImage.color = Color.green; break;
             case KeyCard.KeyCardType.blue: keyCardImage.color = Color.blue; break;
             case KeyCard.KeyCardType.yellow: keyCardImage.color = Color.yellow; break;
             case KeyCard.KeyCardType.purple: keyCardImage.color = new Color(0.5f, 0.0f, 0.5f); break;
-        }
-    }
-}
-        `,
-      },
-
-      {
+            }
+            }
+            }
+            `,
+        },
+        
+        {
         name: "CameraManager.cs",
         language: "C#",
         description:
@@ -562,7 +526,7 @@ private void Start()
 public void ScreenShake(float amplitude, float frequency, float length)
 {
     perlin = currentCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-
+    
     perlin.m_AmplitudeGain = amplitude;
     perlin.m_FrequencyGain = frequency;
     StartCoroutine(ShakeTimer(length));
@@ -572,51 +536,51 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
 {
     oldCam.Priority = 0;
     cam.Priority = 100;
-
+    
     currentCam = cam;
-}
+    }
 
-private IEnumerator ShakeTimer(float length)
-{
+    private IEnumerator ShakeTimer(float length)
+    {
     yield return new WaitForSeconds(length);
-
+    
     //Reset noise
     perlin.m_AmplitudeGain = 0;
     perlin.m_FrequencyGain = 0;
-}
-        `,
-      },
+    }
+    `,
+},
 
-      {
+{
         name: "GameManager.cs",
         language: "C#",
         description:
-          "Here are some functions I made in the GameManager that improve the gameplay experience. The rumble was made with enabling the motors of the controller if the player is playing with a controller, and stopping it in a certain amount of time.",
+        "Here are some functions I made in the GameManager that improve the gameplay experience. The rumble was made with enabling the motors of the controller if the player is playing with a controller, and stopping it in a certain amount of time.",
         code: `
-public void ControllerRumble(float leftMotorIntensity, float rightMotorIntensity, float time)
-{
+        public void ControllerRumble(float leftMotorIntensity, float rightMotorIntensity, float time)
+        {
     if (player != null) 
     {
-        if (player.isGamepad)
-        {
-            Gamepad.current.SetMotorSpeeds(0.50f, 0.50f);
-            StartCoroutine(StopControllerRumble(time));
-        }
+    if (player.isGamepad)
+    {
+    Gamepad.current.SetMotorSpeeds(0.50f, 0.50f);
+    StartCoroutine(StopControllerRumble(time));
     }
+    }
+    }
+    
+    private IEnumerator StopControllerRumble(float time)
+    {
+        yield return new WaitForSeconds(time);
+        InputSystem.ResetHaptics();
 }
+`,
+},
+],
+},
 
-private IEnumerator StopControllerRumble(float time)
+// Not Suepr Maria 63 //
 {
-    yield return new WaitForSeconds(time);
-    InputSystem.ResetHaptics();
-}
-        `,
-      },
-    ],
-  },
-
-  // Not Suepr Maria 63 //
-  {
     title: "Not Suepr Maria 63",
     slug: "not-suepr-maria-63",
     banner: "/images/not suepr.webp",
@@ -628,7 +592,7 @@ private IEnumerator StopControllerRumble(float time)
       "This is a remake of Super Mario 64 made in Unity using C#, but made in about 4 weeks of time for a school project. This game was made purely for fun and with love for the original game, I was not trying to make a full and polished remake with intent of having people playing this instead of the original. \n\nI remade the outside of the castle, a bit of the inside of the castle, and bob omb battlefield. Most models were ripped from the original game, but the animations were made by myself, because I could not find the original animations and mixamo animations didn't feel right with capturing the spirit of the original. \n\nWhat I made: \n- Player movement, attacks, animations, interactions etc \n- Scriptable Object based dialogue system that connects a dialogue sequence to the textbox, and spawns them accordingly \n- Scriptable Object based star system \n- GameManager script that handles the state of the game, star selection and loading the level accordingly based on the star that is selected. \n- Base enemy script that enemies could be built off of \n- Boss fight with King Bob Omb \n- Race with Koopa The Quick \n- Scene transitions \n- Cutscene system \n- Billboarded sprites",
     href: "https://linkerpink.itch.io/not-suepr-maria-63",
     github: "https://github.com/Linkerpink/NOT-Suepr-Maria-63",
-
+    
     technologies: ["/images/unity logo.png", "/images/c sharp logo.svg"],
 
     media: [
@@ -639,31 +603,31 @@ private IEnumerator StopControllerRumble(float time)
       { type: "image", src: "/images/not suepr 4.png" },
       { type: "youtubeId", src: "9c8ntgfiQsk", title: "Gameplay Video" },
     ],
-
+    
     featured: true,
-
+    
     codeSnippets: [
       {
         name: "Mario.cs",
         language: "C#",
         description:
-          "This is the script that has taken the longest to make by far. This is the script for handling the player's movement, animations, attacks and interactions. It is a very long script so I will not show the variable declarations, because that in it self is already 100 lines. The player works with a state machine which decides what the player character should be doing. It has a few health functions that make sure you can take damage, die and give damage to the enemies. The player has 3 damage hitboxes, one for the cick and one for the punch. those are handled through the animations itself, the other one is more interesting, because that one checks if something is under the player, so if the player jumps on top of an enemy, the enemy will take damage. The player also has a few functions that make sure the player can interact with the environment, like interacting with dialogue triggers, picking up items and collecting coins.",
+        "This is the script that has taken the longest to make by far. This is the script for handling the player's movement, animations, attacks and interactions. It is a very long script so I will not show the variable declarations, because that in it self is already 100 lines. The player works with a state machine which decides what the player character should be doing. It has a few health functions that make sure you can take damage, die and give damage to the enemies. The player has 3 damage hitboxes, one for the cick and one for the punch. those are handled through the animations itself, the other one is more interesting, because that one checks if something is under the player, so if the player jumps on top of an enemy, the enemy will take damage. The player also has a few functions that make sure the player can interact with the environment, like interacting with dialogue triggers, picking up items and collecting coins.",
         code: `
-private void Update()
-{
-    isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRayCastLength, groundLayer);
+        private void Update()
+        {
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRayCastLength, groundLayer);
     isOnEnemy = Physics.Raycast(transform.position, Vector3.down, groundedRayCastLength, enemyLayer);
     isCollidingWithPole = Physics.Raycast(transform.position, Vector3.down, groundedRayCastLength, poleLayer);
     
     if (inputDirection.sqrMagnitude > 0.01f && state != States.DiveSlide && canMove) 
     {
-        moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y);
-        targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-        angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-        lastAngle = angle;
+    moveDirection = new Vector3(inputDirection.x, 0, inputDirection.y);
+    targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+    angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+    lastAngle = angle;
     }
     else
-    {
+        {
         moveDirection = Vector3.zero;
         angle = lastAngle;
     }
@@ -677,11 +641,11 @@ private void Update()
     {
         if (!isCrouching)
         {
-            // If not crouching
+        // If not crouching
             
             if (inputDirection.sqrMagnitude >= 0.25f)
             {
-                state = States.Run;
+            state = States.Run;
                 m_animator.Play("Run");
             }
             else if (inputDirection.sqrMagnitude >= 0.01f)
@@ -690,13 +654,13 @@ private void Update()
             }
             else if (state != States.Kick && state != States.Punch)
             {
-                state = States.Idle;
-                //m_animator.SetTrigger("land");
+            state = States.Idle;
+            //m_animator.SetTrigger("land");
             }
             
             m_animator.SetBool("crouch", false);
-        }
-        else
+            }
+            else
         {
             // If crouching
             
@@ -707,7 +671,7 @@ private void Update()
             }
             else if (state != States.Kick && state != States.Punch)
             {
-                state = States.Crouch;
+            state = States.Crouch;
                 m_animator.SetBool("crouch", true);
             }
         }
@@ -715,25 +679,25 @@ private void Update()
 
     if (!isGrounded && state != States.GroundPound && state != States.LongJump && state != States.Dive && state != States.Punch && state != States.Kick)
     {
-        state = States.Jump;
+    state = States.Jump;
 
-        switch (jumpCount)
-        {
+    switch (jumpCount)
+    {
             case 1:
                 m_animator.Play("Jump");
                 break;
             
-            case 2:
-                m_animator.Play("Double Jump");
+                case 2:
+                    m_animator.Play("Double Jump");
                 break;
-            
+                
             case 3:
                 m_animator.Play("Triple jump");
                 break;
         }
-    }
-    
-    // State switching
+        }
+        
+        // State switching
     switch (state)
     {
         //////////Movement//////////////
@@ -744,28 +708,28 @@ private void Update()
             jumpCount = 0;
             isCrouching = false;
             break;
-        
-        // Walk
-        case States.Walk:
-            moveSpeed = Mathf.Min(moveSpeed + acceleration * Time.deltaTime, maxWalkMoveSpeed);
+            
+            // Walk
+            case States.Walk:
+                moveSpeed = Mathf.Min(moveSpeed + acceleration * Time.deltaTime, maxWalkMoveSpeed);
+                isCrouching = false;
+            break;
+            
+            // Run
+            case States.Run:
+                moveSpeed = Mathf.Min(moveSpeed + acceleration * Time.deltaTime, maxMoveSpeed);
             isCrouching = false;
             break;
-        
-        // Run
-        case States.Run:
-            moveSpeed = Mathf.Min(moveSpeed + acceleration * Time.deltaTime, maxMoveSpeed);
-            isCrouching = false;
-            break;
-        
-        // Jump
-        case States.Jump:
+            
+            // Jump
+            case States.Jump:
             moveSpeed = Mathf.Min(moveSpeed + acceleration * Time.deltaTime, maxMoveSpeed);
             jumpTimer = jumpTimerDuration;
             
             if (isGrounded && canMove || isCollidingWithPole && canMove)
             {
-                m_animator.SetTrigger("land");
-                state = States.Idle;
+            m_animator.SetTrigger("land");
+            state = States.Idle;
             }
             
             isCrouching = false;
@@ -782,16 +746,16 @@ private void Update()
             moveSpeed = Mathf.Min(moveSpeed + acceleration * Time.deltaTime, maxCrouchMoveSpeed);
             isCrouching = true;
             break;
-        
-        // GroundPound
-        case States.GroundPound:
-            float _verticalMovement = 0f;
-
-            if (groundPoundTimer <= 0)
-            {
-                _verticalMovement = groundPoundMoveSpeed;
-            }
             
+            // GroundPound
+            case States.GroundPound:
+                float _verticalMovement = 0f;
+                
+                if (groundPoundTimer <= 0)
+                {
+                _verticalMovement = groundPoundMoveSpeed;
+                }
+                
             m_rigidbody.linearVelocity = new Vector3(0, _verticalMovement, 0);
 
             if (isGrounded && canMove)
@@ -799,12 +763,12 @@ private void Update()
                 state = States.Idle;
                 m_animator.SetTrigger("land");
             }
-
+            
             if (isCollidingWithPole && canMove)
             {
-                state = States.Idle;
-                m_animator.SetTrigger("land");
-
+            state = States.Idle;
+            m_animator.SetTrigger("land");
+            
                 ChainChompPole _pole = GameObject.Find("Chain Chomp Area").GetComponentInChildren<ChainChompPole>();
                 
                 _pole.IncreasePolePosition();
@@ -821,42 +785,42 @@ private void Update()
             
             if (longJumpTimer < longJumpTimerDuration / 2)
             {
-                longJumpTimer += Time.deltaTime;
+            longJumpTimer += Time.deltaTime;
                 
-                float _jumpForce = jumpForce / 1.5f;
-                float _jumpSpeed = moveSpeed * 6;
-                m_rigidbody.linearVelocity = new Vector3(bufferedMoveDirection.x * _jumpSpeed, _jumpForce, bufferedMoveDirection.z * _jumpSpeed);
+            float _jumpForce = jumpForce / 1.5f;
+            float _jumpSpeed = moveSpeed * 6;
+            m_rigidbody.linearVelocity = new Vector3(bufferedMoveDirection.x * _jumpSpeed, _jumpForce, bufferedMoveDirection.z * _jumpSpeed);
             }
             else if (longJumpTimer < longJumpTimerDuration)
             {
-                longJumpTimer += Time.deltaTime;
-                float _jumpForce = 0f;
-                float _jumpSpeed = moveSpeed * 6;
-                m_rigidbody.linearVelocity = new Vector3(bufferedMoveDirection.x * _jumpSpeed, _jumpForce, bufferedMoveDirection.z * _jumpSpeed);
+            longJumpTimer += Time.deltaTime;
+            float _jumpForce = 0f;
+            float _jumpSpeed = moveSpeed * 6;
+            m_rigidbody.linearVelocity = new Vector3(bufferedMoveDirection.x * _jumpSpeed, _jumpForce, bufferedMoveDirection.z * _jumpSpeed);
             }
             else
             {
-                if (isGrounded && canMove || isCollidingWithPole && canMove)
-                {
-                    state = States.Idle;
-                    longJumpTimer = 0;
-                    m_animator.SetTrigger("land");
-                }
-            }
-            break;
-        
-        // HighJump
-        case States.HighJump:
             if (isGrounded && canMove || isCollidingWithPole && canMove)
+                {
+            state = States.Idle;
+            longJumpTimer = 0;
+                    m_animator.SetTrigger("land");
+                    }
+                    }
+            break;
+            
+            // HighJump
+            case States.HighJump:
+                if (isGrounded && canMove || isCollidingWithPole && canMove)
             {
                 m_animator.SetTrigger("land");
                 state = States.Idle;
-            }
-            
-            isCrouching = false;
-            break;
-        
-        // DiveSlide
+                }
+                
+                isCrouching = false;
+                break;
+                
+                // DiveSlide
         case States.DiveSlide:
             moveDirection = new Vector3(bufferedMoveDirection.x, 0, bufferedMoveDirection.z);
             
@@ -885,44 +849,44 @@ private void Update()
             if (attackTimer <= 0)
             {
                 state = States.Idle;
-            }
-            moveDirection = Vector3.zero;
-            isCrouching = false;
-            break;
-        
-        // Dive
-        case States.Dive:
-            if (isGrounded || isCollidingWithPole && canMove)
-            {
+                }
+                moveDirection = Vector3.zero;
+                isCrouching = false;
+                break;
+                
+                // Dive
+                case States.Dive:
+                    if (isGrounded || isCollidingWithPole && canMove)
+                    {
                 state = States.DiveSlide;
                 diveSlideTimer = diveSlideTimerDuration;
-            }
-            jumpCount = 0;
-            isCrouching = false;
-            break;
-    }
-    
-    // Set movement and rotations
-    if (state != States.GroundPound && state != States.LongJump && state != States.Dive)
+                }
+                jumpCount = 0;
+                isCrouching = false;
+                break;
+                }
+                
+                // Set movement and rotations
+                if (state != States.GroundPound && state != States.LongJump && state != States.Dive)
     {
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
-    }
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                }
     
-    if (moveDirection != Vector3.zero)
+                if (moveDirection != Vector3.zero)
     {
         moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
     }
-
+    
     velocity = moveDirection.normalized * moveSpeed;
     if (state != States.GroundPound && state != States.LongJump && state != States.Dive && state != States.DiveSlide)
     {
-        m_rigidbody.linearVelocity = new Vector3(velocity.x, m_rigidbody.linearVelocity.y, velocity.z);
+    m_rigidbody.linearVelocity = new Vector3(velocity.x, m_rigidbody.linearVelocity.y, velocity.z);
     }
-
+    
     // Timers
     if (jumpTimer > 0 && isGrounded)
     {
-        jumpTimer -= Time.deltaTime;
+    jumpTimer -= Time.deltaTime;
     }
     
     if (groundPoundTimer > 0 && state == States.GroundPound)
@@ -932,60 +896,60 @@ private void Update()
     
     if (jumpTimer <= 0)
     {
-        jumpCount = 0;
+    jumpCount = 0;
     }
-
+    
     if (attackTimer > 0)
     {
-        attackTimer -= Time.deltaTime;
+    attackTimer -= Time.deltaTime;
     }
-
+    
     if (attackComboTimer > 0)
     {
-        attackComboTimer -= Time.deltaTime;
+    attackComboTimer -= Time.deltaTime;
     }
     else
-    {
-        attackCount = 0;
+        {
+    attackCount = 0;
     }
-
+    
     if (attackCount > 3 && canMove)
     {
-        attackCount = 0;
-        m_animator.SetTrigger("land");
+    attackCount = 0;
+    m_animator.SetTrigger("land");
     }
-
+    
     if (diveSlideTimer > 0)
     {
         diveSlideTimer -= Time.deltaTime;
-    }
-    
-    // Iframes
-    if (iFrameTimer > 0)
-    {
+        }
+        
+        // Iframes
+        if (iFrameTimer > 0)
+        {
         iFrameTimer -= Time.deltaTime;
-
+        
         if (blinkTimer <= 0)
         {
-            blinkTimer = blinkTimerDuration;
-            m_showModel = !m_showModel;
+        blinkTimer = blinkTimerDuration;
+        m_showModel = !m_showModel;
         }
-
+        
         if (blinkTimer > 0)
         {
-            blinkTimer -= Time.deltaTime;
+        blinkTimer -= Time.deltaTime;
         }
-    }
-    else
-    {
+        }
+        else
+            {
         m_showModel = true;
-    }
+        }
 
-    if (m_showModel)
-    {
+        if (m_showModel)
+        {
         m_marioVisual.SetActive(true);
-    }
-    else
+        }
+        else
     {
         m_marioVisual.SetActive(false);
     }
@@ -994,8 +958,8 @@ private void Update()
     {
         m_playerInput.actions.FindActionMap("Player").Enable();
         m_playerInput.actions.FindActionMap("UI").Disable();
-    }
-    else
+        }
+        else
     {
         m_playerInput.actions.FindActionMap("Player").Enable();
         m_playerInput.actions.FindActionMap("UI").Disable();
@@ -1004,61 +968,61 @@ private void Update()
     // Star stuff
     if (m_pickedUpStar)
     {
-        canMove = false;
-
-        if (isGrounded && !m_startedVictoryPose)
-        {
-            m_startedVictoryPose = true;
-            m_animator.SetTrigger("victoryPose");
-        }
+    canMove = false;
+    
+    if (isGrounded && !m_startedVictoryPose)
+    {
+    m_startedVictoryPose = true;
+    m_animator.SetTrigger("victoryPose");
+    }
     }
     
     // Holding objects
     if (heldObject != null)
     {
-        heldObject.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+    heldObject.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
         heldObject.transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
         if (heldObject.name == "King Bob Omb" && m_kingBobOmb != null)
         {
             m_kingBobOmb.state = KingBobOmb.States.Grabbed;
-        }
+            }
     }
 }
 
 public void OnMove(InputAction.CallbackContext _context)
 {
     inputDirection = _context.ReadValue<Vector2>();
-}
+    }
 
-public void OnJump(InputAction.CallbackContext _context)
-{
-    if (_context.performed && canMove && state != States.InsideCannon)
+    public void OnJump(InputAction.CallbackContext _context)
     {
+        if (_context.performed && canMove && state != States.InsideCannon)
+        {
         // Long jump
         if (state != States.LongJump && state != States.Dive)
         {
-            bufferedMoveDirection = moveDirection;    
+        bufferedMoveDirection = moveDirection;    
         }
         
         if (state == States.CrouchWalk && moveDirection.sqrMagnitude > stickDeadZone)
         {
-            jumpCount = 1;
+        jumpCount = 1;
         
-            state = States.LongJump;
+        state = States.LongJump;
         }
-    
+        
         // Jump
         if (isGrounded && state != States.Jump && state != States.LongJump && state != States.DiveSlide || isCollidingWithPole && state != States.Jump && state != States.LongJump && state != States.DiveSlide)
         {
-            if (jumpCount < 3)
-            {
-                jumpCount++;                
-            }
+        if (jumpCount < 3)
+        {
+        jumpCount++;                
+        }
         
-            float _jumpForce = jumpForce + jumpCount;
-            m_rigidbody.linearVelocity = new Vector3(m_rigidbody.linearVelocity.x, _jumpForce, m_rigidbody.linearVelocity.z);
-            state = States.Jump;
+        float _jumpForce = jumpForce + jumpCount;
+        m_rigidbody.linearVelocity = new Vector3(m_rigidbody.linearVelocity.x, _jumpForce, m_rigidbody.linearVelocity.z);
+        state = States.Jump;
         }
         
         // High jump
@@ -1082,80 +1046,80 @@ public void OnJump(InputAction.CallbackContext _context)
 
     if (_context.performed && state == States.InsideCannon)
     {
-        float _jumpForce = jumpForce * 10f;
+    float _jumpForce = jumpForce * 10f;
         m_rigidbody.linearVelocity = new Vector3(m_rigidbody.linearVelocity.x, _jumpForce, m_rigidbody.linearVelocity.z);
         state = States.Jump;
-    }
-}
-
-public void OnCrouch(InputAction.CallbackContext _context)
-{
-    if (_context.performed && canMove)
-    {
-        if (isGrounded)
+        }
+        }
+        
+        public void OnCrouch(InputAction.CallbackContext _context)
         {
+            if (_context.performed && canMove)
+            {
+            if (isGrounded)
+            {
             isGrounded = true;
             isCrouching = true;
             m_animator.SetBool("crouch", true);
-        }
-        else if (state != States.GroundPound && !isGrounded)
-        {
+            }
+            else if (state != States.GroundPound && !isGrounded)
+            {
             m_animator.SetTrigger("groundPound");
             state = States.GroundPound;
             groundPoundTimer = groundPoundTimerDuration;
-        }
-    }
-    
-    if (_context.canceled && state == States.Crouch || _context.canceled && state == States.CrouchWalk)
+            }
+            }
+            
+            if (_context.canceled && state == States.Crouch || _context.canceled && state == States.CrouchWalk)
     {
         isCrouching = false;
         m_animator.SetBool("crouch", false);
-    }
-}
-
-public void OnAttack(InputAction.CallbackContext _context)
-{
-    if (_context.performed && canMove)
-    {
-        // Hold king bob omb
-        if (heldObject == null && isCollidingWithKingBobOmb && m_kingBobOmbObject != null)
-        {
-            heldObject = m_kingBobOmbObject;
         }
-
-        // Throw object
-        if (heldObject != null)
+        }
+        
+        public void OnAttack(InputAction.CallbackContext _context)
+        {
+            if (_context.performed && canMove)
+    {
+            // Hold king bob omb
+            if (heldObject == null && isCollidingWithKingBobOmb && m_kingBobOmbObject != null)
+            {
+            heldObject = m_kingBobOmbObject;
+            }
+            
+            // Throw object
+            if (heldObject != null)
         {
             print("throw object");
             
             heldObject.transform.position = new Vector3(heldObject.transform.position.x, transform.position.y + 4, heldObject.transform.position.z) + transform.forward * 4f;
-
+            
             if (heldObject.name == "King Bob Omb" && m_kingBobOmb != null && m_kingBobOmb.state == KingBobOmb.States.Grabbed)
             {
-                m_kingBobOmb.state = KingBobOmb.States.Thrown;
-                heldObject = null;
+            m_kingBobOmb.state = KingBobOmb.States.Thrown;
+            heldObject = null;
             }
-        }
-        
-        // Dialogue
-        if (m_isCollidingWithDialogueHitbox && m_dialogueHitbox != null)
-        {
+            }
+            
+            // Dialogue
+            if (m_isCollidingWithDialogueHitbox && m_dialogueHitbox != null)
+            {
             DialogueSequence _dialogueSequence = m_dialogueHitbox.GetComponent<DialogueGiver>().dialogueSequence;
             m_textbox.StartDialogueSequence(_dialogueSequence);
-        }
-        
-        // Attacking
-        if (attackCount <= 2 && isGrounded && attackTimer <= 0 && moveDirection.sqrMagnitude < stickDeadZone)
-        {
+            }
+            
+            // Attacking
+            if (attackCount <= 2 && isGrounded && attackTimer <= 0 && moveDirection.sqrMagnitude < stickDeadZone)
+            {
             // Punch
             attackCount++;
             state = States.Punch;
             m_animator.Play("Punch");
             attackTimer = attackTimerDuration;
             attackComboTimer = attackComboTimerDuration;
-        }
-        else if (state != States.Run && attackTimer <= 0 && moveDirection.sqrMagnitude < stickDeadZone)
-        {
+            }
+            else if (state != States.Run && attackTimer <= 0 && moveDirection.sqrMagnitude < stickDeadZone)
+            {
             // Kick
             attackCount++;
             state = States.Kick;
@@ -1172,7 +1136,7 @@ public void OnAttack(InputAction.CallbackContext _context)
             m_animator.Play("Dive");
             m_rigidbody.linearVelocity = new Vector3(m_rigidbody.linearVelocity.x * 1.5f, m_rigidbody.linearVelocity.y, m_rigidbody.linearVelocity.z * 1.5f);
         }
-    }
+        }
 }
 
 public void TakeDamage(int _damageAmount)
@@ -1183,19 +1147,19 @@ public void TakeDamage(int _damageAmount)
         if (hp <= 0)
         {
             Die();
-        }
+            }
 
         iFrameTimer = iFrameDuration;
         
         // Power Meter
         if (!m_powerMeter.showing)
         {
-            print("show power meter");
+        print("show power meter");
             m_powerMeter.ShowPowerMeter();
         }
         else
         {
-            print("skill issueee");
+        print("skill issueee");
         }
     }
 }
@@ -1204,139 +1168,139 @@ public void Heal(int _healAmount)
 {
     if (hp < 8)
     {
-        hp += _healAmount;    
+    hp += _healAmount;    
     }
     
     // Power Meter
     if (m_powerMeter.showing && hp >= 8)
     {
-        print("hide power meter");
-        m_powerMeter.HidePowerMeter();
+    print("hide power meter");
+    m_powerMeter.HidePowerMeter();
     }
-}
-
-public void Die()
-{
-    SceneManager.LoadScene("Peach's Castle Inside Main Room");
-}
+    }
+    
+    public void Die()
+    {
+        SceneManager.LoadScene("Peach's Castle Inside Main Room");
+        }
 
 private void OnTriggerEnter(Collider other)
 {
     if (other.CompareTag("Jump Hitbox"))
     {
-        if (isOnEnemy)
-        {
+    if (isOnEnemy)
+    {
             other.GetComponentInParent<Enemy>().TakeDamage(1);
             m_rigidbody.AddForce(0f,10f,0f,ForceMode.Impulse);
         }
     }
-
+    
     if (other.CompareTag("King Bob Omb"))
     {
-        isCollidingWithKingBobOmb = true;
-        m_kingBobOmbObject = other.gameObject;
+    isCollidingWithKingBobOmb = true;
+    m_kingBobOmbObject = other.gameObject;
     }
     
     if (other.CompareTag("Dialogue Hitbox"))
     {
-        m_isCollidingWithDialogueHitbox = true;
-        m_dialogueHitbox = other;
+    m_isCollidingWithDialogueHitbox = true;
+    m_dialogueHitbox = other;
     }
-
+    
     if (other.CompareTag("Star"))
     {
-        print("should pick up star");
-        GameManager.Instance.GetStar(other.gameObject.GetComponent<StarHolder>().star);
-        other.gameObject.SetActive(false);
-        m_pickedUpStar = true;
+    print("should pick up star");
+    GameManager.Instance.GetStar(other.gameObject.GetComponent<StarHolder>().star);
+    other.gameObject.SetActive(false);
+    m_pickedUpStar = true;
     }
-
+    
     if (other.CompareTag("Top Hitbox"))
     {
-        RaceManager _raceManager = FindObjectOfType<RaceManager>();
+    RaceManager _raceManager = FindObjectOfType<RaceManager>();
 
-        if (_raceManager != null)
+    if (_raceManager != null)
         {
             _raceManager.EndRace();
 
             if (_raceManager.raceState == RaceManager.RaceStates.Racing)
             {
-                _raceManager.raceState = RaceManager.RaceStates.Won;
+            _raceManager.raceState = RaceManager.RaceStates.Won;
             }    
-        }
-
-        if (GameManager.Instance.currentStar != null && m_kingBobOmb != null)
-        {
+            }
+            
+            if (GameManager.Instance.currentStar != null && m_kingBobOmb != null)
+            {
             if (m_kingBobOmb.stage == 0 && GameManager.Instance.currentStar.name == "Star 1")
             {
-                m_textbox.StartDialogueSequence(m_kingBobOmbStartBattleDialogueSequence);    
+            m_textbox.StartDialogueSequence(m_kingBobOmbStartBattleDialogueSequence);    
             }
-        }
-
+            }
+            
         if (!GameManager.Instance.shownCastleIntroDialogue)
         {
-            if (other.CompareTag("Castle Dialogue"))
-            {
-                GameManager.Instance.shownCastleIntroDialogue = true;
-                m_textbox.StartDialogueSequence(GameManager.Instance.castleIntroDialogueSequence);
-
-            }
+        if (other.CompareTag("Castle Dialogue"))
+        {
+        GameManager.Instance.shownCastleIntroDialogue = true;
+        m_textbox.StartDialogueSequence(GameManager.Instance.castleIntroDialogueSequence);
+        
         }
-    }
-
-    if (other.CompareTag("Enemy"))
+        }
+        }
+        
+        if (other.CompareTag("Enemy"))
     {
         Enemy _enemy = other.GetComponent<Enemy>();
         
         if (!isOnEnemy && state != States.Punch && state != States.Kick && state != States.Dive &&
-            state != States.Jump && state != States.GroundPound)
+        state != States.Jump && state != States.GroundPound)
         {
             TakeDamage(_enemy.damageAmount);
         }
         else
         {
-            _enemy.TakeDamage(1);
+        _enemy.TakeDamage(1);
         }
-    }
-
-    if (other.CompareTag("Death"))
+        }
+        
+        if (other.CompareTag("Death"))
     {
         Die();
-    }
+        }
 }
 
 private void OnTriggerExit(Collider other)
 {
     if (other.CompareTag("Dialogue Hitbox"))
     {
-        m_isCollidingWithDialogueHitbox = false;
+    m_isCollidingWithDialogueHitbox = false;
     }
     
     if (other.CompareTag("King Bob Omb"))
     {
-        isCollidingWithKingBobOmb = false;
-        m_kingBobOmbObject = null;
+    isCollidingWithKingBobOmb = false;
+    m_kingBobOmbObject = null;
     }
-}
-
-private void OnTriggerStay(Collider other)
-{
-    if (other.CompareTag("Cannon"))
+    }
+    
+    private void OnTriggerStay(Collider other)
     {
+        if (other.CompareTag("Cannon"))
+        {
         state = States.InsideCannon;
-    }
-}
-`,
+        }
+        }
+        `,
       },
-
+      
       {
-        name: "DialogueSequence.cs",
-        language: "C#",
-        description: "This is the Scriptable Object in charge of making a sequence of dialogue that the textbox will follow. It has a string array where you can add different pages of dialogue to in the editor. It has values for the color that the textbox needs to be. It also has possible ending functions, like opening a cannon, starting / ending fights and starting a race",
-        code: `
-public string[] dialogue;
-
-public Color textBoxColor;
+          name: "DialogueSequence.cs",
+          language: "C#",
+          description: "This is the Scriptable Object in charge of making a sequence of dialogue that the textbox will follow. It has a string array where you can add different pages of dialogue to in the editor. It has values for the color that the textbox needs to be. It also has possible ending functions, like opening a cannon, starting / ending fights and starting a race",
+          code: `
+          public string[] dialogue;
+          
+          public Color textBoxColor;
 public Color textColor;
 
 public enum DialogueTypes
@@ -1348,18 +1312,18 @@ public enum DialogueTypes
     KoopaTheQuickWinRace,
     KoopaTheQuickLoseRace,
     PinkBobOmbOpenCannon,
-}
-
-public DialogueTypes dialogueType;
-
-private Mario m_mario;
-
-private GameManager m_gameManager;
-
-private void Awake()
-{
+    }
+    
+    public DialogueTypes dialogueType;
+    
+    private Mario m_mario;
+    
+    private GameManager m_gameManager;
+    
+    private void Awake()
+    {
     m_gameManager = FindObjectOfType<GameManager>();
-}
+    }
 
 public void EndDialogueFunction()
 {
@@ -1369,9 +1333,9 @@ public void EndDialogueFunction()
             KingBobOmb _kingBobOmb = FindAnyObjectByType<KingBobOmb>();
             _kingBobOmb.StartFight();
             break;
-        
-        case DialogueTypes.KingBobOmbEndFight:
-            _kingBobOmb = FindAnyObjectByType<KingBobOmb>();
+            
+            case DialogueTypes.KingBobOmbEndFight:
+                _kingBobOmb = FindAnyObjectByType<KingBobOmb>();
             _kingBobOmb.EndFight();
             break;
         
@@ -1380,33 +1344,33 @@ public void EndDialogueFunction()
             _koopaTheQuick.StartRace();
             break;
         
-        case DialogueTypes.KoopaTheQuickWinRace:
+            case DialogueTypes.KoopaTheQuickWinRace:
             _koopaTheQuick = FindAnyObjectByType<KoopaTheQuick>();
             _koopaTheQuick.WinRace();
             break;
-        
-        case DialogueTypes.KoopaTheQuickLoseRace:
-            m_mario = FindObjectOfType<Mario>();
-            m_mario.Die();
+            
+            case DialogueTypes.KoopaTheQuickLoseRace:
+                m_mario = FindObjectOfType<Mario>();
+                m_mario.Die();
             break;
-        
+            
         case DialogueTypes.PinkBobOmbOpenCannon:
             // Open Cannons
             m_gameManager = FindAnyObjectByType<GameManager>();
             if (!GameManager.Instance.cannonsOpened)
             {
-                m_mario = FindObjectOfType<Mario>();
+            m_mario = FindObjectOfType<Mario>();
                 Animator m_animator = GameObject.Find("Cannon Covers").GetComponent<Animator>();
                 m_animator.SetTrigger("openCannon");
                 m_mario.canMove = false;
             }
             break;
     }
-}
+    }
 	`,
-      },
+},
 
-      {
+{
         name: "Textbox.cs",
         language: "C#",
         description: "This is the textbox script that loads in the information from the DialogueSequence that is given to the textbox.",
@@ -1415,13 +1379,13 @@ private void Update()
 {
     if (!m_textboxExists)
     {
-        m_background.color = Color.clear;
+    m_background.color = Color.clear;
         m_text.color = Color.clear;
-    }
-}
+        }
+        }
 
-public void StartDialogueSequence(DialogueSequence _sequence)
-{
+        public void StartDialogueSequence(DialogueSequence _sequence)
+        {
     if (!m_textboxExists)
     {
         m_mario.canMove = false;
@@ -1431,7 +1395,7 @@ public void StartDialogueSequence(DialogueSequence _sequence)
         ResetTextbox();
     
         SpawnTextbox(m_sequence.dialogue[m_page]);    
-    }
+        }
 }
 
 private void SpawnTextbox(string _text)
@@ -1451,21 +1415,21 @@ public void OnSubmit(InputAction.CallbackContext _context)
         print("submit");
         if (m_page < m_sequence.dialogue.Length - 1 && m_textboxExists)
         {
-            m_page++;
-            SpawnTextbox(m_sequence.dialogue[m_page]);
+        m_page++;
+        SpawnTextbox(m_sequence.dialogue[m_page]);
         }
         else if (m_textboxExists)
         {
-            m_sequence.EndDialogueFunction();
-            m_animator.SetTrigger("textboxOut");
-            m_textboxExists = false;
-            m_mario.canMove = true;
+        m_sequence.EndDialogueFunction();
+        m_animator.SetTrigger("textboxOut");
+        m_textboxExists = false;
+        m_mario.canMove = true;
         }
-    }
-}
-
-private void ResetTextbox()
-{
+        }
+        }
+        
+        private void ResetTextbox()
+        {
     m_page = 0;
 }
         `,
@@ -1476,23 +1440,23 @@ private void ResetTextbox()
         language: "C#",
         description:
           "This is the script that handles the state of the game, star selection and loading the level accordingly based on the star that is selected. It also has the screenshake function I made for Robo Rebellion.",
-        code: `
+          code: `
 private void Update()
 {
     print(starsCollected.Count);
     if (Input.GetKeyDown(KeyCode.B))
     {
         enableDebug = !enableDebug;
-    }
+        }
 
     if (Input.GetKeyDown(KeyCode.R))
     {
         if (m_mario != null)
         {
-            m_mario.Die();
+        m_mario.Die();
         }
         
-    }
+        }
     
     if (Input.GetKeyDown(KeyCode.Escape))
     {
@@ -1503,18 +1467,18 @@ private void Update()
     if (m_starsText != null)
     {
         SetStarsText();
-    }
+        }
 
     if (m_coinsText != null)
     {
-        SetCoinsText();
+    SetCoinsText();
     }
 
     // Application
     if (Application.isFocused)
     {
         lockCursor = true;
-    }
+        }
 
     Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
 }
@@ -1529,7 +1493,7 @@ private void SetObjects()
     currentScene = SceneManager.GetActiveScene().name;
     
     m_canvas = GameObject.Find("Canvas");
-
+    
     if (m_canvas != null)
     {
         foreach (Transform _child in m_canvas.transform)
@@ -1538,14 +1502,14 @@ private void SetObjects()
             {
                 m_backgroundAnimator = _child.GetComponent<Animator>();
                 StartTransitionAnimation("fadeOutWhite");
-            }
-
-            if (_child.name == "Star Select")
-            {
+                }
+                
+                if (_child.name == "Star Select")
+                {
                 SetStarText();
-            }
+                }
         }
-    }
+        }
     
     m_starSelect = GameObject.Find("Star Select");
     m_starObjects = GameObject.Find("Star Objects");
@@ -1556,41 +1520,41 @@ private void SetObjects()
     {
         if (m_starSelect != null)
         {
-            m_mario.canMove = false;   
+        m_mario.canMove = false;   
         }
         else
         {
-            m_mario.canMove = true;    
+        m_mario.canMove = true;    
         }
-    }
+        }
     
-    m_starsText = GameObject.Find("Stars Text").GetComponent<TextMeshProUGUI>();
-    m_coinsText = GameObject.Find("Coins Text").GetComponent<TextMeshProUGUI>();
-    
-    coinsCollected = 0;
+        m_starsText = GameObject.Find("Stars Text").GetComponent<TextMeshProUGUI>();
+        m_coinsText = GameObject.Find("Coins Text").GetComponent<TextMeshProUGUI>();
+        
+        coinsCollected = 0;
     spawned100CoinStar = false;
-}
+    }
 
-private IEnumerator SetObjectsWhenReady()
-{
+    private IEnumerator SetObjectsWhenReady()
+    {
     while (GameObject.Find("Canvas") == null)
     {
         yield return null;
     }
     SetObjects();
-}
-
-
-public void StartTransitionAnimation(string _animation)
-{
-    if (m_backgroundAnimator != null)
+    }
+    
+    
+    public void StartTransitionAnimation(string _animation)
+    {
+        if (m_backgroundAnimator != null)
     {
         m_backgroundAnimator.SetTrigger(_animation);
-    }
-}
-
-public UnityAction SelectStar(Star _star)
-{
+        }
+        }
+        
+        public UnityAction SelectStar(Star _star)
+        {
     StartCoroutine(InitializeLevel(_star));
     currentStar = _star;
     
@@ -1599,11 +1563,11 @@ public UnityAction SelectStar(Star _star)
         m_mario.m_kingBobOmbObject = FindAnyObjectByType<KingBobOmb>().gameObject;
         m_mario.m_kingBobOmb = m_mario.m_kingBobOmbObject.GetComponent<KingBobOmb>();
     }
-
+    
     SetStarsText();
     
     return null;
-}
+    }
 
 public IEnumerator InitializeLevel(Star _star)
 {
@@ -1684,9 +1648,9 @@ public IEnumerator InitializeLevel(Star _star)
                 }
             }
         }
-
+        
         yield return null;
-    }
+        }
 }
 
 public void HoverOverStar(Star _star)
@@ -1713,7 +1677,7 @@ private void SetStarsText()
     if (m_starsText != null)
     {
         m_starsText.SetText("X" + starsCollected.Count);
-    }
+        }
 }
 
 private void SetCoinsText()
@@ -1722,7 +1686,7 @@ private void SetCoinsText()
     
     if (m_coinsText != null)
     {
-        m_coinsText.SetText("X" + coinsCollected);
+    m_coinsText.SetText("X" + coinsCollected);
     }
 }
 
@@ -1731,7 +1695,7 @@ public void SpawnStar(Star _star, Vector3 _position)
     GameObject _starObject = Instantiate(m_starPrefab, new Vector3(_position.x, _position.y, _position.z), Quaternion.identity);
 
     _starObject.GetComponentInChildren<StarHolder>().star = _star;
-}
+    }
 
 public void GetStar(Star _star)
 {
@@ -1784,8 +1748,8 @@ private void Awake()
     m_marioTransform = m_mario.transform;
     agent = GetComponent<NavMeshAgent>();
     m_animator = GetComponentInChildren<Animator>();
-}
-
+    }
+    
 private void Update()
 {
     // Check for sight and attack range
@@ -1798,7 +1762,7 @@ private void Update()
 
     if (playerInSightRange)
     {
-        state = States.ChargePlayer;
+    state = States.ChargePlayer;
     }
     
     // State switching
@@ -1809,7 +1773,7 @@ private void Update()
             
             if (!walkPointSet)
             {
-                SearchWalkPoint();
+            SearchWalkPoint();
             }
 
             if (walkPointSet)
@@ -1835,11 +1799,11 @@ private void Update()
             }
             
             break;
-        
-        // Carge Player
-        case States.ChargePlayer:
             
-            if (m_mario.canMove)
+            // Carge Player
+            case States.ChargePlayer:
+            
+                if (m_mario.canMove)
             {
                 agent.SetDestination(m_marioTransform.position);
                 agent.speed = runSpeed;    
@@ -1858,101 +1822,101 @@ private void SearchWalkPoint()
     // Calculate random point in range
     float randomZ = Random.Range(-walkPointRange, walkPointRange);
     float randomX = Random.Range(-walkPointRange, walkPointRange);
-
+    
     walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
-
+    
     if (Physics.Raycast(walkPoint, -transform.up, 2f, groundLayer))
     {
-        walkPointSet = true;
+    walkPointSet = true;
     }
-}
-
-private void OnDrawGizmosSelected()
+    }
+    
+    private void OnDrawGizmosSelected()
 {
     Gizmos.color = Color.yellow;
     Gizmos.DrawWireSphere(transform.position, sightRange);
     Gizmos.color = Color.red;
     Gizmos.DrawWireSphere(transform.position, walkPointRange);
-}
-
-private void DamagePlayer(int _damageAmount)
-{
-    m_mario.TakeDamage(_damageAmount);
-}
-
-public void TakeDamage(int _damageAmount)
-{
-    hp -= _damageAmount;
-
-    if (hp <= 0)
-    {
-        Die();
     }
+
+    private void DamagePlayer(int _damageAmount)
+    {
+        m_mario.TakeDamage(_damageAmount);
+        }
+
+        public void TakeDamage(int _damageAmount)
+        {
+            hp -= _damageAmount;
+            
+            if (hp <= 0)
+            {
+            Die();
+            }
 }
 
 private void Die()
 {
     gameObject.SetActive(false);
-}
+    }
 	`
-    },
+},
 
 {
 	name: "KingBobOmb.cs",
 	language: "C#",
 	description: "",
 	code: `
-public enum States
-{
+    public enum States
+    {
 	Idle,
 	Walking,
 	Grabbing,
 	Throwing,
 	Grabbed,
 	Thrown,
-}
-
-public States state = States.Idle;
-
-[SerializeField] private Star m_kingBobOmbStar;
-
-private void Awake()
-{
-	m_mario = FindAnyObjectByType<Mario>();
+    }
+    
+    public States state = States.Idle;
+    
+    [SerializeField] private Star m_kingBobOmbStar;
+    
+    private void Awake()
+    {
+        m_mario = FindAnyObjectByType<Mario>();
 	m_marioTransform = m_mario.transform;
 	agent = GetComponent<NavMeshAgent>();
 	m_animator = GetComponentInChildren<Animator>();
 	m_gameManager = FindAnyObjectByType<GameManager>();
 	m_textbox = FindAnyObjectByType<Textbox>();
-}
-
-private void Update()
-{
-	isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.5f, groundLayer);
+    }
+    
+    private void Update()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.5f, groundLayer);
 	
 	switch (state)
 	{
 		case States.Idle:
-			if (goToWalkTimer > 0)
+            if (goToWalkTimer > 0)
 			{
 				goToWalkTimer -= Time.deltaTime;
 			}
 			else
-			{
+                {
 				state = States.Walking;
-			}
+                }
 			break;
 			
 		case States.Walking:
-			if (stage > 0 && stage < 3)
+            if (stage > 0 && stage < 3)
 			{
-				agent.SetDestination(walkPoint);
-
-				if (setWalkPointTimer > 0)
-				{
+            agent.SetDestination(walkPoint);
+            
+            if (setWalkPointTimer > 0)
+            {
 					setWalkPointTimer -= Time.deltaTime;
-				}
-				else
+                    }
+                    else
 				{
 					SetWalkPoint(m_marioTransform.position);
 					setWalkPointTimer = setWalkPointTimerDuration;
@@ -1960,22 +1924,22 @@ private void Update()
 
 				if (stage < 2)
 				{
-					agent.angularSpeed = 75;
+                agent.angularSpeed = 75;
 				}
 				else
 				{
 					agent.angularSpeed = 180;
 					setWalkPointTimerDuration = 0.25f;
-				}    
+                    }    
 			}
 			else
-			{
-				state = States.Idle;
+                {
+            state = States.Idle;
 			}
 			break;
 		
-		case States.Grabbed:
-			
+            case States.Grabbed:
+                
 			break;
 		
 		case States.Thrown:
@@ -1984,34 +1948,34 @@ private void Update()
 				state = States.Walking;
 				stage++;
 				m_gameManager.ScreenShake(10,10,0.25f);
-			}
-			break;
-	}
+                }
+                break;
+                }
 
 	if (stage > 3)
 	{
-		m_textbox.StartDialogueSequence(m_loseDialogueSequence);
-		stage = -1;
+    m_textbox.StartDialogueSequence(m_loseDialogueSequence);
+    stage = -1;
 	}
 }
 
 private void SetWalkPoint(Vector3 _walkPoint)
 {
 	walkPoint = _walkPoint;
-}
+    }
 
-public void StartFight()
+    public void StartFight()
 {
 	state = States.Walking;
 	stage = 1;
-}
-
-public void EndFight()
+    }
+    
+    public void EndFight()
 {
 	GameManager.Instance.SpawnStar(m_kingBobOmbStar, new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z));
 	gameObject.SetActive(false);
 }
-	`
+`
 },
 
 {
@@ -2025,20 +1989,20 @@ private void Update()
 	
 	if (racing)
 	{
-		float _remainingDist = Vector3.Distance(transform.position, waypoints[m_currentWaypoint].position);
-			
-		if (_remainingDist <= 1f  &&  m_currentWaypoint < waypoints.Length - 1)
-		{
-			m_currentWaypoint++;
-			SetWaypoint();
-		}
-
+    float _remainingDist = Vector3.Distance(transform.position, waypoints[m_currentWaypoint].position);
+    
+    if (_remainingDist <= 1f  &&  m_currentWaypoint < waypoints.Length - 1)
+    {
+    m_currentWaypoint++;
+    SetWaypoint();
+    }
+    
 	}
 	
 	print(m_currentWaypoint);
-}
-
-public void StartRace()
+    }
+    
+    public void StartRace()
 {
 	racing = true;
 	SetWaypoint(); 
@@ -2061,17 +2025,17 @@ private void OnTriggerEnter(Collider other)
 			m_raceManager.raceState = RaceManager.RaceStates.Lost;
 			
 			m_textbox.StartDialogueSequence(m_lostDialogue);
-		}
-		
-		if (m_raceManager.raceState == RaceManager.RaceStates.Won)
-		{
+            }
+            
+            if (m_raceManager.raceState == RaceManager.RaceStates.Won)
+            {
 			m_textbox.StartDialogueSequence(m_wonDialogue);
-		}
-	}
-}
-
-public void WinRace()
-{
+            }
+            }
+            }
+            
+            public void WinRace()
+            {
 	m_agent.enabled = false;
 	print("race gewonnen :O");
 	GameManager.Instance.SpawnStar(m_star, new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z));
@@ -2083,32 +2047,40 @@ public void WinRace()
     ],
   },
 
-  // Risk It For The Biscuit //
+  
+  // Bombs Per Minute (BPM) //
   {
-    title: "Risk It For The Biscuit",
-    slug: "risk-it-for-the-biscuit",
-    banner: "/images/eng.png",
-    icon: "/images/eng.png",
-    date: "not released",
-    displayDate: formatDisplayDate("not released"),
-    platform: "Itch.io",
-    description:
-      "",
-
-    href: "",
-    github: "https://github.com/Linkerpink/Risk-It-For-The-Biscuit",
-
-    technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
-
-    media: [
-      { type: "image", src: "/images/eng.png" },
-    ],
-
-    featured: false,
-
-    codeSnippets: [
-      
-	]
+      title: "Bombs Per Minute",
+      slug: "bpm",
+      banner: "/images/BPM logo new.png",
+      icon: "/images/BPM logo new.png",
+      date: "2025-10-06",
+      displayDate: formatDisplayDate("2025-10-06"),
+      platform: "Itch.io",
+      description:
+      "Bombs Per Minute is a rhythm game made in godot",
+  
+      href: "https://fortnite.com",
+      github: "https://github.com/Linkerpink/Bombs-Per-Minute",
+  
+      technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+  
+      media: [
+      { type: "image", src: "/images/BPM logo new.png" },
+      { type: "youtubeId", src: "NfxPphgsxag", title: "Launch Trailer" },
+      ],
+  
+      featured: true,
+  
+      codeSnippets: [
+          {
+              name: "",
+              language: "GDScript",
+              description:
+              "",
+              code:'fortnite'
+          }
+      ]
   },
 
   // The Royal Spin //
@@ -2121,12 +2093,12 @@ public void WinRace()
     displayDate: formatDisplayDate("2025-07-14"),
     platform: "Itch.io",
     description:
-      "The Royal Spin is a game made by a group of 4 students. \n\nGamble and drink your heart out to pay rent and turn the tide with powerful spell cards. In this game you play Slots, Roulette and Russian Roulette. The goal is buying keys to escape. \n\nDevelopers: \nhttps://sites.google.com/view/mark-biesheuvel-portfolio \nhttps://linkerpink.vercel.app/ \n\nArtists: \nhttps://www.artstation.com/bellebunnik \nhttps://www.artstation.com/sekerio \n\nWhat I made: \n- Game Settings \n- Shop \n- GameManager script that holds the game state and displays the items in the player's inventory at that moment \n- Russian Roulette \n- Rent system \n- Sound System \n- Keys & Doors \n- Main Menu camera sequences",
+    "The Royal Spin is a game made by a group of 4 students. \n\nGamble and drink your heart out to pay rent and turn the tide with powerful spell cards. In this game you play Slots, Roulette and Russian Roulette. The goal is buying keys to escape. \n\nDevelopers: \n[Mark Biesheuvel](https://sites.google.com/view/mark-biesheuvel-portfolio) \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nArtists: \n[Belle Bunnik](https://www.artstation.com/bellebunnik) \n[Jordy Andriessen](https://www.artstation.com/sekerio) \n\nWhat I made: \n- Game Settings \n- Shop \n- GameManager script that holds the game state and displays the items in the player's inventory at that moment \n- Russian Roulette \n- Rent system \n- Sound System \n- Keys & Doors \n- Main Menu camera sequences",
     href: "https://linkerpink.itch.io/the-royal-spin",
     github: "https://github.com/MarkBSH/Suicide-Squad",
 
     technologies: ["/images/unity logo.png", "/images/c sharp logo.svg"],
-
+    
     media: [
       { type: "image", src: "/images/the royal spin logo.png" },
       { type: "image", src: "/images/trs 1.jpg" },
@@ -2138,17 +2110,17 @@ public void WinRace()
     ],
 
     featured: true,
-
+    
     codeSnippets: [
 {
 	name: "SettingsManager.cs",
 	language: "C#",
 	description: "This is the script that manages player settings. The current player settings and default player settings are stored in a Scriptable Object, that then gets loaded when the game loads a scene.",
 	code: `
-private void Start()
-{
+    private void Start()
+    {
 	LoadPlayerSettings();
-
+    
 	if (playerSettings.fieldOfView < 10)
 	{
 		LoadDefaultSettings();
@@ -2160,9 +2132,9 @@ private void FindObjects()
 	m_playerCam = FindAnyObjectByType<FirstPersonCam>();
 	if (m_playerCam != null)
 	{
-		m_playerCam.m_MouseSensitivity = playerSettings.mouseSensitivity;
+    m_playerCam.m_MouseSensitivity = playerSettings.mouseSensitivity;
 		m_playerCam.GetComponent<Camera>().fieldOfView = playerSettings.fieldOfView;
-	}
+        }
 }
 
 public void ChangeViewBobbing()
@@ -2170,25 +2142,25 @@ public void ChangeViewBobbing()
 	playerSettings.viewBobbingEnabled = m_viewBobbingSlider.value;
 	UpdateSettingsUI();
 	SavePlayerSettings();
-}
-
-public void ChangeMouseSens(float _value)
-{
-	playerSettings.ChangeMouseSensitivity(_value);
-	UpdateSettingsUI();
-	SavePlayerSettings();
-}
-
-public void ChangeCameraFOV(float _value)
-{
-	playerSettings.ChangeFieldOfView(_value);
-	UpdateSettingsUI();
-	SavePlayerSettings();
-}
-
-public void LoadDefaultSettings()
-{
-	ChangeMouseSens(defaultSettings.mouseSensitivity);
+    }
+    
+    public void ChangeMouseSens(float _value)
+    {
+        playerSettings.ChangeMouseSensitivity(_value);
+        UpdateSettingsUI();
+        SavePlayerSettings();
+        }
+        
+        public void ChangeCameraFOV(float _value)
+        {
+            playerSettings.ChangeFieldOfView(_value);
+            UpdateSettingsUI();
+            SavePlayerSettings();
+            }
+            
+            public void LoadDefaultSettings()
+            {
+                ChangeMouseSens(defaultSettings.mouseSensitivity);
 	ChangeCameraFOV(defaultSettings.fieldOfView);
 
 	SavePlayerSettings();
@@ -2199,93 +2171,93 @@ public void UpdateSettingsUI()
 {
 	m_mouseSensText.SetText("Mouse Sensitivity: " + playerSettings.mouseSensitivity.ToString());
 	m_mouseSensSlider.value = playerSettings.mouseSensitivity;
-
+    
 	m_camFOVText.SetText("Camera Field Of View: " + playerSettings.fieldOfView.ToString());
 	m_camFOVSlider.value = playerSettings.fieldOfView;
 	
 	// m_viewBobbingText.SetText("View Bobbing: " + playerSettings.viewBobbingEnabled.ToString());
 	// m_viewBobbingSlider.value = playerSettings.viewBobbingEnabled;
-}
-
-public void SavePlayerSettings()
-{
-	PlayerPrefs.SetFloat("Mouse Sensitivity", playerSettings.mouseSensitivity);
-	PlayerPrefs.SetFloat("Field Of View", playerSettings.fieldOfView);
-	//PlayerPrefs.SetFloat("View Bobbing Enabled", playerSettings.viewBobbingEnabled);
-	PlayerPrefs.Save();
-
-	FindObjects();
-}
-
-public void LoadPlayerSettings()
-{
-	if (PlayerPrefs.HasKey("Mouse Sensitivity"))
+    }
+    
+    public void SavePlayerSettings()
+    {
+        PlayerPrefs.SetFloat("Mouse Sensitivity", playerSettings.mouseSensitivity);
+        PlayerPrefs.SetFloat("Field Of View", playerSettings.fieldOfView);
+        //PlayerPrefs.SetFloat("View Bobbing Enabled", playerSettings.viewBobbingEnabled);
+        PlayerPrefs.Save();
+        
+        FindObjects();
+        }
+        
+        public void LoadPlayerSettings()
+        {
+            if (PlayerPrefs.HasKey("Mouse Sensitivity"))
 	{
 		playerSettings.mouseSensitivity = PlayerPrefs.GetFloat("Mouse Sensitivity");
-	}
-	else
-	{
+        }
+        else
+            {
 		PlayerPrefs.SetFloat("Mouse Sensitivity", defaultSettings.mouseSensitivity);
 		playerSettings.mouseSensitivity = PlayerPrefs.GetFloat("Mouse Sensitivity");
-	}
-
+        }
+    
 	if (PlayerPrefs.HasKey("Field Of View"))
 	{
-		playerSettings.fieldOfView = PlayerPrefs.GetFloat("Field Of View");
+    playerSettings.fieldOfView = PlayerPrefs.GetFloat("Field Of View");
 	}
 	else
-	{
+        {
 		PlayerPrefs.SetFloat("Mouse Sensitivity", defaultSettings.mouseSensitivity);
 		playerSettings.fieldOfView = PlayerPrefs.GetFloat("Field Of View");
 	}
-}
-	`
+    }
+`
 },
 
 {
-	name: "GameManager.cs",
+    name: "GameManager.cs",
 	language: "C#",
 	description: "This is the GameManager script that can pause the game, locks / unlocks cursor and displays the items in the player's inventory at that moment ",
 	code: `
-#region Common GameManager Functions
-
-public void ChangeScene(string _scene)
-{
-	SceneManager.LoadScene(_scene);
+    #region Common GameManager Functions
+    
+    public void ChangeScene(string _scene)
+    {
+        SceneManager.LoadScene(_scene);
 }
 
 public void LockCursor()
 {
 	Cursor.lockState = CursorLockMode.Locked;
-}
+    }
+    
+    public void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        }
 
-public void UnlockCursor()
-{
-	Cursor.lockState = CursorLockMode.None;
-}
-
-public void EnablePause()
-{
+        public void EnablePause()
+        {
 	if (FindAnyObjectByType<PlayerInteracting>())
 	{
 		m_playerInteracting = FindAnyObjectByType<PlayerInteracting>();
-	}
+        }
 
 	if (currentScene != "Main Menu" && !m_playerInteracting.m_IsInteracting)
 	{
-		if (!paused)
+    if (!paused)
 		{
 			PauseGame();
 		}
 		else
-		{
+            {
 			UnpauseGame();
 		}
-	}
-}
-
-public void PauseGame()
-{
+        }
+        }
+        
+        public void PauseGame()
+        {
 	paused = true;
 	Time.timeScale = 0;
 
@@ -2304,24 +2276,24 @@ public void UnpauseGame()
 
 	if (UIManager.Instance.pauseUI != null)
 	{
-		UIManager.Instance.pauseUI.SetActive(false);
+    UIManager.Instance.pauseUI.SetActive(false);
 	}
 
 	LockCursor();
-}
+    }
+    
+    #endregion
+    
+    #region Shop & Items
 
-#endregion
-
-#region Shop & Items
-
-public void BuyItem(Item _item)
-{
-	if (money >= _item.itemCost)
+    public void BuyItem(Item _item)
+    {
+        if (money >= _item.itemCost)
 	{
 		// Look if the player has the item and if it's allowed to have duplicates of the same time in the inventory
 		if (items.ContainsKey(_item) && !_item.duplicatesAllowed)
 		{
-			Debug.Log("Can only buy one of this item");
+        Debug.Log("Can only buy one of this item");
 		}
 		else
 		{
@@ -2332,137 +2304,137 @@ public void BuyItem(Item _item)
 			}
 			else if (_item.itemType == Item.ItemType.SpellPack)
 			{
-				RandomSpellGiver.Instance.SetupSpellGiver();
+            RandomSpellGiver.Instance.SetupSpellGiver();
 			}
 			else if (_item.itemType == Item.ItemType.Alchohol)
 			{
-				FindAnyObjectByType<DrunkEffect>().Drink();
+            FindAnyObjectByType<DrunkEffect>().Drink();
 			}
-
+            
 			RemoveMoney(_item.itemCost);
-		}
-	}
-	else
+            }
+            }
+            else
 	{
-		Debug.Log("Not enough money");
+            Debug.Log("Not enough money");
 	}
-}
+    }
 
-public void AddItem(Item _item)
+    public void AddItem(Item _item)
 {
 	if (!items.ContainsKey(_item))
 	{
-		items.Add(_item, 0);
+    items.Add(_item, 0);
 	}
 	else
-	{
-		items[_item]++;
+        {
+    items[_item]++;
 	}
 
 	UpdateItemUI();
-}
-
-public void RemoveItem(Item _item)
-{
-	if (items.ContainsKey(_item))
+    }
+    
+    public void RemoveItem(Item _item)
+    {
+        if (items.ContainsKey(_item))
 	{
-		if (items[_item] > 0)
+    if (items[_item] > 0)
 		{
-			items[_item]--;
-		}
-		else
-		{
+    items[_item]--;
+            }
+            else
+                {
 			items.Remove(_item);
 		}
 	}
 	else
 	{
-		Debug.LogError($"Trying to remove an item that doesn't exist in the items dictionary :( Item name: {_item.name}");
-
-		foreach (var kvp in items)
+    Debug.LogError($"Trying to remove an item that doesn't exist in the items dictionary :( Item name: {_item.name}");
+    
+    foreach (var kvp in items)
 		{
 			Debug.Log($"Inventory item: {kvp.Key.name} x{kvp.Value}");
-		}
-	}
+            }
+        }
+        
 
+        UpdateItemUI();
+        }
 
-	UpdateItemUI();
-}
-
-public Item TryGetItem(string _name)
-{
+        public Item TryGetItem(string _name)
+        {
 	bool _found = false;
-
+    
 	foreach (Item _item in items.Keys)
 	{
 		if (_item.name == _name && !_found)
 		{
-			_found = true;
-			return _item;
+        _found = true;
+        return _item;
 		}
 	}
-
+    
 	return null;
-}
-
-public void EnableShopUI()
-{
-	m_shopManager.shopUI.SetActive(true);
-
+    }
+    
+    public void EnableShopUI()
+    {
+        m_shopManager.shopUI.SetActive(true);
+        
 	UnlockCursor();
-}
-
-public void DisableShopUI()
-{
+    }
+    
+    public void DisableShopUI()
+    {
 	m_shopManager = FindAnyObjectByType<ShopManager>();
 	m_shopManager.shopUI.SetActive(false);
 
 	if (RandomSpellGiver.Instance.m_spellScreenActive == false)
 	{
-		LockCursor();
-	}
-}
-
+    LockCursor();
+        }
+        }
+        
 private void UpdateItemUI()
 {
 	if (m_itemUI != null)
 	{
-		foreach (Transform _child in m_itemUI.transform)
+    foreach (Transform _child in m_itemUI.transform)
 		{
 			// Make sure there are no item icons left
 			Destroy(_child.gameObject);
-		}
-
-		foreach (Item _item in items.Keys)
-		{
-			if (_item.itemType != Item.ItemType.SpellPack)
-			{
+            }
+            
+            foreach (Item _item in items.Keys)
+            {
+                if (_item.itemType != Item.ItemType.SpellPack)
+                {
 				GameObject _itemIconObject = Instantiate(m_itemIconPrefab);
 				_itemIconObject.transform.SetParent(m_itemUI.transform);
-
+                
 				Image _itemIcon = _itemIconObject.GetComponent<Image>();
 				_itemIcon.sprite = _item.itemIcon;
-
+                
 				TextMeshProUGUI _itemAmountText = _itemIconObject.GetComponentInChildren<TextMeshProUGUI>();
-
+                
 				int _amount;
-
+                
 				if (items.ContainsKey(_item))
 				{
-					_amount = items[_item] + 1;
+                _amount = items[_item] + 1;
 				}
 				else
-				{
+                    {
 					_amount = 0;
-				}
-
+                    }
+                    
 				_itemAmountText.SetText(_amount.ToString());
 			}
 		}
-	}
+        }
 	else
 	{
-		Debug.LogError("Item UI not found!");
+    Debug.LogError("Item UI not found!");
 	}
 }
 
@@ -2481,10 +2453,10 @@ private IEnumerator DisableShopUICoroutine()
 	language: "C#",
 	description: "This is the script for handling russian roulette. Some of the functions are used in animations as events.",
 	code: `
-public void StartRussianRouletteSetup()
-{
-	if (!playedRoulette)
-	{
+    public void StartRussianRouletteSetup()
+    {
+        if (!playedRoulette)
+        {
 		m_animator.SetTrigger("Start Russian Roulette Intro");
 		m_interactableCameras.EnableCamera();
 		completedRussianRouletteSetup = false;
@@ -2494,33 +2466,33 @@ public void StartRussianRouletteSetup()
 	AudioManager.Instance.Stop("bg music");
 	AudioManager.Instance.Play("piano slam");
 	AudioManager.Instance.Play("heart beat");
-}
+    }
 
-public void CompleteRussianRouletteSetup()
-{
+    public void CompleteRussianRouletteSetup()
+    {
 	completedRussianRouletteSetup = true;
 	m_ableToCloseRoulette = true;
-}
-
-public void StartRussianRoulette()
-{
-	if (!playedRoulette)
+    }
+    
+    public void StartRussianRoulette()
+    {
+        if (!playedRoulette)
 	{
 		FindAnyObjectByType<PlayerStartInteract>().ClearControlsUIHolder();
-
+        
 		int _rnd = 1;
 		if (!GameManager.Instance.m_IsInstaWin)
 		{
-			_rnd = Random.Range(0, 5);
+        _rnd = Random.Range(0, 5);
 		}
 		else
-		{
+            {
 			GameManager.Instance.m_IsInstaWin = false;
-		}
-
+            }
+            
 		if (_rnd == 0)
 		{
-			RouletteDeath();
+        RouletteDeath();
 		}
 		else
 		{
@@ -2530,24 +2502,24 @@ public void StartRussianRoulette()
 		completedRussianRouletteSetup = true;
 		m_ableToCloseRoulette = false;
 	}
-}
-
-public void CloseRussianRoulette()
+    }
+    
+    public void CloseRussianRoulette()
 {
 	if (completedRussianRouletteSetup && m_ableToCloseRoulette)
 	{
-		if (GetComponentInChildren<InteracteblesCameras>())
+    if (GetComponentInChildren<InteracteblesCameras>())
 		{
-			GetComponentInChildren<InteracteblesCameras>().DisableCamera();
+    GetComponentInChildren<InteracteblesCameras>().DisableCamera();
 		}
-
+        
 		completedRussianRouletteSetup = false;
 		print("closed Russian Roulette");
 
 		m_txt = "";
-
+        
 		m_animator.SetTrigger("Close Russian Roulette");
-
+        
 		AudioManager.Instance.Play("bg music");
 		AudioManager.Instance.Stop("heart beat");
 		m_tableGun.SetActive(true);
@@ -2567,7 +2539,7 @@ private void RouletteDeath()
 private void RouletteWin()
 {
 	m_animator.SetTrigger("Win Russian Roulette");
-
+    
 	// Destroy object instead of set active, caused weird interact issues
 	Destroy(GetComponentInChildren<BoxCollider>().gameObject);
 	playedRoulette = true;
@@ -2577,7 +2549,7 @@ public void RouletteWinEvent()
 {
 	CloseRussianRoulette();
 	print(hasSeenEscapeSequence);
-
+    
 	if (!hasSeenEscapeSequence)
 	{
 		if (FindAnyObjectByType<PlayerInteracting>())
@@ -2625,17 +2597,17 @@ private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 		s.source.pitch = s.pitch;
 		s.source.loop = s.loop;
 	}
-}
-
-public void Play(string _name)
-{
+    }
+    
+    public void Play(string _name)
+    {
 	Sound s = Array.Find(sounds, sound => sound.name == _name);
 	if (s == null) 
 	{
 		Debug.LogWarning("Sound: " + name + " not found!");
 		return;
-	}
-	s.source.Play();
+        }
+        s.source.Play();
 }
 
 public void Stop(string _name)
@@ -2647,9 +2619,9 @@ public void Stop(string _name)
 		return;
 	}
 	s.source.Stop();
-}
+    }
 
-public void StopAll()
+    public void StopAll()
 {
 	foreach (Sound s in sounds)
 	{
@@ -2672,7 +2644,7 @@ public void SetVolume(float _volume, string _name)
 
     ],
   },
-
+  
   // When Time Colldes //
   {
     title: "When Time Collides",
@@ -2688,7 +2660,7 @@ public void SetVolume(float _volume, string _name)
 
 
     description:
-      "When Time Collides is a small retro platformer made for the GameMaker Studio GameJam 2022 where you have to parkour your way through multiple levels while being able to controll time. But what does switching the time do? Are there any enemies? Find out while playing yourself. \n\nDeveloper: \nNoah (Linkerpink) \n\nArtists: \nLuca (SupercatLuigi Player) \nBelle \n\n What I made: \n- Player Movement \n- Player Interaction \n- Player Camera \n- Time Switching Mechanic \n- Textbox System \n- Tutorial Dummy with easter eggs \n- Boss Fight",
+    "When Time Collides is a small retro platformer made for the GameMaker Studio GameJam 2022 where you have to parkour your way through multiple levels while being able to controll time. But what does switching the time do? Are there any enemies? Find out while playing yourself. \n\nDeveloper: \nNoah (Linkerpink) \n\nArtists: \nLuca (SupercatLuigi Player) \nBelle \n\n What I made: \n- Player Movement \n- Player Interaction \n- Player Camera \n- Time Switching Mechanic \n- Textbox System \n- Tutorial Dummy with easter eggs \n- Boss Fight",
 
     technologies: ["/images/gamemaker studio logo.svg"],
 
@@ -2699,7 +2671,7 @@ public void SetVolume(float _volume, string _name)
       { type: "image", src: "/images/wtc 3.webp" },
       { type: "youtubeId", src: "qTu8QpEhT8A", title: "Gameplay Video" },
       {
-        type: "youtubeId",
+          type: "youtubeId",
         src: "zdwZJZxRDiE",
         title: "The Making Of When Time Collides",
       },
@@ -2713,12 +2685,12 @@ public void SetVolume(float _volume, string _name)
 	language: "GML",
 	description: "This is the Step event of the player object. It handles the player movement, time switching and attacking.",
 	code: `
-//day and night switching
-timekey = keyboard_check_pressed (ord("C"))// or (gamepad_button_check_pressed(0, gp_face3));
-attackkey = keyboard_check_pressed(ord("X"))
-
-if cancontrol = true
-{
+    //day and night switching
+    timekey = keyboard_check_pressed (ord("C"))// or (gamepad_button_check_pressed(0, gp_face3));
+    attackkey = keyboard_check_pressed(ord("X"))
+    
+    if cancontrol = true
+    {
 	if timekey and day == true
 	{
 		cancontrol = false;
@@ -2726,10 +2698,10 @@ if cancontrol = true
 		audio_play_sound(TimeChangeSound,3,false);
 		ScreenShake(10,20);
 		alarm[0] = 20;
-	}
+        }
 	
-	if timekey and day == false
-	{
+        if timekey and day == false
+        {
 		cancontrol = false;
 		sprite_index = PlayerSpriteSlash;
 		audio_play_sound(TimeChangeSound,3,false);
@@ -2742,7 +2714,7 @@ if cancontrol = true
 		cancontrol = false;
 		sprite_index = PlayerSpriteSlash;
 		alarm[2] = 20;
-	}
+        }
 }
 
 
@@ -2764,7 +2736,7 @@ if day == true
 		{
 		while (!place_meeting(x+sign(horispeed),y,ObstacleObject))
 		{
-			x = x + sign(horispeed);
+        x = x + sign(horispeed);
 		}
 			horispeed = 0;
 		}
@@ -2785,39 +2757,39 @@ if day == true
 		{
 		   while (!place_meeting(x, y+sign(vertispeed), ObstacleObject))
 		   {
-		    y = y + sign(vertispeed);
+           y = y + sign(vertispeed);
 		   }
 		    vertispeed = 0;
 		}
 
 		y = y + vertispeed;
-
+        
 		// animations :))))))))))))))))))))
-
+        
 		image_speed = 1;
 		// standing animation
 		if (horispeed == 0)
 		{
-			sprite_index = PlayerSprite;
+        sprite_index = PlayerSprite;
 		}
 		// running animation
 		else 
 		{
 			sprite_index = PlayerSpriteRun;
 		}
-
+        
 		//jumping animation
 		if !(place_meeting(x ,y+1,ObstacleObject)) {sprite_index = PlayerSpriteJump;}
 
 		if (horispeed !=0) image_xscale = sign (horispeed);
 		image_yscale = 1;
-
+        
 		// you are dead not a big suprise
 		if hp == 0 
 		{
 			room_restart();
 		}
-
+        
 		// damage taken (you nooby gamer)
 		invincable = max(invincable-1,0);
 	}
@@ -2827,7 +2799,7 @@ if day == true
 		leftkey = 0;
 		jumpkey = 0;
 	}
-}
+    }
 
 if day == false
 {
@@ -2837,9 +2809,9 @@ if day == false
 	leftkey = keyboard_check(vk_left)// or (gamepad_button_check(0, gp_padl));
 	rightkey = keyboard_check(vk_right)// or (gamepad_button_check(0, gp_padr));
 	jumpkey = keyboard_check_pressed (vk_space)// or (gamepad_button_check_pressed(0, gp_face1));
-
+    
 	var move = rightkey - leftkey;
-
+    
 	horispeed = move * walkspeed;
 	// left and right movement
 	//horizontal collisions
@@ -2847,23 +2819,23 @@ if day == false
 	{
 	while (!place_meeting(x+sign(horispeed),y,ObstacleObject))
 	{
-		x = x + sign(horispeed);
+    x = x + sign(horispeed);
 	}
 		horispeed = 0;
 	}
-
+    
 	x = x + horispeed;
-
+    
 	// jumping
 	vertispeed = vertispeed - grav;
-
+    
 	if (place_meeting(x ,y-8,ObstacleObject)) and (jumpkey)
 	{
 	    vertispeed = +4;
 		audio_play_sound(JumpSound,5,false);
-	}
+        }
 
-	//vertical collisions
+        //vertical collisions
 	if (place_meeting(x, y+vertispeed -4,ObstacleObject))
 	{
 	   while (!place_meeting(x, y+sign(vertispeed), ObstacleObject))
@@ -2871,12 +2843,12 @@ if day == false
 	    y = y + sign(vertispeed);
 	   }
 	    vertispeed = 0;
-	}
-
-	y = y + vertispeed;
-
+        }
+        
+        y = y + vertispeed;
+        
 	// animations :))))))))))))))))))))
-
+    
 	image_speed = 1;
 	// standing animation
 	if (horispeed == 0) 
@@ -2887,20 +2859,20 @@ if day == false
 	else 
 	{
 		sprite_index = PlayerSpriteRun;
-	}
-
-	//jumping animation
-	if !(place_meeting(x, y+vertispeed -4,ObstacleObject)) {sprite_index = PlayerSpriteJump;}
-
-	if (horispeed !=0) image_xscale = sign (horispeed);
+        }
+        
+        //jumping animation
+        if !(place_meeting(x, y+vertispeed -4,ObstacleObject)) {sprite_index = PlayerSpriteJump;}
+        
+        if (horispeed !=0) image_xscale = sign (horispeed);
 	image_yscale = -1;
-
+    
 	// you are dead not a big suprise
 	if hp == 0 
 	{
 		room_restart();
 	}
-
+    
 	// damage taken (you nooby gamer)
 	invincable = max(invincable-1,0);
 	}
@@ -2909,11 +2881,11 @@ if day == false
 		rightkey = 0;
 		leftkey = 0;
 		jumpkey = 0;
-	}
-}
+        }
+        }
 
-if instance_exists(TextObject) {image_index = PlayerSprite;}
-	`
+        if instance_exists(TextObject) {image_index = PlayerSprite;}
+        `
 },
 
 {
@@ -2976,7 +2948,7 @@ textbox_y = camera_get_view_y(view_camera[0]) +80;
 if text_length !=0
 {
 	PlayerObject.cancontrol = false;
-}
+    }
 if text_length == 0
 {
 	PlayerObject.cancontrol = true;
@@ -3026,7 +2998,7 @@ if (accept_key)
 		{
 			PlayerObject.cancontrol = true;
 			instance_destroy();
-		}
+            }
 	}
 	//if typing is not done
 	else
@@ -3051,8 +3023,8 @@ if float_text[c, page] == true
 {
 	float_dir[c, page] += -6;
 	_float_y = dsin(float_dir[c, page]);
-}
-
+    }
+    
 var _drawtext = string_copy(text[page],1,draw_char);
 draw_text_ext_color(textbox_x - text_x_offset[page] -70 + border, textbox_y + _float_y + border -70, _drawtext, line_sep, line_width, col_1[c, page], col_2[c, page], col_3[c, page], col_4[c, page], 1);
 	`
@@ -3073,11 +3045,11 @@ function scr_game_text(_text_id)
 		break;
 		
 		case "sign2":
-		scr_text("Press C on the keyboard to change the time.");
-		break;
-		
-		case "sign3":
-		scr_text("In the night the gravity is lower. Try to switch between day and night often.");
+            scr_text("Press C on the keyboard to change the time.");
+            break;
+            
+            case "sign3":
+                scr_text("In the night the gravity is lower. Try to switch between day and night often.");
 		break;
 		
 		case "sign4":
@@ -3089,8 +3061,8 @@ function scr_game_text(_text_id)
 		break;
 		
 		case "dummy2":
-		scr_text("I think that's enough practicing for now.");
-		break;
+            scr_text("I think that's enough practicing for now.");
+            break;
 		
 		case "dummy3":
 		scr_text("Uhm please stop it's hurting.");
@@ -3101,7 +3073,7 @@ function scr_game_text(_text_id)
 		break;
 		
 		case "dummy5":
-		scr_text("STOP!");
+            scr_text("STOP!");
 		break;
 		
 		case "dummy6":
@@ -3113,7 +3085,7 @@ function scr_game_text(_text_id)
 		break;
 		
 		case "dummy8":
-		scr_text("Would you like it if you got hit in the face about 70 times?");
+            scr_text("Would you like it if you got hit in the face about 70 times?");
 		scr_text("I think not.");
 		break;
 		
@@ -3203,7 +3175,7 @@ function scr_game_text(_text_id)
 		break;
 	}
 }
-	`
+`
 },
 
 {
@@ -3249,7 +3221,7 @@ if moving == 2
 {
 	sprite_index = BossSprite;
 	x --;
-}
+    }
 if moving == 3
 {
 	sprite_index = BossSprite;
@@ -3296,16 +3268,16 @@ alarm 1:
 if moving == 0 and PlayerObject.day == true
 {
 	instance_create_layer(x,y,layer,FireballObject);
-}
-alarm[1] = 60;
+    }
+    alarm[1] = 60;
 	`
 },
 
-    ],
-  },
+],
+},
 
-  // Portfolio Website //
-  {
+// Portfolio Website //
+{
     title: "Portfolio Website",
     slug: "portfolio-website",
     banner: "/images/portfolio site cover temp.png",
@@ -3326,21 +3298,21 @@ alarm[1] = 60;
     ],
 
     media: [{ type: "image", src: "/images/portfolio site cover temp.png" }],
-
+    
     featured: true,
-
+    
     codeSnippets: [
       {
         name: "insane script",
         language: "tsx",
         description: "ik was beter.",
         code: `insane code`,
-      },
-    ],
-  },
+    },
+],
+},
 
-  // Shy //
-  {
+// Shy //
+{
     title: "Shy",
     slug: "shy",
     banner: "/images/Shy Render No Bullshit Ai _Art_ Banner.webp",
@@ -3351,7 +3323,7 @@ alarm[1] = 60;
     github: "https://github.com/GLU-CSD/shy-Linkerpink",
     imgSrc: "/images/Shy Render No Bullshit Ai _Art_.webp",
     platform: "Itch.io",
-
+    
     description: "Shy is a stealth game where you need to get keys and try to escape while not getting cought by the guards. Press B to emote. \n\nWhat I made: \n- Emote wheel. \n- Freelook Camera \n- GameManager \n- Audio System \n- Player \n- Guards \n- Keys & Doors",
 
     technologies: ["/images/unity logo.png", "/images/c sharp logo.svg"],
@@ -3367,7 +3339,7 @@ alarm[1] = 60;
     featured: false,
 
     codeSnippets: [
-      {
+        {
 	name: "EmoteWheel.cs",
 	language: "C#",
 	description: "This is the script that handles the emote wheel. Most of it is made in unity's canvas.",
@@ -3388,7 +3360,7 @@ void Update()
 		//animator.SetBool("animateIn", false);
 	}
 	else
-	{
+        {
 		//GetComponent<CanvasGroup>().alpha = 0f;
 		wheel.transform.localScale = Vector3.zero;
 
@@ -3422,11 +3394,11 @@ public void ChangeEnableEmoteWheel()
 	language: "C#",
 	description: "This is the script for making the player emote when they have selected an emote from the wheel, and then changes the camera acordingly",
 	code: `
-public void EmoteDab()
-{
+    public void EmoteDab()
+    {
 	if (emoteWheel.enableEmoteWheel)
 	{
-		if (!isEmoting)
+    if (!isEmoting)
 		{
 			emoteWheel.ChangeEnableEmoteWheel();
 			StartCoroutine(EmoteTimer(1f, emoteCam));
@@ -3443,7 +3415,7 @@ public void EmoteFlippinSexy()
 {
 	if (emoteWheel.enableEmoteWheel)
 	{
-		if (!isEmoting) 
+    if (!isEmoting) 
 		{
 			emoteWheel.ChangeEnableEmoteWheel();
 			StartCoroutine(EmoteTimer(3f, emoteCam));
@@ -3453,10 +3425,10 @@ public void EmoteFlippinSexy()
 			gameManager.ChangeCamera(playerCam, emoteCam);
 		}
 	}
-}
-
-public void EmoteDance()
-{
+    }
+    
+    public void EmoteDance()
+    {
 	if (emoteWheel.enableEmoteWheel)
 	{
 		if (!isEmoting)
@@ -3468,7 +3440,7 @@ public void EmoteDance()
 
 			gameManager.ChangeCamera(playerCam, emoteCam);
 		}
-	}
+        }
 }
 
 public void EmoteSalute()
@@ -3477,15 +3449,15 @@ public void EmoteSalute()
 	{
 		if (!isEmoting)
 		{
-			emoteWheel.ChangeEnableEmoteWheel();
+        emoteWheel.ChangeEnableEmoteWheel();
 			StartCoroutine(EmoteTimer(1f, emoteCam));
 
 			animator.SetTrigger("emoteSalute");
-
+            
 			gameManager.ChangeCamera(playerCam, emoteCam);
 		}
 	}
-}
+    }
 
 public void EmoteDefaultDance()
 {
@@ -3501,9 +3473,9 @@ public void EmoteDefaultDance()
 			audioManager.Play("Default Dance");
 
 			gameManager.ChangeCamera(playerCam, emoteCam);
-		}
-	}
-}
+            }
+            }
+            }
 
 public void EmoteGriddy()
 {
@@ -3519,7 +3491,7 @@ public void EmoteGriddy()
 			audioManager.Play("Griddy");
 
 			//gameManager.ChangeCamera(playerCam, emoteCam);
-		}
+            }
 	}
 }
 
@@ -3546,14 +3518,14 @@ private IEnumerator EmoteTimer(float time, CinemachineVirtualCamera cam)
 	yield return new WaitForSeconds(time);
 	isEmoting = false;
 	emoteWheel.player.canMove = true;
-
+    
 	gameManager.ChangeCamera(cam, playerCam);
-}
+    }
 	`
 },
 
 {
-	name: "GameManager.cs",
+    name: "GameManager.cs",
 	language: "C#",
 	description: "This is the GameManager script that handles the pausing of the game, camera switching, level completion and cheats",
 	code: `
@@ -3561,30 +3533,30 @@ private void Update()
 {
 	if (Input.GetButtonDown("Pause"))
 	{
-		gamePaused = !gamePaused;
+    gamePaused = !gamePaused;
 	}
-
+    
 	if (gamePaused)
 	{
-		Time.timeScale = 0.0f;
-		pauseUi.enabled = true;
-		
+    Time.timeScale = 0.0f;
+    pauseUi.enabled = true;
+    
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
-			enableCheatInput = !enableCheatInput;
+        enableCheatInput = !enableCheatInput;
 		}
-
+        
 		if (enableCheatInput)
 		{
 			cheatInput.SetActive(true);
 		}
 		else
-		{
+            {
 			cheatInput.SetActive(false);
 		}
 	}
 	else
-	{
+        {
 		Time.timeScale = 1.0f;
 		pauseUi.enabled = false;
 		enableCheatInput = false;
@@ -3592,7 +3564,7 @@ private void Update()
 
 	if (levelCompleted)
 	{
-		StartCoroutine(LevelCompleted());
+    StartCoroutine(LevelCompleted());
 	}
 }
 
@@ -3626,7 +3598,7 @@ public IEnumerator LevelCompleted()
 	yield return new WaitForSeconds(5f);
 	SceneManager.LoadScene("Main Menu");
 	levelCompleted = false;
-}
+    }
 	`
 },
 
@@ -3648,9 +3620,9 @@ private void Awake()
 		s.source.pitch = s.pitch;
 		s.source.loop = s.loop;
 	}
-
+    
 	Play("Music");
-}
+    }
 
 public void Play(string name)
 {
@@ -3678,15 +3650,15 @@ private void Update()
 	{
 		Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
-
+        
 		if (Physics.Raycast(ray, out hit))
 		{
-			NavMeshHit navHit;
-			if (NavMesh.SamplePosition(hit.point, out navHit, 1.0f, NavMesh.AllAreas))
-			{
-				agent.SetDestination(navHit.position);
+        NavMeshHit navHit;
+        if (NavMesh.SamplePosition(hit.point, out navHit, 1.0f, NavMesh.AllAreas))
+        {
+        agent.SetDestination(navHit.position);
 			}
-		}
+            }
 	}
 
 	agentSpeed = agent.velocity.magnitude;
@@ -3697,7 +3669,7 @@ private void Update()
 
 	if (!canMove)
 	{
-		agent.velocity = Vector3.zero;
+    agent.velocity = Vector3.zero;
 		agentSpeed = 0;
 	}else
 	{
@@ -3711,7 +3683,7 @@ private void Update()
 		}
 	}
 
-}
+    }
 
 private IEnumerator Die()
 {
@@ -3726,14 +3698,14 @@ private IEnumerator Die()
 
 	yield return new WaitForSeconds(5f);
 	SceneManager.LoadScene("Main Menu");
-}
+    }
 
 private void OnTriggerEnter(Collider other)
 {
 	if (other.gameObject.tag == "Enemy" && !died && !gameManager.levelCompleted)
 	{
 		StartCoroutine(Die());
-	}
+        }
 }
 
 private void OnTriggerStay(Collider other)
@@ -3773,14 +3745,14 @@ private void Update()
 	if (playerInSightRange)
 	{
 		ChasePlayer();
-	}
-
-	if (player.died) 
-	{
+        }
+        
+        if (player.died) 
+        {
 		agent.speed = 0;
 		animator.SetTrigger("Outrage");
 		transform.Rotate(playerTransform.position);
-	}
+        }
 }
 
 private void Patroling()
@@ -3821,20 +3793,48 @@ private void SearchWalkPoint()
 private void ChasePlayer()
 {
 	agent.SetDestination(playerTransform.position);
-}
+    }
 	`
 },
 
-    ],
-  },
+],
+},
+
+// Risk It For The Biscuit //
+{
+  title: "Risk It For The Biscuit",
+  slug: "risk-it-for-the-biscuit",
+  banner: "/images/eng.png",
+  icon: "/images/eng.png",
+  date: "not released",
+  displayDate: formatDisplayDate("not released"),
+  platform: "Itch.io",
+  description:
+  "",
   
-  // Open Pixel Art //
+  href: "",
+  github: "https://github.com/Linkerpink/Risk-It-For-The-Biscuit",
+  
+  technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+  
+  media: [
+    { type: "image", src: "/images/eng.png" },
+  ],
+
+  featured: false,
+
+  codeSnippets: [
+      
+  ]
+},
+  
+// Open Pixel Art //
   {
     title: "Open Pixel Art",
     slug: "open-pixel-art",
     banner: "/images/open pixel art temp logo.png",
     icon: "/images/open pixel art temp logo.png",
-
+    
     date: "not released",
     displayDate: formatDisplayDate("not released"),
 
@@ -3885,7 +3885,7 @@ private void ChasePlayer()
     platform: "Itch.io",
 
     description:
-      "Slimetastic Punchout is a chaotic and fun local multiplayer game where you take control of colorful, squishy slimes and battle it out in fast-paced arenas. The goal? Cover as many tiles as you can while sliding, bouncing, and splattering your way across the map. Along the way, you can land some solid punches to shove your opponents out of the way—or just throw them off their game. Every match is unpredictable, full of laughter, and a messy fight for control. It’s slimy chaos at its best! \n\nDevelopers: \nNiels de Laat \nNoah van Uunen \n\nArtists: \nSeemay Alsemgeest \nJordy Andriessen \nLisa van der Kloet \n\nWhat I made: \n- Player Attacking \n- Win Calculation \n- Unused Dynamic Camera \n\nThis project was made at one of my lowest points mentally. I had a lot of personal issues and didn't have motivation on anything at that moment. I thought about not including it in the: all projects section, but that would be a bit against what I was trying to acomplish with that section of the site. I want all projects I made and are sort of showcasable to be shown here. So don't expect the best from this game. Niels carried",
+      "Slimetastic Punchout is a chaotic and fun local multiplayer game where you take control of colorful, squishy slimes and battle it out in fast-paced arenas. The goal? Cover as many tiles as you can while sliding, bouncing, and splattering your way across the map. Along the way, you can land some solid punches to shove your opponents out of the way—or just throw them off their game. Every match is unpredictable, full of laughter, and a messy fight for control. It’s slimy chaos at its best! \n\nDevelopers: \n[Niels de Laat](https://nielsdelaat.com) \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nArtists: \n[Seemay Alsemgeest](https://www.artstation.com/seemz) \n[Jordy Andriessen](https://www.artstation.com/sekerio) \n[Lisa van der Kloet](https://www.artstation.com/lisavdkloet) \n\nWhat I made: \n- Player Attacking \n- Win Calculation \n- Unused Dynamic Camera \n\nThis project was made at one of my lowest points mentally. I had a lot of personal issues and didn't have motivation on anything at that moment. I thought about not including it in the: all projects section, but that would be a bit against what I was trying to acomplish with that section of the site. I want all projects I made and are sort of showcasable to be shown here. So don't expect the best from this game. Niels carried",
 
     technologies: ["/images/unity logo.png", "/images/c sharp logo.svg"],
 
