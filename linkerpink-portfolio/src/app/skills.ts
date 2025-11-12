@@ -78,8 +78,8 @@ const Skills = [
     },
     {
         name: "Blender",
-        logo: "/images/unreal engine logo.svg",
-        description: `experience: ${CalculateTime("2025-8-3")}`,
+        logo: "/images/blender icon.svg",
+        description: `experience: ${CalculateTime("2025-04-17")}`,
     },
 ];
 

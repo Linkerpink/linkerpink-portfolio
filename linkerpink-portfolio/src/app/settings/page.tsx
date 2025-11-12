@@ -14,6 +14,7 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-8 px-2 sm:px-4">
+      <div className="Looking for any other themes? Try entering the konami cheat code for the BEST looking theme EVER!!! (OMG) visibility: hidden"></div>
       <div className={`w-full max-w-3xl sm:w-[90%] rounded-xl shadow-lg p-4 sm:p-12 border border-neutral-200 dark:border-neutral-700 ${gradientClass}`}
         style={isSecretTheme ? {
           borderRadius: '75%',
