@@ -3,7 +3,7 @@
 
 import MediaCard from "../media-card"; // adjust path as needed
 import { allProjects } from "../all-projects";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import { useTheme } from "../../theme-context";
 import CodeBlock from "../code-block";
@@ -91,11 +91,7 @@ export default function ProjectDetails() {
   const project = allProjects.find((p) => p.slug === projectId);
 
   if (!project) {
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-red-600">Project not found</h1>
-      </div>
-    );
+    notFound();
   }
 
   const screenshots = (project.media ?? []).filter((m) => m.type === "image");

@@ -1,54 +1,77 @@
 "use client";
-import React, { createContext, useContext, useLayoutEffect, useState, useEffect } from 'react';
 
-interface ThemeContextType {
-  theme: 'light' | 'dark' | 'secret';
-  setTheme: (theme: 'light' | 'dark' | 'secret') => void;
+import { createContext, useContext, useEffect, useState } from "react";
+
+type Theme = "light" | "dark" | "secret";
+
+type ThemeContextType = {
+  theme: Theme;
+  setTheme: (t: Theme) => void;
   secretUnlocked: boolean;
-  setSecretUnlocked: (unlocked: boolean) => void;
-}
+  setSecretUnlocked: (v: boolean) => void;
+};
 
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
-  setTheme: () => {},
-  secretUnlocked: false,
-  setSecretUnlocked: () => {},
-});
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const useTheme = () => useContext(ThemeContext);
-
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setThemeState] = useState<'light' | 'dark' | 'secret'>("light");
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
   const [secretUnlocked, setSecretUnlockedState] = useState(false);
 
-  useLayoutEffect(() => {
-    const storedTheme = (localStorage.getItem('theme') as 'light' | 'dark' | 'secret') || 'light';
-    setThemeState(storedTheme);
-    const unlocked = localStorage.getItem('secretUnlocked') === 'true';
-    setSecretUnlockedState(unlocked);
+  useEffect(() => {
+    // Load saved theme
+    const savedTheme = (localStorage.getItem("theme") as Theme) || "light";
+    const savedSecret = localStorage.getItem("secretUnlocked") === "true";
+
+    setSecretUnlockedState(savedSecret);
+
+    // Only set secret theme if unlocked
+    if (savedTheme === "secret" && !savedSecret) {
+      setThemeState("light");
+      document.documentElement.classList.add("light");
+    } else {
+      setThemeState(savedTheme);
+      document.documentElement.classList.add(savedTheme);
+    }
+
+    setMounted(true);
   }, []);
 
-  useLayoutEffect(() => {
-    document.documentElement.classList.remove('light', 'dark', 'secret');
-    document.documentElement.classList.add(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+  const setTheme = (newTheme: Theme) => {
+    // Only allow secret if unlocked
+    if (newTheme === "secret" && !secretUnlocked) return;
 
-  useEffect(() => {
-    localStorage.setItem('secretUnlocked', secretUnlocked ? 'true' : 'false');
-  }, [secretUnlocked]);
-
-  const setTheme = (newTheme: 'light' | 'dark' | 'secret') => {
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.remove("light", "dark", "secret");
+    document.documentElement.classList.add(newTheme);
     setThemeState(newTheme);
   };
 
-  const setSecretUnlocked = (unlocked: boolean) => {
-    setSecretUnlockedState(unlocked);
+  const setSecretUnlocked = (value: boolean) => {
+    localStorage.setItem("secretUnlocked", value.toString());
+    setSecretUnlockedState(value);
   };
 
+  if (!mounted) return null;
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, secretUnlocked, setSecretUnlocked }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+        secretUnlocked,
+        setSecretUnlocked,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
-};
+}
+
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+}
