@@ -27,6 +27,11 @@ const Skills = [
         description: `experience: ${CalculateTime("2022-01-20")}`,
     },
     {
+        name: "Unreal Engine",
+        logo: "/images/unreal engine logo.svg",
+        description: `experience: ${CalculateTime("2025-9-12")}`,
+    },
+    {
         name: "Scratch",
         logo: "/images/scratch logo.png",
         description: `experience: ${CalculateTime("2016-5-3")}`,
@@ -70,6 +75,11 @@ const Skills = [
         name: "Photoshop",
         logo: "https://www.adobe.com/content/dam/acom/one-console/icons_rebrand/ps_appicon.svg",
         description: `experience: ${CalculateTime("2023-10-04")}`,
+    },
+    {
+        name: "Blender",
+        logo: "/images/unreal engine logo.svg",
+        description: `experience: ${CalculateTime("2025-8-3")}`,
     },
 ];
 

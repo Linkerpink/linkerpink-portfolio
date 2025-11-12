@@ -34,13 +34,13 @@ export default function SettingsPage() {
           </label>
           <div className="flex gap-4 justify-center">
             <button
-              className={`interactable-object px-8 py-4 text-xl rounded-xl font-semibold border transition-colors duration-200 ${theme === 'light' ? 'bg-blue-500 text-white border-blue-500' : 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600'}`}
+              className={`interactable-object px-8 py-4 text-xl rounded-xl font-semibold border transition-colors duration-200 ${theme === 'light' ? 'bg-[#F57C00] text-white border-[#FFE0B2]' : 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600'}`}
               onClick={() => setTheme('light')}
             >
               Light
             </button>
             <button
-              className={`interactable-object px-8 py-4 text-xl rounded-xl font-semibold border transition-colors duration-200 ${theme === 'dark' ? 'bg-blue-500 text-white border-blue-500' : 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-white'}`}
+              className={`interactable-object px-8 py-4 text-xl rounded-xl font-semibold border transition-colors duration-200 ${theme === 'dark' ?  'bg-[#F57C00] text-white border-[#FFE0B2]' : 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-white'}`}
               onClick={() => setTheme('dark')}
             >
               Dark

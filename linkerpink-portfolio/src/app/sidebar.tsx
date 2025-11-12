@@ -155,7 +155,7 @@ export default function Sidebar() {
     ? 'bg-[#232323]'
     : theme === 'secret'
       ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]'
-      : 'bg-[#E4E4E4]';
+      : 'bg-white';
   const sidebarText = theme === 'dark'
     ? 'text-[#fafafa]'
     : theme === 'secret'
@@ -323,7 +323,7 @@ export default function Sidebar() {
                 alt="Menu"
                 width={32}
                 height={32}
-                className="pointer-events-none"
+                className={`pointer-events-none ${theme === 'dark' ? 'invert' : theme === 'secret' ? 'invert-0' : 'invert-0'}`}
               />
             </motion.span>
           ) : (
@@ -339,7 +339,7 @@ export default function Sidebar() {
                 alt="Menu"
                 width={32}
                 height={32}
-                className="pointer-events-none"
+                className={`pointer-events-none ${theme === 'dark' ? 'invert' : theme === 'secret' ? 'invert-0' : 'invert-0'}`}
               />
             </motion.div>
           )}
@@ -356,7 +356,7 @@ export default function Sidebar() {
               animate={{ scale: circleScale}}
               exit={{ scale: 1 }}
               transition={{ duration: 0.5, ease: [0.4, 0.25, 0.1, 1] }}
-              className={`fixed top-4 left-4 w-16 h-16 rounded-full z-50 origin-center ${theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]' : 'bg-white'}`}
+              className={`fixed top-4 left-4 w-16 h-16 rounded-full z-50 origin-center ${sidebarBg}`}
               style={{ transformOrigin: 'middle center' }}
             />
 
