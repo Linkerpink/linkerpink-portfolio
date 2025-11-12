@@ -17,7 +17,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Noah's Portfolio",
   description: "The portfolio of Noah (Linkerpink)",
+  icons: {
+    icon: '/images/linkerpink-icon.png',
+    apple: '/images/linkerpink-icon.png',
+    other: [
+      { rel: 'icon', url: '/images/linkerpink-icon.png', sizes: '32x32' },
+      { rel: 'icon', url: '/images/linkerpink-icon.png', sizes: '16x16' },
+    ],
+  },
 };
+
 
 export default function RootLayout({
   children,

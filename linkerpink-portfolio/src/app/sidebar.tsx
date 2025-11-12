@@ -20,7 +20,7 @@ type SidebarItem = {
 const homepageSidebarItems: SidebarItem[] = [
   { href: '#home', img: '/images/eshop logo.png', alt: 'Home Icon', label: 'Home', offset: -80 },
   { href: '/projects', img: '/images/vandringjorne horror.jpg', alt: 'Projects Icon', label: 'Projects'},
-  { href: '#about-me', img: '/images/eng.png', alt: 'My Menu Icon', label: 'Profile', offset: -250 },
+  { href: '#about-me', img: '/images/linkerpink-icon.webp', alt: 'My Menu Icon', label: 'Profile', offset: -250 },
   { href: '#skills', img: '/images/c sharp logo.svg', alt: 'Projects Icon', label: 'Skills', offset: 75 },
   { href: '/settings', img: '/images/settings icon.svg', alt: 'Settings Icon', label: 'Settings', last: true},
 ];
@@ -28,8 +28,8 @@ const homepageSidebarItems: SidebarItem[] = [
 const nonHomepageSidebarItems: SidebarItem[] = [
   { href: '/#home', img: '/images/eshop logo.png', alt: 'Home Icon', label: 'Home', anchor: 'home' },
   { href: '/projects', img: '/images/vandringjorne horror.jpg', alt: 'Projects Icon', label: 'Projects'},
-  { href: '/#about-me', img: '/images/eng.png', alt: 'My Menu Icon', label: 'Profile', anchor: 'about-me' },
-  { href: '/#skills', img: '/images/itch.io logo.png', alt: 'Projects Icon', label: 'Skills', anchor: 'skills' },
+  { href: '/#about-me', img: '/images/linkerpink-icon.webp', alt: 'My Menu Icon', label: 'Profile', anchor: 'about-me' },
+  { href: '/#skills', img: '/images/c sharp logo.svg', alt: 'Projects Icon', label: 'Skills', anchor: 'skills' },
   { href: '/settings', img: '/images/settings icon.svg', alt: 'Settings Icon', label: 'Settings', last: true},
 ];
 
