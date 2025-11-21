@@ -3,7 +3,7 @@ import { CalculateTime } from "./calculate-time";
 const Skills = [
     {
         name: "Unity",
-        logo: "/images/unity logo.png",
+        logo: "/images/unity logo.svg",
         description: `experience: ${CalculateTime("2023-12-01")}`,
     },
     {

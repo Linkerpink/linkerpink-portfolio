@@ -39,7 +39,7 @@ export default function SkillCard({ name, description, logo }: SkillCardProps) {
               const whitelist = [
                 '/next.svg',
                 'gamemaker studio logo.svg',
-                'gamemaker studio logo',
+                'unreal engine logo.svg',
               ];
               const lowerLogo = typeof logo === 'string' ? logo.toLowerCase() : '';
               const isWhitelisted = isSvg && whitelist.some((w) => lowerLogo.includes(w));
