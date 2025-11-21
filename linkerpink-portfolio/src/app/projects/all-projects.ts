@@ -2058,9 +2058,9 @@ private void OnTriggerEnter(Collider other)
       displayDate: formatDisplayDate("2025-10-06"),
       platform: "Itch.io",
       description:
-      "Bombs Per Minute is a rhythm game made in godot",
+      "Bombs Per Minute is a rhythm game made with notes and bombs made in godot. It's a work in progress that still lacks the map editor and some score calculations, but I'm still proud of it. \n\nWhat i made: \n- Conductor class responsible for handling bpm, time signatures and beat calculations",
   
-      href: "https://fortnite.com",
+      //href: "https://linkerpink.itch.io/bombs-per-minute",
       github: "https://github.com/Linkerpink/Bombs-Per-Minute",
   
       technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
@@ -2078,7 +2078,7 @@ private void OnTriggerEnter(Collider other)
               language: "GDScript",
               description:
               "",
-              code:'fortnite'
+              code:''
           }
       ]
   },
@@ -3289,7 +3289,7 @@ if moving == 0 and PlayerObject.day == true
 
     github: "https://github.com/Linkerpink/linkerpink.github.io",
 
-    description: "This is the website you are currently looking at. It is made with Next.js, TypeScript, and Tailwind CSS. It is a portfolio website that showcases my development projects, skills, and experiences. The site includes some easter eggs, Good luck finding them all :) \n\nThe design of the website is based off the Nintendo Wii U eshop design, Wii U Operating System design and Nintendo Switch eshop design, modified to my own liking. I chose for this type of design because Nintendo has always had great designs for their consoles. The Wii U is my favorite console and defined a big part of my youth and life. \n\nWhat I made: \n- Home Page \n- All Projects Page \n- Project Details Page \n- Re usable Project component \n- Re usable Code Snippet component \n- Theme Support \n- Responsive design \n- Sleek Animations \n- Easter Eggs",
+    description: "This is the website you are currently looking at. It is made with Next.js, TypeScript, and Tailwind CSS. It is a portfolio website that showcases my development projects, skills, and experiences. The site includes some easter eggs, Good luck finding them all :) \n\nThe design of the website is based off the Nintendo Wii U eshop design, Wii U Operating System design and Nintendo Switch eshop design, modified to my own liking. I chose for this type of design because Nintendo has always had great designs for their consoles. The Wii U is my favorite console and defined a big part of my youth and life. \n\nWhat I made: \n- Home Page \n- All Projects Page \n- Project Details Page \n- Re usable Project component \n- Re usable Code Snippet component \n- Theme Support \n- Responsive design \n- Animations \n- Easter Eggs",
 
     technologies: [
       "/next.svg",
