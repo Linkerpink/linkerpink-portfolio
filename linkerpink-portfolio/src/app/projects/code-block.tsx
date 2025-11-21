@@ -59,7 +59,6 @@ export default function CodeBlock({
     ? 'hover:bg-gradient-to-r hover:from-pink-400 hover:to-pink-500'
     : 'hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200';
 
-  const borderClass = ""; // all borders removed
   const descriptionBgClass = theme === 'dark'
     ? 'bg-[#232323] text-gray-200'
     : theme === 'secret'
