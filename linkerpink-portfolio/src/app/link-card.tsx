@@ -26,6 +26,7 @@ export default function LinkCard({ logo, href }: LinkCardProps) {
         target="_blank"
         rel="noopener noreferrer"
         className="block group interactable-object"
+        draggable={false}
         style={
           isSecretTheme
             ? {

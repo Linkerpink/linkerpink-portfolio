@@ -70,13 +70,13 @@ export default function SkillCard({ name, description, logo }: SkillCardProps) {
           {/* Text */}
           <div className="ml-6 flex flex-col justify-center">
             <h3
-              className="text-lg font-semibold"
+              className="text-lg font-semibold user-select-none select-none"
               style={isSecretTheme ? { color: '#faecb7', fontFamily: 'Smooch, cursive, Arial, sans-serif' } : {}}
             >
               {name}
             </h3>
             <p
-              className="text-sm"
+              className="text-sm user-select-none select-none"
               style={isSecretTheme ? { color: '#faecb7', fontFamily: 'Smooch, cursive, Arial, sans-serif' } : {}}
             >
               {description}

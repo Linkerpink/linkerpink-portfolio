@@ -101,7 +101,7 @@ export default function ProjectDetails() {
 
   // Theme-based card classes
   const cardBgClass = theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-pink-200' : 'bg-white';
-  const borderClass = theme === 'dark' ? 'border-gray-700' : theme === 'secret' ? 'border-pink-400' : 'border-white';
+  const borderClass = theme === 'dark' ? 'border-[#555555]' : theme === 'secret' ? 'border-pink-400' : 'border-white';
   const textColor = theme === 'dark' ? '#FFFFFF' : theme === 'secret' ? '#be194e' : '#000000';
   const descriptionTextColor = theme === 'dark' ? '#ffffffff' : theme === 'secret' ? '#a01546' : '#5F5F5F';
   const hrBorderColor = theme === 'dark' ? '#555555' : theme === 'secret' ? '#ec4899' : '#BEBEBE';
@@ -156,7 +156,8 @@ export default function ProjectDetails() {
                       alt="tech"
                       width={512}
                       height={512}
-                      className="w-8 h-8 object-contain"
+                      className="w-8 h-8 object-contain user-select-none select-none"
+                      draggable={false}
                     />
                   ))}
                 </div>
@@ -220,7 +221,7 @@ export default function ProjectDetails() {
         {/* Description */}
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
+            <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
             Software Description
           </h2>
           <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
@@ -234,7 +235,7 @@ export default function ProjectDetails() {
         {/* Code Snippets */}
         <section className="mb-10">
           <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
+            <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
             Code Snippets
           </h2>
           <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
@@ -265,7 +266,7 @@ export default function ProjectDetails() {
         {screenshots.length > 0 && (
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
+              <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
               Screenshots
             </h2>
             <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
@@ -286,7 +287,7 @@ export default function ProjectDetails() {
         {videoLikeMedia.length > 0 && (
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm" />
+              <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
               Related Videos
             </h2>
             <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />

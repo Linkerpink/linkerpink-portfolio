@@ -20,7 +20,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Load saved theme
-    const savedTheme = (localStorage.getItem("theme") as Theme) || "light";
+    const savedTheme = (localStorage.getItem("theme") as Theme) || "dark";
     const savedSecret = localStorage.getItem("secretUnlocked") === "true";
 
     setSecretUnlockedState(savedSecret);

@@ -41,13 +41,43 @@ export default function CodeBlock({
   const { theme } = useTheme();
 
   // Theme-based classes
-  const headerBgClass = theme === 'dark' ? 'bg-gradient-to-r from-[#232323] to-[#1a1a1a]' : theme === 'secret' ? 'bg-gradient-to-r from-pink-300 to-pink-400' : 'bg-gradient-to-r from-gray-50 to-gray-100';
-  const headerTextClass = theme === 'dark' ? 'text-white' : theme === 'secret' ? 'text-pink-900' : 'text-gray-900';
-  const headerHoverClass = theme === 'dark' ? 'hover:bg-gradient-to-r hover:from-orange-700 hover:to-orange-800' : theme === 'secret' ? 'hover:bg-gradient-to-r hover:from-pink-400 hover:to-pink-500' : 'hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200';
-  const borderClass = theme === 'dark' ? 'border-gray-700' : theme === 'secret' ? 'border-pink-400' : 'border-gray-300';
-  const descriptionBgClass = theme === 'dark' ? 'bg-[#232323] text-gray-200' : theme === 'secret' ? 'bg-pink-200 text-pink-900' : 'bg-gray-100 text-[#5F5F5F]';
-  const codeBgClass = theme === 'dark' ? 'bg-[#1a1a1a] text-gray-300' : theme === 'secret' ? 'bg-pink-100 text-pink-900' : 'bg-gray-50 text-[#5F5F5F]';
-  const containerBgClass = theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-pink-100' : 'bg-white';
+  const headerBgClass = theme === 'dark'
+    ? 'bg-gradient-to-r from-[#232323] to-[#1a1a1a]'
+    : theme === 'secret'
+    ? 'bg-gradient-to-r from-pink-300 to-pink-400'
+    : 'bg-gradient-to-r from-gray-50 to-gray-100';
+
+  const headerTextClass = theme === 'dark'
+    ? 'text-white'
+    : theme === 'secret'
+    ? 'text-pink-900'
+    : 'text-gray-900';
+
+  const headerHoverClass = theme === 'dark'
+    ? 'hover:bg-gradient-to-r hover:from-orange-700 hover:to-orange-800'
+    : theme === 'secret'
+    ? 'hover:bg-gradient-to-r hover:from-pink-400 hover:to-pink-500'
+    : 'hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200';
+
+  const borderClass = ""; // all borders removed
+  const descriptionBgClass = theme === 'dark'
+    ? 'bg-[#232323] text-gray-200'
+    : theme === 'secret'
+    ? 'bg-pink-200 text-pink-900'
+    : 'bg-gray-100 text-[#5F5F5F]';
+
+  const codeBgClass = theme === 'dark'
+    ? 'bg-[#1a1a1a] text-gray-300'
+    : theme === 'secret'
+    ? 'bg-pink-100 text-pink-900'
+    : 'bg-gray-50 text-[#5F5F5F]';
+
+  const containerBgClass = theme === 'dark'
+    ? 'bg-[#232323]'
+    : theme === 'secret'
+    ? 'bg-pink-100'
+    : 'bg-white';
+
   const accentColor = theme === 'dark' ? '#FF8C00' : theme === 'secret' ? '#ec4899' : '#F57C00';
   const buttonColor = theme === 'dark' ? '#FF8C00' : theme === 'secret' ? '#be194e' : '#F57C00';
 
@@ -63,7 +93,6 @@ export default function CodeBlock({
     }
 
     if (theme === 'dark') {
-      // Disable other highlight themes and enable dark
       document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
         (link as HTMLLinkElement).disabled = true;
       });
@@ -71,37 +100,32 @@ export default function CodeBlock({
         @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
       `;
     } else if (theme === 'secret') {
-      // Disable other highlight themes and enable an old hope (dark theme with warm colors)
       document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
         (link as HTMLLinkElement).disabled = true;
       });
       style.textContent = `
-        @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/an-old-hope.min.css");
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16-cupcake.css");
       `;
     } else {
-      // Light theme - enable default kimbie-light
       document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
         (link as HTMLLinkElement).disabled = false;
       });
-      style.textContent = '';
+      style.textContent = '@import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/kimbie-light.css");';
     }
 
     return () => {
-      // Clean up
       if (style && !style.textContent) {
         style.remove();
       }
     };
   }, [theme]);
 
-  // Track if block was ever opened (on mobile)
   useEffect(() => {
     if (isOpen && isMobile && !hasOpened) {
       setHasOpened(true);
     }
   }, [isOpen, isMobile, hasOpened]);
 
-  // Scroll to block only if it was previously opened and is now closed
   useEffect(() => {
     if (hasOpened && !isOpen && isMobile && blockRef.current) {
       setTimeout(() => {
@@ -116,7 +140,7 @@ export default function CodeBlock({
   const content = (
     <article className="flex flex-col">
       {description && (
-        <div className={`${descriptionBgClass} whitespace-pre-line px-6 py-3 border-b ${borderClass} text-sm leading-relaxed`}>
+        <div className={`${descriptionBgClass} whitespace-pre-line px-6 py-3 text-sm leading-relaxed`}>
           {description}
         </div>
       )}
@@ -130,7 +154,7 @@ export default function CodeBlock({
     <section
       ref={blockRef}
       aria-label={`${language} code block: ${name}`}
-      className={`relative rounded-3xl overflow-hidden border ${borderClass} ${containerBgClass}`}
+      className={`relative rounded-3xl overflow-hidden ${containerBgClass}`}
     >
       <header
         role="button"
@@ -240,7 +264,7 @@ export default function CodeBlock({
               <div className="flex-1 overflow-auto">
                 <article className="min-h-full flex flex-col">
                   {description && (
-                    <div className={`${descriptionBgClass} leading-relaxed whitespace-pre-line px-6 py-3 border-b ${borderClass} text-sm`}>
+                    <div className={`${descriptionBgClass} leading-relaxed whitespace-pre-line px-6 py-3 text-sm`}>
                       {description}
                     </div>
                   )}

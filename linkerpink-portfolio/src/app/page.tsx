@@ -62,6 +62,7 @@ export default function Home() {
         {isExpanded && thumbRect && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+            draggable={false}
             onClick={closeOverlay}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -220,7 +221,7 @@ export default function Home() {
           className={`pt-20 px-4 transition-all duration-300 ${isExpanded ? "blur-sm" : ""
             }`}
         >
-          <h2 className="text-4xl font-bold mb-8 text-center">My Skills</h2>
+          <h2 className="text-4xl font-bold mb-8 text-center user-select-none select-none">My Skills</h2>
           <div className="flex flex-wrap justify-center max-w-4xl mx-auto px-4">
             {Skills.map((skill, i) => (
               <SkillCard key={i} {...skill} />
@@ -233,7 +234,7 @@ export default function Home() {
           className={`pt-20 px-4 transition-all duration-300 ${isExpanded ? "blur-sm" : ""
             }`}
         >
-          <h2 className="text-4xl font-bold mb-3 text-center">My links</h2>
+          <h2 className="text-4xl font-bold mb-3 text-center user-select-none select-none">My links</h2>
           <div className="flex flex-wrap justify-center max-w-4xl mx-auto px-4">
             {Links.map((link, i) => (
               <LinkCard key={i} logo={link.logo} href={link.href} />
