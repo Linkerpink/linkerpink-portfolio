@@ -140,15 +140,15 @@ export default function ProjectDetails() {
               />
             )}
             <div>
-              <h1 className="text-2xl font-extrabold leading-tight">
+              <h1 className="text-2xl font-extrabold leading-tight user-select-none select-none">
                 {project.title}
               </h1>
-              <p className="text-sm mt-2" style={{ color: descriptionTextColor }}>
+              <p className="text-sm mt-2 user-select-none select-none" style={{ color: descriptionTextColor }}>
                 {project.displayDate}
               </p>
 
               {project.technologies.length > 0 && (
-                <div className="mt-3 flex gap-2 flex-wrap">
+                <div className="mt-3 flex gap-2 flex-wrap ">
                   {project.technologies.map((icon, i) => (
                     <Image
                       key={i}
@@ -220,7 +220,7 @@ export default function ProjectDetails() {
 
         {/* Description */}
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
+          <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
             <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
             Software Description
           </h2>
@@ -233,8 +233,8 @@ export default function ProjectDetails() {
         </section>
 
         {/* Code Snippets */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
+        <section className="mb-10 user-select-none select-none">
+          <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
             <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
             Code Snippets
           </h2>
@@ -265,7 +265,7 @@ export default function ProjectDetails() {
         {/* Screenshots */}
         {screenshots.length > 0 && (
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
               <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
               Screenshots
             </h2>

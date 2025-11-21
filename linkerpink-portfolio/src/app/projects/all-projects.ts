@@ -26,7 +26,7 @@ export const allProjects = [
     displayDate: formatDisplayDate("2024-07-10"),
     platform: "Itch.io",
         description:
-            "Robo Rebellion Dawn of the Machine, is a top down TwinStick game made by a team of 6 people. 3 Artists and 3 Developers, the game was made as a school project within a short timespan of 4 weeks with it's end goal being a sci-fi based top down shooter.\n\nFEATURES\n\nThe game build supports both QWERTY keyboards and controller. Realistic gun bass! Trigger warning. (Headphone users be warned.) \n\nthe player was made with multiple people, so I will only be showing the parts I made, and are also interesting. \n\nDevelopers: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nWhat I made: \n- Player Movement, dashing and rotation \n- Player Interaction \n- Pickups \n- Keycards & inventory \n- Keycard stacking UI \n- Weapon switching \n- Player Camera, camera switching and screenshake \n- GameManager, rumble and game state management \n- Tutorial popups \n- Main Menu camera switching \n- Weapon, Ammo & Health UI",
+            "Robo Rebellion Dawn of the Machine, is a top down TwinStick game made by a team of 6 people. 3 Artists and 3 Developers, the game was made as a school project within a short timespan of 4 weeks with it's end goal being a sci-fi based top down shooter.\n\nFEATURES\n\nThe game build supports both QWERTY keyboards and controller. Realistic gun bass! Trigger warning. (Headphone users be warned.) \n\nthe player was made with multiple people, so I will only be showing the parts I made, and are also interesting. \n\nDevelopers: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n[Kaisor lue](https://lulaobobao.itch.io/) \nRobin Hain \n\nArtists: \n[Noah Moes](https://dark-knight8092.itch.io/) \nMandy Blansjaar \nLieke van der Vring \n\nWhat I made: \n- Player Movement, dashing and rotation \n- Player Interaction \n- Pickups \n- Keycards & inventory \n- Keycard stacking UI \n- Weapon switching \n- Player Camera, camera switching and screenshake \n- GameManager, rumble and game state management \n- Tutorial popups \n- Main Menu camera switching \n- Weapon, Ammo & Health UI",
 
     href: "https://lulaobobao.itch.io/robo-rebellion-dawn-of-the-machine",
     github: "https://github.com/GLU-Gaming/twinstick-2024-arcane-interactive",
@@ -40,6 +40,7 @@ export const allProjects = [
       { type: "image", src: "/images/robo rebellion 6.jpeg" },
       { type: "image", src: "/images/robo rebellion 4.jpeg" },
       { type: "image", src: "/images/robo rebellion 3.jpeg" },
+      { type: "youtubeId", src: "iHwMC_45iww", title: "Launch Trailer" },
       { type: "youtubeId", src: "pjqwkHgBgVQ", title: "Launch Trailer" },
     ],
 
@@ -3226,12 +3227,12 @@ public void SetVolume(float _volume, string _name)
     ],
   },
   
-  // When Time Colldes //
+  // When Time Collides //
   {
     title: "When Time Collides",
     slug: "when-time-collides",
-    banner: "/images/when time collides.webp",
-    icon: "/images/when time collides.webp",
+    banner: "/images/When Time Collides HD Cover Art.png",
+    icon: "/images/when time collides icon.webp",
     date: "2022-03-18",
     displayDate: formatDisplayDate("2022-03-18"),
     platform: "GX Games",
@@ -3241,7 +3242,7 @@ public void SetVolume(float _volume, string _name)
 
 
     description:
-    "When Time Collides is a small retro platformer made for the GameMaker Studio GameJam 2022 where you have to parkour your way through multiple levels while being able to controll time. But what does switching the time do? Are there any enemies? Find out while playing yourself. \n\nDeveloper: \nNoah (Linkerpink) \n\nArtists: \nLuca (SupercatLuigi Player) \nBelle \n\n What I made: \n- Player Movement \n- Player Interaction \n- Player Camera \n- Time Switching Mechanic \n- Textbox System \n- Tutorial Dummy with easter eggs \n- Boss Fight",
+    "When Time Collides is a small retro platformer made for the GameMaker Studio GameJam 2022 where you have to parkour your way through multiple levels while being able to controll time. But what does switching the time do? Are there any enemies? Find out while playing yourself. \n\nDeveloper: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nArtists: \n[Luca van Uunen](https://www.youtube.com/@supercatluigiplayer4180/featured) \n[Belle Bunnik](https://www.artstation.com/bellebunnik) \n\n What I made: \n- Player Movement \n- Player Interaction \n- Player Camera \n- Time Switching Mechanic \n- Textbox System \n- Tutorial Dummy with easter eggs \n- Boss Fight",
 
     technologies: ["/images/gamemaker studio logo.svg"],
 
@@ -3250,12 +3251,8 @@ public void SetVolume(float _volume, string _name)
       { type: "image", src: "/images/wtc 1.webp" },
       { type: "image", src: "/images/wtc 2.webp" },
       { type: "image", src: "/images/wtc 3.webp" },
-      { type: "youtubeId", src: "qTu8QpEhT8A", title: "Gameplay Video" },
-      {
-          type: "youtubeId",
-        src: "zdwZJZxRDiE",
-        title: "The Making Of When Time Collides",
-      },
+      { type: "youtubeId", src: "kgeYsm6rrzc", title: "The Making Of When Time Collides", },
+      { type: "youtubeId", src: "zdwZJZxRDiE", title: "The Making Of When Time Collides", },
     ],
 
     featured: true,
@@ -4382,32 +4379,32 @@ private void ChasePlayer()
 },
 
 // Risk It For The Biscuit //
-{
-  title: "Risk It For The Biscuit",
-  slug: "risk-it-for-the-biscuit",
-  banner: "/images/eng.png",
-  icon: "/images/eng.png",
-  date: "not released",
-  displayDate: formatDisplayDate("not released"),
-  platform: "Itch.io",
-  description:
-  "",
+// {
+//   title: "Risk It For The Biscuit",
+//   slug: "risk-it-for-the-biscuit",
+//   banner: "/images/eng.png",
+//   icon: "/images/eng.png",
+//   date: "not released",
+//   displayDate: formatDisplayDate("not released"),
+//   platform: "Itch.io",
+//   description:
+//   "",
   
-  href: "",
-  github: "https://github.com/Linkerpink/Risk-It-For-The-Biscuit",
+//   href: "",
+//   github: "https://github.com/Linkerpink/Risk-It-For-The-Biscuit",
   
-  technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+//   technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
   
-  media: [
-    { type: "image", src: "/images/eng.png" },
-  ],
+//   media: [
+//     { type: "image", src: "/images/eng.png" },
+//   ],
 
-  featured: false,
+//   featured: false,
 
-  codeSnippets: [
+//   codeSnippets: [
       
-  ]
-},
+//   ]
+// },
   
 // Open Pixel Art //
   {
@@ -5144,7 +5141,7 @@ private void Die()
     platform: "Itch.io",
 
     description:
-      "horror \n\n Developers: \nLinkerpink\nJesse Faassen \nhttps://sites.google.com/view/jesse-faassen/home?authuser=0 \n\nArtists: \nLinkerpink \nJesse Faassen \nhttps://sites.google.com/view/jesse-faassen/home?authuser=0",
+      "horror \n\n Developers: \n[Noah van Uunen](https://linkerpink.vercel.app/)\n[Jesse Faassen](https://sites.google.com/view/jesse-faassen/home?authuser=0) \n\nArtists: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n[Jesse Faassen](https://sites.google.com/view/jesse-faassen/home?authuser=0)",
 
     technologies: [
       "/images/fnaf unity fortnite official game godot.webp",
