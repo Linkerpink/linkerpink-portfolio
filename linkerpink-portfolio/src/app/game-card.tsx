@@ -53,8 +53,8 @@ const GameCard: React.FC<GameCardProps> = ({
           <Image
             src={imgSrc}
             alt={title}
-            width={600}
-            height={400}
+            width={1920}
+            height={1080}
             className="w-full h-full object-cover select-none cursor-pointer"
             draggable={false}
             style={isSecretTheme ? { borderRadius: '75%' } : { borderRadius: '10px' }}

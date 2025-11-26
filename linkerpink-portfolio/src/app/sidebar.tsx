@@ -4,7 +4,15 @@ import { useState, useEffect } from 'react';
 import { useTheme } from './theme-context';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+
+const GAME_ICONS_POOL = [
+  "/images/game icons/robo rebellion icon.webp",
+  "/images/game icons/bpm icon.webp",
+  "/images/game icons/when time collides icon.webp",
+  "/images/game icons/shmup 2 icon.webp",
+  "/images/game icons/not not balatro icon.webp",
+];
 
 type SidebarItem = {
   href: string;
@@ -15,23 +23,39 @@ type SidebarItem = {
   last?: boolean;
   external?: boolean;
   anchor?: string;
+  iconSize?: string;
+  hoverScale?: number;
+  hoverRotate?: number;
+  hoverY?: number;
+  isStack?: boolean;
 };
 
 const homepageSidebarItems: SidebarItem[] = [
-  { href: '#home', img: '/images/eshop logo.png', alt: 'Home Icon', label: 'Home', offset: -80 },
-  { href: '/projects', img: '/images/vandringjorne horror.jpg', alt: 'Projects Icon', label: 'Projects'},
-  { href: '#about-me', img: '/images/linkerpink-icon.webp', alt: 'My Menu Icon', label: 'Profile', offset: -250 },
-  { href: '#skills', img: '/images/c sharp logo.svg', alt: 'Projects Icon', label: 'Skills', offset: 75 },
-  { href: '/settings', img: '/images/settings icon.svg', alt: 'Settings Icon', label: 'Settings', last: true},
+  { href: '#home', img: '/images/eshop logo.png', alt: 'Home Icon', label: 'Home', iconSize: 'w-1/3', hoverScale: 1.1 },
+  {
+    href: '/projects',
+    img: '/images/game icons/bpm icon.webp',
+    alt: 'Projects Icon',
+    label: 'Projects',
+    isStack: true,
+    iconSize: 'w-[40%]'
+  },
+  { href: '#about-me', img: '/images/linkerpink-icon.webp', alt: 'My Menu Icon', label: 'Profile', iconSize: 'w-1/2', hoverY: -10, hoverScale: 1.05 },
+  { href: '#skills', img: '/images/c sharp logo.svg', alt: 'Projects Icon', label: 'Skills', iconSize: 'w-[30%]', hoverRotate: 15, hoverScale: 1.15 },
+  { href: '/settings', img: '/images/settings icon new.webp', alt: 'Settings Icon', label: 'Settings', last: true, iconSize: 'w-1/3', hoverRotate: 15, hoverScale: 1.25 },
 ];
 
 const nonHomepageSidebarItems: SidebarItem[] = [
-  { href: '/#home', img: '/images/eshop logo.png', alt: 'Home Icon', label: 'Home', anchor: 'home' },
-  { href: '/projects', img: '/images/vandringjorne horror.jpg', alt: 'Projects Icon', label: 'Projects'},
-  { href: '/#about-me', img: '/images/linkerpink-icon.webp', alt: 'My Menu Icon', label: 'Profile', anchor: 'about-me' },
-  { href: '/#skills', img: '/images/c sharp logo.svg', alt: 'Projects Icon', label: 'Skills', anchor: 'skills' },
-  { href: '/settings', img: '/images/settings icon.svg', alt: 'Settings Icon', label: 'Settings', last: true},
+  { href: '/#home', img: '/images/eshop logo.png', alt: 'Home Icon', label: 'Home', anchor: 'home', iconSize: 'w-1/3', hoverScale: 1.1 },
+  { href: '/projects', img: '/images/game icons/bpm icon.webp', alt: 'Projects Icon', label: 'Projects', isStack: true, iconSize: 'w-[40%]' },
+  { href: '/#about-me', img: '/images/linkerpink-icon.webp', alt: 'My Menu Icon', label: 'Profile', anchor: 'about-me', iconSize: 'w-1/2', hoverY: -10, hoverScale: 1.05 },
+  { href: '/#skills', img: '/images/c sharp logo.svg', alt: 'Projects Icon', label: 'Skills', anchor: 'skills', iconSize: 'w-[30%]', hoverRotate: 15, hoverScale: 1.15 },
+  { href: '/settings', img: '/images/settings icon new.webp', alt: 'Settings Icon', label: 'Settings', last: true, iconSize: 'w-1/3', hoverRotate: 15, hoverScale: 1.25 },
 ];
+
+const WIIU_DROP_SHADOW_STYLE = {
+  filter: 'drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.4))',
+};
 
 export default function Sidebar() {
   const { theme } = useTheme();
@@ -41,23 +65,40 @@ export default function Sidebar() {
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [circleScale, setCircleScale] = useState(1);
+  const [projectStackIcons, setProjectStackIcons] = useState<string[]>([]);
+
+  useEffect(() => {
+    setMounted(true);
+
+    const pool = GAME_ICONS_POOL.length > 0 ? [...GAME_ICONS_POOL] : ['/images/game icons/bpm icon.webp'];
+
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    const selected = [];
+    for (let i = 0; i < 3; i++) {
+      selected.push(pool[i % pool.length]);
+    }
+
+    setProjectStackIcons(selected);
+  }, []);
 
   useEffect(() => {
     const updateScale = () => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const buttonX = 4 + 32; 
-      const buttonY = 4 + 32;
+      const buttonX = 64;
+      const buttonY = 64;
 
       const distances = [
-        Math.hypot(buttonX, buttonY), // top-left corner (button itself)
-        Math.hypot(vw - buttonX, buttonY), // top-right
-        Math.hypot(buttonX, vh - buttonY), // bottom-left
-        Math.hypot(vw - buttonX, vh - buttonY), // bottom-right
+        Math.hypot(buttonX, buttonY),
+        Math.hypot(vw - buttonX, buttonY),
+        Math.hypot(buttonX, vh - buttonY),
+        Math.hypot(vw - buttonX, vh - buttonY),
       ];
-      const maxDistance = Math.max(...distances);
-
-      setCircleScale(maxDistance / 32);
+      setCircleScale(Math.max(...distances) / 32);
     };
 
     updateScale();
@@ -66,27 +107,17 @@ export default function Sidebar() {
   }, []);
 
   useEffect(() => {
-  const handleResize = () => {
-    if (window.innerWidth >= 768 && isMobileMenuOpen) {
-      setIsMobileMenuOpen(false);
-    }
-  };
-
-  window.addEventListener('resize', handleResize);
-  handleResize();
-
-  return () => window.removeEventListener('resize', handleResize);
-}, [isMobileMenuOpen]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMobileMenuOpen) setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     if (!mounted) return;
-    if (pathname !== '/') {
-      setLastPage(document.referrer || '/');
-    }
+    if (pathname !== '/') setLastPage(document.referrer || '/');
   }, [pathname, mounted]);
 
   useEffect(() => {
@@ -102,9 +133,7 @@ export default function Sidebar() {
         const offset = item.offset ?? -80;
         if (section) {
           const offsetTop = section.getBoundingClientRect().top + window.scrollY + offset + 50;
-          if (scrollY >= offsetTop) {
-            currentLabel = item.label;
-          }
+          if (scrollY >= offsetTop) currentLabel = item.label;
         }
       }
       setSelectedLabel(currentLabel);
@@ -112,16 +141,12 @@ export default function Sidebar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-
     const anchor = sessionStorage.getItem('scrollToAnchor');
     if (anchor) {
       const el = document.getElementById(anchor);
-      if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
-      }
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
       sessionStorage.removeItem('scrollToAnchor');
     }
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname, mounted]);
 
@@ -138,7 +163,7 @@ export default function Sidebar() {
       }
     }
     setSelectedLabel(label);
-    setIsMobileMenuOpen(false); // close menu after navigation
+    setIsMobileMenuOpen(false);
   };
 
   const handleBack = (e: React.MouseEvent) => {
@@ -146,11 +171,42 @@ export default function Sidebar() {
     window.location.href = lastPage && lastPage !== window.location.href ? lastPage : '/';
   };
 
-  const sidebarItems = pathname === '/' ? homepageSidebarItems : nonHomepageSidebarItems;
+  const singleIconVariants: Variants = {
+    rest: { scale: 1, rotate: 0, y: 0 },
+    hover: { transition: { type: 'spring', stiffness: 300, damping: 15 } }
+  };
+
+  const getStackItemVariants = (index: number): Variants => {
+    const rotate = index === 0 ? -12 : index === 1 ? 8 : -4;
+    const liftY = index === 0 ? -18 : index === 1 ? -10 : -2;
+    const shiftX = index === 0 ? -5 : index === 1 ? 5 : 0;
+    const scale = index === 0 ? 1.1 : index === 1 ? 1.05 : 1.02;
+    const zIndex = 10 - index;
+
+    return {
+      rest: {
+        rotate: index * 3 - 3,
+        y: index * 2,
+        x: 0,
+        scale: 1,
+        zIndex: zIndex,
+        transition: { type: 'spring', stiffness: 300, damping: 20 }
+      },
+      hover: {
+        rotate: rotate,
+        y: liftY,
+        x: shiftX,
+        scale: scale,
+        zIndex: zIndex,
+        transition: { type: 'spring', stiffness: 200, damping: 15, delay: index * 0.05 }
+      }
+    }
+  };
 
   if (!mounted) return null;
 
-  // Theme-based styles
+  const sidebarItems = pathname === '/' ? homepageSidebarItems : nonHomepageSidebarItems;
+
   const sidebarBg = theme === 'dark'
     ? 'bg-[#232323]'
     : theme === 'secret'
@@ -162,213 +218,131 @@ export default function Sidebar() {
       ? 'text-[#232323]'
       : 'text-[#3f3f3f]';
 
+  const stackStyles = theme === 'dark'
+    ? 'border-white/10 bg-[#333]'
+    : theme === 'secret'
+      ? 'border-[#ff79c6]/40 bg-white/40'
+      : 'border-black/10 bg-white';
+
   return (
     <>
-      {/* Desktop Sidebar */}
-  <nav className="hidden md:flex fixed top-0 left-0 h-full flex-col items-center w-[10.5%] bg-transparent z-1000">
+      <nav className="hidden md:flex fixed top-0 left-0 h-full flex-col items-center w-[10.5%] bg-transparent z-1000">
         {sidebarItems.map((item, idx) => {
           const isSelected = item.label === selectedLabel;
-          const base =
-            `sidebar-item w-full py-4 px-0 ${sidebarBg} text-center text-3xl transition-colors duration-150 ${sidebarText} shadow-[5px_0px_5px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center flex-1 border-b-0 border-[#dedede] select-none no-underline cursor-default`;
+          const base = `sidebar-item w-full py-4 px-0 ${sidebarBg} text-center text-3xl transition-colors duration-150 ${sidebarText} shadow-[5px_0px_5px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center flex-1 border-b-0 border-[#dedede] select-none no-underline cursor-default`;
           const selected = isSelected ? 'text-[#F57C00]' : '';
           const first = idx === 0 ? 'rounded-tr-[35%]' : '';
-          // For the last sidebar item (Settings) keep a gradient background but allow hover to change it
           const last = item.last
             ? (theme === 'dark'
-                // darker default for dark theme; hover will be lighter
-                ? 'rounded-br-[35%] bg-gradient-to-r from-[#070707] to-[#000000] text-[#fafafa]'
-                : theme === 'secret'
-                  ? 'rounded-br-[35%] bg-gradient-to-r from-[#ffb86f] to-[#ff79c6] text-[#232323]'
-                  : // For light (and other) themes use the normal dark gradient to avoid the orange look
-                    'rounded-br-[35%] bg-gradient-to-r from-[#545454] to-[#323232] text-[#fafafa]')
+              ? 'rounded-br-[35%] bg-gradient-to-r from-[#070707] to-[#000000] text-[#fafafa]'
+              : theme === 'secret'
+                ? 'rounded-br-[35%] bg-gradient-to-r from-[#ffb86f] to-[#ff79c6] text-[#232323]'
+                : 'rounded-br-[35%] bg-gradient-to-r from-[#545454] to-[#323232] text-[#fafafa]')
             : '';
-          
+
           let hoverBg = '';
-          // For the Settings item, only change text color on hover (no background change)
-          // Hover: change the background gradient for Settings and other items (only background, not text)
           if (item.label === 'Settings') {
-            if (theme === 'dark') {
-              hoverBg = 'hover:bg-gradient-to-r hover:from-[#3f3f3f] hover:to-[#232323]';
-            } else if (theme === 'secret') {
-              hoverBg = 'hover:bg-gradient-to-r hover:from-[#ffd89a] hover:to-[#ff79c6]';
-            } else {
-              hoverBg = 'hover:bg-gradient-to-r hover:from-[#fff4e6] hover:to-[#ffe0b2]';
-            }
+            hoverBg = theme === 'dark' ? 'hover:bg-gradient-to-r hover:from-[#3f3f3f] hover:to-[#232323]'
+              : theme === 'secret' ? 'hover:bg-gradient-to-r hover:from-[#ffd89a] hover:to-[#ff79c6]'
+                : 'hover:bg-gradient-to-r hover:from-[#fff4e6] hover:to-[#ffe0b2]';
           } else {
-            if (theme === 'dark') {
-              hoverBg = 'hover:bg-[#333845]';
-            } else if (theme === 'secret') {
-              hoverBg = 'hover:bg-gradient-to-r hover:from-[#ffb86f] hover:to-[#ff79c6]';
-            } else {
-              hoverBg = 'hover:bg-[#ffe0b2]';
-            }
+            hoverBg = theme === 'dark' ? 'hover:bg-[#333845]'
+              : theme === 'secret' ? 'hover:bg-gradient-to-r hover:from-[#ffb86f] hover:to-[#ff79c6]'
+                : 'hover:bg-[#ffe0b2]';
           }
 
-          const hover = `${hoverBg} transition-colors duration-150`;
-          const special = item.label === 'Settings' ? ' settings-item' : '';
-          const className = [base, selected, first, last, hover, special].join(' ');
+          const className = [base, selected, first, last, hoverBg, 'transition-colors duration-150', item.label === 'Settings' ? 'settings-item' : ''].join(' ');
 
-          const content = (
-            <>
-              <Image
-                src={item.img}
-                alt={item.alt}
-                width={64}
-                height={64}
-                className="w-1/4 h-auto mb-3 pointer-events-none"
-                draggable={false}
-                priority={idx === 0}
-                unoptimized={item.img.startsWith('http')}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/eshop logo.png';
-                }}
-              />
-              <span className="mt-1">{item.label}</span>
-            </>
-          );
+          let iconContent;
+          if (item.isStack && projectStackIcons.length > 0) {
+            iconContent = (
+              <motion.div className={`${item.iconSize || 'w-1/3'} h-auto mb-3 pointer-events-none relative flex justify-center items-center aspect-square`}>
+                {projectStackIcons.slice(0, 3).map((iconSrc, stackIdx) => (
+                  <motion.div
+                    key={`${item.label}-stack-${stackIdx}`}
+                    className={`absolute w-full h-full rounded-2xl overflow-hidden backdrop-blur-sm border ${stackStyles}`}
+                    variants={getStackItemVariants(stackIdx)}
+                  >
+                    <Image
+                      src={iconSrc}
+                      alt={`${item.alt} stack ${stackIdx}`}
+                      width={128}
+                      height={128}
+                      className="w-full h-full object-contain p-2 rounded-2xl"
+                      style={WIIU_DROP_SHADOW_STYLE}
+                      draggable={false}
+                      unoptimized={iconSrc.startsWith('http')}
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            );
+          } else {
+            const specificVariants = {
+              ...singleIconVariants,
+              hover: { ...singleIconVariants.hover, scale: item.hoverScale ?? 1, rotate: item.hoverRotate ?? 0, y: item.hoverY ?? 0 }
+            }
+            iconContent = (
+              <motion.div className={`${item.iconSize || 'w-1/3'} h-auto mb-3 pointer-events-none relative flex justify-center`} variants={specificVariants}>
+                <Image
+                  src={item.img}
+                  alt={item.alt}
+                  width={128}
+                  height={128}
+                  className="w-full h-auto"
+                  style={WIIU_DROP_SHADOW_STYLE}
+                  draggable={false}
+                  priority={idx === 0}
+                  unoptimized={item.img.startsWith('http')}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/images/eshop logo.png'; }}
+                />
+              </motion.div>
+            );
+          }
+
+          const finalContent = <>{iconContent}<span className="mt-1">{item.label}</span></>;
+          const motionProps = { initial: "rest", whileHover: "hover", animate: "rest", className: className, draggable: false };
 
           if (pathname !== '/' && item.label === 'Back') {
-            return (
-              <a key={item.label} href="#" draggable={false} className={className} onClick={handleBack}>
-                {content}
-              </a>
-            );
+            return <motion.a {...motionProps} key={item.label} href="#" onClick={handleBack}>{finalContent}</motion.a>;
           }
-
           if (item.label === 'Settings') {
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                draggable={false}
-                className={className}
-                onClick={() => setSelectedLabel(item.label)}
-              >
-                {content}
-              </a>
-            );
+            return <motion.a {...motionProps} key={item.label} href={item.href} onClick={() => setSelectedLabel(item.label)}>{finalContent}</motion.a>;
           }
-
           if (pathname === '/' && item.href.startsWith('#')) {
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={(e) => handleClick(e, item.href, item.label)}
-                draggable={false}
-                className={className}
-              >
-                {content}
-              </a>
-            );
+            return <motion.a {...motionProps} key={item.label} href={item.href} onClick={(e) => handleClick(e, item.href, item.label)}>{finalContent}</motion.a>;
           }
-
           if (pathname !== '/' && item.anchor) {
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                draggable={false}
-                className={className}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (item.anchor) {
-                    sessionStorage.setItem('scrollToAnchor', item.anchor);
-                  }
-                  window.location.href = item.href;
-                }}
-              >
-                {content}
-              </a>
-            );
+            return <motion.a {...motionProps} key={item.label} href={item.href} onClick={(e) => { e.preventDefault(); if (item.anchor) sessionStorage.setItem('scrollToAnchor', item.anchor); window.location.href = item.href; }}>{finalContent}</motion.a>;
           }
-
-          return (
-            <a
-              key={item.label}
-              href={item.href}
-              draggable={false}
-              className={className}
-              onClick={() => setSelectedLabel(item.label)}
-            >
-              {content}
-            </a>
-          );
+          return <motion.a {...motionProps} key={item.label} href={item.href} onClick={() => setSelectedLabel(item.label)}>{finalContent}</motion.a>;
         })}
       </nav>
 
-      {/* Mobile Menu Toggle Button */}
-  <div className="fixed top-4 left-4 z-[100] md:hidden isolate">
+      <div className="fixed top-4 left-4 z-[100] md:hidden isolate">
         <motion.button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`w-16 h-16 rounded-full flex items-center justify-center relative z-[101] ${theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]' : 'bg-white'}`}
+          className={`w-16 h-16 rounded-full flex items-center justify-center relative z-[101] ${theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-gradient-to-b from-[#ffb86f] via-[#ff79c6] to-[#8be9fd]' : 'bg-white'}`}
           aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          animate={{
-            boxShadow: isMobileMenuOpen
-              ? '0px 0px 0px rgba(0, 0, 0, 0)'
-              : '0px 4px 2.5px rgba(0, 0, 0, 0.35)'
-          }}
+          animate={{ boxShadow: isMobileMenuOpen ? '0px 0px 0px rgba(0, 0, 0, 0)' : '0px 4px 2.5px rgba(0, 0, 0, 0.35)' }}
         >
           {isMobileMenuOpen ? (
-            <motion.span
-              key="close-icon"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="text-3xl select-none"
-            >
-              <Image
-                src="/images/close icon.svg"
-                alt="Menu"
-                width={32}
-                height={32}
-                className={`pointer-events-none ${theme === 'dark' ? 'invert' : theme === 'secret' ? 'invert-0' : 'invert-0'}`}
-              />
+            <motion.span key="close-icon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }} className="text-3xl select-none">
+              <Image src="/images/close icon.svg" alt="Menu" width={32} height={32} className={`pointer-events-none ${theme === 'dark' ? 'invert' : theme === 'secret' ? 'invert-0' : 'invert-0'}`} />
             </motion.span>
           ) : (
-            <motion.div
-              key="open-icon"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Image
-                src="/images/hambureger menu icon.svg"
-                alt="Menu"
-                width={32}
-                height={32}
-                className={`pointer-events-none ${theme === 'dark' ? 'invert' : theme === 'secret' ? 'invert-0' : 'invert-0'}`}
-              />
+            <motion.div key="open-icon" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+              <Image src="/images/hambureger menu icon.svg" alt="Menu" width={32} height={32} className={`pointer-events-none ${theme === 'dark' ? 'invert' : theme === 'secret' ? 'invert-0' : 'invert-0'}`} />
             </motion.div>
           )}
         </motion.button>
       </div>
 
-      {/* Expanding Circle Background */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            <motion.div
-              key="circle-bg"
-              initial={{ scale: 1 }}
-              animate={{ scale: circleScale}}
-              exit={{ scale: 1 }}
-              transition={{ duration: 0.5, ease: [0.4, 0.25, 0.1, 1] }}
-              className={`fixed top-4 left-4 w-16 h-16 rounded-full z-50 origin-center ${sidebarBg}`}
-              style={{ transformOrigin: 'middle center' }}
-            />
-
-            {/* Mobile Fullscreen Menu */}
-            <motion.nav
-              key="mobile-menu"
-              initial={{ opacity: 0, scale: '0%', x: '-80%', y: '-80%' }}
-              animate={{ opacity: 1, scale: '150%', x: 0, y: 0 }}
-              exit={{ opacity: 0, scale: '0%', x: '-80%', y: '-80%'  }}
-              transition={{duration: 0.5, ease: [0.4, 0.25, 0.1, 1], delay: 0.05}}
-              className={`fixed inset-0 z-50 flex flex-col items-center justify-center md:hidden space-y-6 ${sidebarBg}`}
-            >
+            <motion.div key="circle-bg" initial={{ scale: 1 }} animate={{ scale: circleScale }} exit={{ scale: 1 }} transition={{ duration: 0.5, ease: [0.4, 0.25, 0.1, 1] }} className={`fixed top-4 left-4 w-16 h-16 rounded-full z-50 origin-center ${sidebarBg}`} style={{ transformOrigin: 'middle center' }} />
+            <motion.nav key="mobile-menu" initial={{ opacity: 0, scale: '0%', x: '-80%', y: '-80%' }} animate={{ opacity: 1, scale: '150%', x: 0, y: 0 }} exit={{ opacity: 0, scale: '0%', x: '-80%', y: '-80%' }} transition={{ duration: 0.5, ease: [0.4, 0.25, 0.1, 1], delay: 0.05 }} className={`fixed inset-0 z-50 flex flex-col items-center justify-center md:hidden space-y-6 ${sidebarBg}`}>
               {sidebarItems.map((item) => {
                 const isSelected = item.label === selectedLabel;
                 return (
