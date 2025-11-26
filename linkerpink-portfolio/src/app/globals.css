@@ -65,13 +65,22 @@ html.secret .interactable-object {
 }
 
 .interactable-object:hover {
-  @apply outline-[8px] animate-[pulse-outline_0.75s_infinite_alternate_linear];
+  /* Default (light theme): orange pulse */
+  @apply outline-[8px] animate-[pulse-outline-orange_0.75s_infinite_alternate_linear];
   animation: pulse-outline-orange 0.75s infinite alternate ease-in-out;
 }
 
 .custom-interactable-object:hover {
-  @apply outline-[8px] animate-[pulse-outline_0.75s_infinite_alternate_linear];
+  /* Default (light theme): orange pulse */
+  @apply outline-[8px] animate-[pulse-outline-orange_0.75s_infinite_alternate_linear];
   animation: pulse-outline-orange 0.75s infinite alternate ease-in-out;
+}
+
+/* Dark theme: override to blue pulse */
+html.dark .interactable-object:hover,
+html.dark .custom-interactable-object:hover {
+  @apply outline-[8px] animate-[pulse-outline_0.75s_infinite_alternate_linear];
+  animation: pulse-outline 0.75s infinite alternate ease-in-out;
 }
 
 .banner-animate {

@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { useTheme } from './theme-context';
 import Image from 'next/image';
@@ -13,6 +12,22 @@ const GAME_ICONS_POOL = [
   "/images/game icons/shmup 2 icon.webp",
   "/images/game icons/not not balatro icon.webp",
 ];
+
+const SECRET_GAME_ICONS_POOL = [
+  "/images/game icons/robo rebellion icon.webp",
+  "/images/game icons/bpm icon.webp",
+  "/images/game icons/when time collides icon.webp",
+  "/images/game icons/shmup 2 icon.webp",
+  "/images/game icons/not not balatro icon.webp",
+];
+
+const SECRET_ICON_MAP: Record<string, string> = {
+  'Home': '/images/home icon secret.webp',
+  'Projects': '/images/secret/projects-secret.jpg',
+  'Profile': '/images/linkerpink-icon-secret.png',
+  'Skills': '/images/eng.png',
+  'Settings': '/images/eng.png',
+};
 
 type SidebarItem = {
   href: string;
@@ -70,7 +85,8 @@ export default function Sidebar() {
   useEffect(() => {
     setMounted(true);
 
-    const pool = GAME_ICONS_POOL.length > 0 ? [...GAME_ICONS_POOL] : ['/images/game icons/bpm icon.webp'];
+      const poolSource = theme === 'secret' ? SECRET_GAME_ICONS_POOL : GAME_ICONS_POOL;
+      const pool = poolSource.length > 0 ? [...poolSource] : ['/images/game icons/bpm icon.webp'];
 
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -83,7 +99,7 @@ export default function Sidebar() {
     }
 
     setProjectStackIcons(selected);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     const updateScale = () => {
@@ -285,7 +301,7 @@ export default function Sidebar() {
             iconContent = (
               <motion.div className={`${item.iconSize || 'w-1/3'} h-auto mb-3 pointer-events-none relative flex justify-center`} variants={specificVariants}>
                 <Image
-                  src={item.img}
+                  src={(theme === 'secret' && SECRET_ICON_MAP[item.label]) ? SECRET_ICON_MAP[item.label] : item.img}
                   alt={item.alt}
                   width={128}
                   height={128}
