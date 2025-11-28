@@ -37,9 +37,9 @@ export default function CodeBlock({
   videoSrc,
 }: CodeBlockProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasOpened, setHasOpened] = useState(false);
   const isMobile = useIsMobile();
   const blockRef = useRef<HTMLElement | null>(null);
+  const idRef = useRef(`codeblock-${Math.random().toString(36).slice(2,9)}`);
   const { theme } = useTheme();
 
   // Theme-based classes
@@ -136,30 +136,32 @@ export default function CodeBlock({
     };
   }, [theme]);
 
-  useEffect(() => {
-    if (isOpen && isMobile && !hasOpened) {
-      setHasOpened(true);
-    }
-    if (isOpen && blockRef.current) {
-      setTimeout(() => {
-        blockRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 100);
-    }
-  }, [isOpen, isMobile, hasOpened]);
+  // Removed automatic scrollIntoView behavior — it caused incorrect scrolling
+  // when opening/closing code snippets. Keeping UI stable without auto-scroll.
 
+  // Inject per-block scrollbar styles so the scrollbar/thumb is visible when opened
   useEffect(() => {
-    if (hasOpened && !isOpen && isMobile && blockRef.current) {
-      setTimeout(() => {
-        blockRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 300);
+    const styleId = `codeblock-scroll-style-${idRef.current}`;
+    let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;
+
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
     }
-  }, [isOpen, isMobile, hasOpened, blockRef]);
+
+    styleEl.textContent = `
+      #${idRef.current} .scrollable { scrollbar-width: thin; scrollbar-color: ${accentColor} rgba(0,0,0,0.06); }
+      #${idRef.current} .scrollable::-webkit-scrollbar { width: 10px; height: 10px; }
+      #${idRef.current} .scrollable::-webkit-scrollbar-track { background: rgba(0,0,0,0.04); border-radius: 9999px; }
+      #${idRef.current} .scrollable::-webkit-scrollbar-thumb { background: ${accentColor}; border-radius: 9999px; border: 2px solid rgba(255,255,255,0.06); }
+      #${idRef.current} .scrollable::-webkit-scrollbar-thumb:hover { filter: brightness(0.9); }
+    `;
+
+    return () => {
+      styleEl?.remove();
+    };
+  }, [accentColor]);
 
   const content = (
     <article className="flex flex-col">
@@ -202,6 +204,7 @@ export default function CodeBlock({
 
   return (
     <section
+      id={idRef.current}
       ref={blockRef}
       aria-label={`${language} code block: ${name}`}
       className={`relative rounded-3xl overflow-hidden ${containerBgClass}`}
@@ -270,9 +273,10 @@ export default function CodeBlock({
                 opacity: { duration: 0.25 },
               }}
               className="overflow-hidden"
-              style={{ maxHeight: "60vh", overflowY: "auto" }}
             >
-              {content}
+              <div className="scrollable" style={{ maxHeight: "60vh", overflowY: "auto" }}>
+                {content}
+              </div>
             </motion.div>
           </>
         )}
@@ -313,7 +317,7 @@ export default function CodeBlock({
                 </button>
               </header>
 
-              <div className="flex-1 overflow-auto">
+              <div className="flex-1 scrollable" style={{ overflowY: "auto" }}>
                 <article className="min-h-full flex flex-col">
                   {description && (
                     <div
