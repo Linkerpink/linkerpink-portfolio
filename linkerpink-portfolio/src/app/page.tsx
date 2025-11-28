@@ -204,12 +204,10 @@ export default function Home() {
               </p>
             </h1>
             <h3 className="text-base sm:text-lg">
-              I am an {CalculateTimeYearOnly("2007-04-20")}-year-old game developer from the Netherlands. I&apos;ve been
-              making games for {CalculateTime("2022-01-20")} (primarily in Unity using C#). I enjoy
-              programming and bringing ideas to life. I&apos;m currently studying game
-              development at Grafisch Lyceum Utrecht. 
-              
-              <br /> <br />
+              I am an {CalculateTimeYearOnly("2007-04-20")}-year-old game developer from the Netherlands. 
+              I enjoy programming and seeing my ideas come to life. 
+              I started gamedev in early 2022 and made a few games and prototypes before getting inspired to study game development at college.
+              development at Grafisch Lyceum Utrecht.
               Outside of game dev, I enjoy
               playing guitar, editing videos, listening to music and playing games.
             </h3>

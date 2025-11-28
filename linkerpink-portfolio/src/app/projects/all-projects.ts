@@ -26,7 +26,7 @@ export const allProjects = [
     displayDate: formatDisplayDate("2024-07-10"),
     platform: "Itch.io",
         description:
-            "Robo Rebellion Dawn of the Machine, is a top down TwinStick game made by a team of 6 people. 3 Artists and 3 Developers, the game was made as a school project within a short timespan of 4 weeks with it's end goal being a sci-fi based top down shooter.\n\nFEATURES\n\nThe game build supports both QWERTY keyboards and controller. Realistic gun bass! Trigger warning. (Headphone users be warned.) \n\nthe player was made with multiple people, so I will only be showing the parts I made, and are also interesting. \n\nDevelopers: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n[Kaisor lue](https://lulaobobao.itch.io/) \nRobin Hain \n\nArtists: \n[Noah Moes](https://dark-knight8092.itch.io/) \nMandy Blansjaar \nLieke van der Vring \n\nWhat I made: \n- Player Movement, dashing and rotation \n- Player Interaction \n- Pickups \n- Keycards & inventory \n- Keycard stacking UI \n- Weapon switching \n- Player Camera, camera switching and screenshake \n- GameManager, rumble and game state management \n- Tutorial popups \n- Main Menu camera switching \n- Weapon, Ammo & Health UI",
+            "Robo Rebellion Dawn of the Machine, is a top down TwinStick game made by a team of 6 people. 3 Artists and 3 Developers, the game was made as a school project within a short timespan of 4 weeks with it's end goal being a sci-fi based top down shooter.\n\nFEATURES\n\nThe game build supports both QWERTY keyboards and controller. Realistic gun bass! Trigger warning. (Headphone users be warned.) \n\nthe player was made with multiple people, so I will only be showing the parts I made, and are also interesting. \n\nDevelopers: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n[Kaisor lue](https://lulaobobao.itch.io/) \nRobin Hain \n\nArtists: \n[Noah Moes](https://dark-knight8092.itch.io/) \nMandy Blansjaar \nLieke van der Vring",
 
     href: "https://lulaobobao.itch.io/robo-rebellion-dawn-of-the-machine",
     github: "https://github.com/GLU-Gaming/twinstick-2024-arcane-interactive",
@@ -50,7 +50,7 @@ export const allProjects = [
         language: "C#",
         description:
           "Here are some functions I made for the player. I was in control of the player movement, controller support, animation switching, state switching, player rotation / look at and dashing",
-        videoSrc: "/videos/test.mp4",
+        videoSrc: "/videos/robo rebellion/movement and controller.mp4",
         code: `
 public enum PlayerState
 {
@@ -305,7 +305,7 @@ private void IdleState()
         language: "C#",
         description:
           "I was also in charge of the player interaction, pickups, keycards and inventory. the code blocks below are conntected with this one",
-        videoSrc: "/videos/test.mp4",
+        videoSrc: "/videos/robo rebellion/interaction.mp4",
         code: `
 private void OnTriggerStay(Collider other)
 {
@@ -362,7 +362,7 @@ private void OnTriggerStay(Collider other)
         language: "C#",
         description:
           "This script shows the player inventory / weapon switching",
-        videoSrc: "/videos/test.mp4",
+        videoSrc: "/videos/robo rebellion/inventory.mp4",
         code: `
         public enum Weapons
         {
@@ -458,7 +458,7 @@ private void SwitchWeapon()
         name: "KeyUI.cs",
         language: "C#",
         description: "This script shows the keycard stacking ui.",
-        videoSrc: "/videos/test.mp4",
+        videoSrc: "/videos/robo rebellion/keycard ui.mp4",
         code: `
 private void Awake()
 {
@@ -518,7 +518,7 @@ private void PlayerInventory_OnKeysChanged(object sender, System.EventArgs e)
         language: "C#",
         description:
           "This is the camera manager I made for the game. This manager is able to switch cameras in a smooth way using CineMachine, and give screenshake when needed.",
-        videoSrc: "/videos/test.mp4",
+        videoSrc: "/videos/robo rebellion/camera.mp4",
         code: `
 private void Start()
 {
@@ -560,7 +560,6 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
         language: "C#",
         description:
         "Here are some functions I made in the GameManager that improve the gameplay experience. The rumble was made with enabling the motors of the controller if the player is playing with a controller, and stopping it in a certain amount of time.",
-        videoSrc: "/videos/test.mp4",
         code: `
         public void ControllerRumble(float leftMotorIntensity, float rightMotorIntensity, float time)
         {

@@ -180,7 +180,7 @@ export default function CodeBlock({
             <div className="w-full max-w-3xl rounded-lg overflow-hidden shadow-lg">
               <video
                 src={videoSrc}
-                className="w-full h-auto aspect-video object-cover"
+                className="w-full h-auto object-cover"
                 autoPlay
                 loop
                 muted
