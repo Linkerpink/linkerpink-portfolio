@@ -580,7 +580,624 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
 ],
 },
 
-// Not Suepr Maria 63 //
+  
+  // Bombs Per Minute (BPM) //
+  {
+      title: "Bombs Per Minute",
+      slug: "bpm",
+      banner: "/images/bpm banner.webp",
+      icon: "/images/game icons/bpm icon.webp",
+      date: "2025-10-06",
+      displayDate: formatDisplayDate("2025-10-06"),
+      platform: "Itch.io",
+      description:
+      "Bombs Per Minute is a rhythm game made with notes and bombs made in godot. It's a work in progress that still lacks the map editor and some score calculations, but I'm still proud of it. \n\nWhat i made: \n- Conductor script responsible for handling bpm, time signatures and beat calculations \n- Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file \n- Song manager script responsible for holding data like combo, multipliers, score and health \n- Note script that gets spawned by the Charter with a type that can be: Normal or Bomb \n- Lane script responsible for hit detection of the notes \n- Globals script responsible for holding global data like the current user's name\n- Database script to send the information of the map you beat to the database \n- Settings menu that saves data the Globals \n- Result screen that shows your score, accuracy, max combo and rank on the current song \n\nWork In Progress: \n- Map Editor (can only make the map json files at the moment) \n- More songs made with the new map editor so the game has playable content that isn't made in a text editor",
+  
+      //href: "https://linkerpink.itch.io/bombs-per-minute",
+      github: "https://github.com/Linkerpink/Bombs-Per-Minute",
+  
+      technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+  
+      media: [
+      { type: "image", src: "/images/bpm.webp" },
+      { type: "youtubeId", src: "NfxPphgsxag", title: "Launch Trailer" },
+      ],
+  
+      featured: true,
+  
+      codeSnippets: [
+        {
+            name: "conductor.gd",
+            language: "gdscript",
+            description:
+            "This is the Conductor script responsible for handling bpm, time signatures and beat calculations",
+            code: `
+extends AudioStreamPlayer
+class_name Conductor
+
+#region Variables
+var song_bpm : int # The beats per minute in the song
+var song_measures : int # The amount of measures in a beat. For a 4/4 time signature, this would be 4
+var song_scroll_speed : float
+@export var song_audio : AudioStream
+@onready var charter = %Charter
+
+var song_position = 0.0
+var song_position_in_beats = 1
+var seconds_per_beat
+var last_reported_beat = 0
+var beats_before_start = 0
+var current_measure = 0
+
+var closest = 0
+var time_off_beat = 0.0
+
+@onready var start_timer : Timer = $"Start Timer"
+
+signal beat(position)
+signal measure(position)
+
+@onready var song_position_in_beats_text : RichTextLabel = $"../Song UI/MarginContainer/Debug UI/Song Position In Beats Text"
+@onready var current_measure_text : RichTextLabel = $"../Song UI/MarginContainer/Debug UI/Current Measure Text"
+
+@onready var song_manager : SongManager = %"Song Manager"
+#endregion
+
+func _ready() -> void:
+globals.set_results(0, 0, 0, 0, 0, 0, false)
+song_bpm = charter.map.bpm
+song_measures = charter.map.measures
+song_scroll_speed = charter.map.scroll_speed
+seconds_per_beat = 60.0 / song_bpm
+stream = charter.map.audio
+if song_audio != null:
+    stream = song_audio
+else:
+    push_error("No song audio selected for this song!")
+
+func _physics_process(delta: float) -> void:
+if playing:
+    song_position = get_playback_position() + AudioServer.get_time_since_last_mix()
+    song_position -= AudioServer.get_output_latency()
+    song_position_in_beats = int(floor(song_position / seconds_per_beat)) + beats_before_start
+    _report_beat()
+    _update_ui()
+if not playing and song_position_in_beats > 1:
+    var sm = song_manager
+    globals.set_results(sm.score, sm.accuracy, sm.best_combo, sm.notes_hit, sm.bombs_hit, sm.notes_missed, true)
+    get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
+
+func _report_beat():
+if last_reported_beat < song_position_in_beats:
+    if current_measure > song_measures - 1:
+        current_measure = 0
+    emit_signal("beat", song_position_in_beats)
+    emit_signal("measure", current_measure)
+    last_reported_beat = song_position_in_beats
+    current_measure += 1
+
+func note_to_time(measure: int, beat: int, subdivision: int, bpm: float, beats_per_measure: int, subdivision_size: int):
+var seconds_per_beat = 60.0 / bpm
+var total_beats = measure * beats_per_measure + beat + (float(subdivision) / subdivision_size)
+return total_beats * seconds_per_beat
+
+func play_with_beat_offset(_num):
+beats_before_start = _num
+start_timer.wait_time = seconds_per_beat
+start_timer.start()
+
+func play_from_beat(beat: int, measure: int = 0) -> void:
+var total_beats = measure * song_measures + beat
+var start_time = total_beats * seconds_per_beat
+
+play()
+seek(start_time)
+
+song_position = start_time
+song_position_in_beats = total_beats
+last_reported_beat = total_beats
+current_measure = measure
+
+func _on_beat(position: Variant) -> void:
+#print("beat")
+pass
+
+func _on_measure(position: Variant) -> void:
+#print(current_measure)
+pass
+
+func _on_start_timer_timeout() -> void:
+song_position_in_beats += 1
+if song_position_in_beats < beats_before_start - 1:
+    start_timer.start()
+elif song_position_in_beats == beats_before_start -1:
+    start_timer.wait_time = start_timer.wait_time - (AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency())
+    start_timer.start()
+else:
+    #play_from_beat(75)
+    play()
+    start_timer.stop()
+_report_beat()
+
+func _update_ui():
+song_position_in_beats_text.text = "Song position in beats: " + str(song_position_in_beats)
+current_measure_text.text = "Current measure: " + str(current_measure)
+pass
+
+`
+        },
+
+        {
+            name: "charter.gd",
+            language: "gdscript",
+            description:
+            "This is the Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file",
+            code: `
+            extends Node
+class_name Charter
+
+@export var map : Map
+@onready var note_scene : PackedScene = preload("res://scenes/note.tscn")
+@onready var conductor : Conductor = %Conductor
+@export var note_spawn_ahead : float = 2.0
+@onready var lanes : Array = %"Lanes Holder".get_children()
+
+var note_index := 0
+var active_notes := []
+
+func _ready() -> void:
+map = globals.current_map
+for note in map.notes:
+    note["time"] = conductor.note_to_time(
+        note["measure"],
+        note["beat"],
+        note["subdivision"],
+        map.bpm,
+        map.measures,
+        map.subdivision_size
+    )
+
+func _process(delta: float) -> void:
+if conductor.playing and note_index < map.notes.size():
+    var current_time = conductor.song_position
+    var next_note = map.notes[note_index]
+
+    if current_time >= next_note["time"] - note_spawn_ahead:
+        spawn_note(next_note)
+        note_index += 1
+
+func spawn_note(note_data: Dictionary):
+var note = note_scene.instantiate()
+add_child(note)
+
+var lane_node = lanes[note_data["lane"]]
+note.position = Vector2(lane_node.position.x, -720)
+
+note.set("hit_time", note_data["time"])
+note.set("type", note_data["type"])
+note.set("end_beat", note_data["end_beat"])
+note.set("end_subdivision", note_data["end_subdivision"])
+
+active_notes.append(note)
+
+`
+        },
+
+        {
+            name: "song_manager.gd",
+            language: "gdscript",
+            description:
+            "This is the Song manager script responsible for holding data like combo, multipliers, score and health",
+            code: `
+extends Node2D
+class_name SongManager
+
+var score : int = 0
+var accuracy : float = 100.0
+var combo : int = 0
+var best_combo : int = 0
+var combo_multiplier : int = 1
+
+var notes_hit : int
+var notes_missed : int = 0
+var bombs_hit : int = 0
+
+var score_text : RichTextLabel 
+var combo_text : RichTextLabel
+var combo_multiplier_text : RichTextLabel
+
+var hp : int = 100
+@onready var hp_progress_bar : TextureProgressBar = %"Song UI".find_child("Hp Progress Bar")
+
+var exit_timer = 0
+@onready var exit_progress_bar : TextureProgressBar = %"Song UI".find_child("Exit Progress Bar")
+
+@onready var charter : Charter = %Charter
+
+func _ready() -> void:
+score_text = get_tree().get_first_node_in_group("score_text")
+combo_text = get_tree().get_first_node_in_group("combo_text")
+combo_multiplier_text = get_tree().get_first_node_in_group("combo_multiplier_text")
+
+score_text.text = "Score: " + str(score)
+combo_text.text = "Combo: " + str(combo)
+combo_multiplier_text.text = "x[color=blue]" + str(combo_multiplier)
+
+func _process(delta: float) -> void:
+if Input.is_action_pressed("menu_back"):
+    exit_timer += delta
+elif exit_timer > 0:
+    exit_timer -= delta
+    
+exit_progress_bar.value = exit_timer * 200
+    
+if exit_timer >= 0.5:
+    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func hit_note(_amount : int):
+notes_hit += 1
+score += _amount * combo_multiplier
+_handle_combo()
+_change_hp(2.5)
+#_calculate_accuracy()
+
+func hit_bomb():
+bombs_hit += 1
+break_combo()
+
+func miss_note():
+notes_missed += 1
+break_combo()
+_change_hp(-5)
+
+func break_combo():
+combo = 0
+combo_multiplier = 1
+score_text.text = "Score: " + str(score)
+combo_text.text = "combo: " + str(combo)
+_handle_combo_multiplier_text()
+
+func _change_hp(_value : int):
+hp += _value
+hp_progress_bar.value = hp
+
+if hp > 100:
+    hp = 100
+    
+if hp <= 0:
+    _die()
+    
+func _calculate_accuracy():
+var _remaining_notes = charter.map.notes.size() - charter.map.notes[charter.note_index].size()
+for note in charter.map.notes:
+    pass
+
+func _die():
+globals.set_results(score, accuracy, best_combo, notes_hit, bombs_hit, notes_missed, false)
+get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
+
+func _handle_combo():
+combo += 1
+
+if combo > best_combo:
+    best_combo = combo
+
+score_text.text = "Score: " + str(score)
+combo_text.text = "combo: " + str(combo)
+
+match combo:
+    0:
+        combo_multiplier = 1
+        _handle_combo_multiplier_text()
+    10:
+        combo_multiplier = 2
+        _handle_combo_multiplier_text()
+    20:
+        combo_multiplier = 3
+        _handle_combo_multiplier_text()
+    30:
+        combo_multiplier = 4
+        _handle_combo_multiplier_text()
+
+func _handle_combo_multiplier_text():
+match combo_multiplier:
+    1:
+        combo_multiplier_text.text = "x[color=cyan]" + str(combo_multiplier)
+    2:
+        combo_multiplier_text.text = "x[color=orange]" + str(combo_multiplier)
+    3:
+        combo_multiplier_text.text = "x[color=green]" + str(combo_multiplier)
+    4:
+        combo_multiplier_text.text = "x[color=purple]" + str(combo_multiplier)
+
+`
+        },
+
+        {
+            name: "note.gd",
+            language: "gdscript",
+            description:
+            "This is the Note script that gets spawned by the Charter with a type that can be: Normal or Bomb",
+            code: `
+extends Node2D
+
+var conductor : Conductor
+var scroll_speed : float
+var hit_time : float = 0.0
+var type : String = "note"
+var end_beat : int = 0
+var end_subdivision : int = 0
+
+@onready var normal : Node2D = %Normal
+@onready var bomb : Node2D = %Bomb
+@onready var setup_timer : Timer = %"Setup Timer"
+@onready var end_point : Node2D = %"End Point"
+@onready var line : Line2D = %Line2D
+
+signal hit_note
+
+func _ready() -> void:
+conductor = get_tree().get_first_node_in_group("conductor")
+scroll_speed = conductor.song_scroll_speed
+
+func _process(delta: float) -> void:
+if conductor == null:
+    push_error("conductor not found in note!")
+var time_until_hit = hit_time - conductor.song_position
+position.y = 200 - time_until_hit * scroll_speed
+
+#if type == "long":
+    #line.set_point_position(1,end_point.position)
+
+func _on_setup_timer_timeout() -> void:
+#if (end_beat > 0):
+    #type = "long"
+
+match type:
+    "note":
+        normal.show()
+        bomb.queue_free()
+    "bomb":
+        bomb.show()
+        normal.queue_free()
+    #"long":
+        #normal.show()
+        #bomb.queue_free()
+        #line.add_point(end_point.position)
+
+`
+        },
+
+        {
+            name: "lane.gd",
+            language: "gdscript",
+            description:
+            "This is the Lane script responsible for hit detection of the notes.",
+            code: `
+extends Node2D
+
+@export var hit_key : String
+@export var input_value : String
+@onready var sprite : Sprite2D = %"Hit Window Sprite"
+@onready var input_text : RichTextLabel = %"Input Text"
+
+@onready var hit_score_animation_player : AnimationPlayer = %"Hit Score Animation Player"
+@onready var hit_score_text : RichTextLabel = %"Hit Score Text"
+
+@onready var hit_effect_animation_player : AnimationPlayer = %"Hit Effect Animation Player"
+
+@onready var song_manager : SongManager = %"Song Manager"
+@onready var beat_indicator_scene : PackedScene = preload("res://scenes/beat_indicator.tscn")
+
+enum note_score_states
+{
+None,
+Perfect,
+Good,
+Okay,
+Bomb,
+}
+
+var note_score_state : note_score_states = note_score_states.None
+
+var colliding_note : Area2D
+
+func _ready() -> void:
+input_text.text = input_value
+
+func _process(delta: float) -> void:
+if Input.is_action_just_pressed(hit_key):
+    pass #Animate
+
+if Input.is_action_just_pressed(hit_key):
+    match note_score_state:
+        note_score_states.Perfect:
+            _hit_note(300)
+            hit_score_text.text = "[color=purple]Perfect!"
+        note_score_states.Good:
+            _hit_note(200)
+            hit_score_text.text = "[color=green]Good!"
+        note_score_states.Okay:
+            _hit_note(100)
+            hit_score_text.text = "[color=orange]OK."
+        note_score_states.Bomb:
+            _hit_bomb()
+            hit_score_text.text = "[shake][color=red]KABOOM!"
+        note_score_states.None:
+            _miss_note()
+            hit_score_text.text = "[color=red]Miss."
+
+func _hit_note(_amount : int): 
+print("hit noted")
+colliding_note.get_parent().get_parent().queue_free()
+colliding_note = null
+_play_hit_score_animation()
+song_manager.hit_note(_amount)
+hit_effect_animation_player.stop()
+hit_effect_animation_player.play("hit_effect")
+
+func _miss_note():
+_play_hit_score_animation()
+song_manager.miss_note()
+
+func _hit_bomb():
+print("hit_bomb")
+song_manager.hit_bomb()
+colliding_note.get_parent().queue_free()
+_play_hit_score_animation()
+colliding_note = null
+
+func _play_hit_score_animation():
+hit_score_animation_player.stop()
+hit_score_animation_player.play("hit_score")
+
+func _on_hit_window_area_entered(area: Area2D) -> void:
+if area.is_in_group("perfect"):
+    note_score_state = note_score_states.Perfect
+    colliding_note = area
+
+if area.is_in_group("good"):
+    if note_score_state != note_score_states.Perfect:
+        note_score_state = note_score_states.Good
+        colliding_note = area
+
+if area.is_in_group("okay"):
+    if note_score_state != note_score_states.Perfect and note_score_state != note_score_states.Good:
+        note_score_state = note_score_states.Okay
+        colliding_note = area
+
+if area.is_in_group("bomb"):
+    note_score_state = note_score_states.Bomb
+    colliding_note = area
+
+func _on_hit_window_area_exited(area: Area2D) -> void:
+if area.is_in_group("perfect"):
+    note_score_state = note_score_states.None
+
+if area.is_in_group("good"):
+    note_score_state = note_score_states.None
+
+if area.is_in_group("okay"):
+    note_score_state = note_score_states.None
+    
+if area.is_in_group("bomb"):
+    note_score_state = note_score_states.None
+
+colliding_note = null
+
+func _on_conductor_beat(position: Variant) -> void:
+pass
+#var _beat_indicator = beat_indicator_scene.instantiate()
+#add_child(_beat_indicator)
+
+func _on_miss_trigger_area_exited(area: Area2D) -> void:
+if area.is_in_group("okay"):
+    area.queue_free()
+    note_score_state = note_score_states.None
+    hit_score_text.text = "[color=red]Miss."
+    _miss_note()
+    
+if area.is_in_group("bomb"):
+    area.queue_free()
+
+`
+        },
+
+        {
+            name: "globals.gd",
+            language: "gdscript",
+            description:
+            "This is the Globals script responsible for holding global data like the current user's name",
+            code: `
+extends Node
+
+var users : Array[String] = ["Guest"]
+var current_user : String
+
+var current_map : Map
+var cm_rank : String = "SS"
+var cm_score : int
+var cm_best_combo : int
+var cm_accuracy : float
+var cm_notes_hit : int
+var cm_bombs_hit : int
+var cm_notes_missed : int
+
+var cm_passed : bool = false
+
+func _ready() -> void:
+current_user = users[0]
+
+func _process(delta: float) -> void:
+if Input.is_action_just_pressed("restart"):
+    get_tree().reload_current_scene()
+
+func add_user(_user : String):
+users.append(_user)
+
+func set_results(_score, _acc : float, _best_combo : int, _notes_hit : int, _bombs_hit : int, _notes_missed : int, _passed : bool):
+cm_score = _score
+cm_accuracy = _acc
+cm_best_combo = _best_combo
+cm_notes_hit = _notes_hit
+cm_bombs_hit = _bombs_hit
+cm_notes_missed = _notes_missed
+cm_passed = _passed
+
+`
+        },
+
+        {
+            name: "db.gd",
+            language: "gdscript",
+            description:
+            "This is the Database script to send the information of the map you beat to the database",
+            code: `
+extends Node
+
+var api_url = "http://localhost/bombs-per-minute/api.php"
+
+func send_score():
+	var data = {
+		"user": globals.current_user,
+		"map": globals.current_map.name,
+		"rank": globals.cm_rank,
+		"accuracy": globals.cm_accuracy,
+		"score": globals.cm_score,
+		"best_combo": globals.cm_best_combo,
+		"notes_hit": globals.cm_notes_hit,
+		"bombs_hit": globals.cm_bombs_hit,
+		"notes_missed": globals.cm_notes_missed
+	}
+
+	var http := HTTPRequest.new()
+	add_child(http)
+
+	var body = JSON.stringify(data)
+	var headers = ["Content-Type: application/json"]
+
+	http.request(api_url, headers, HTTPClient.METHOD_POST, body)
+	http.request_completed.connect(_on_request_completed)
+
+
+func _on_request_completed(result, response_code, headers, body):
+	if response_code == 200:
+		var text = body.get_string_from_utf8()
+		var parsed = JSON.parse_string(text)
+		if typeof(parsed) == TYPE_DICTIONARY:
+			print("Insert OK, id:", parsed.get("insert_id"))
+		else:
+			print("Unexpected response:", text)
+	else:
+		print("HTTP Error:", response_code)
+
+`
+        },
+
+      ]
+  },
+
+  // Not Suepr Maria 63 //
 {
     title: "Not Suepr Maria 63",
     slug: "not-suepr-maria-63",
@@ -1368,7 +1985,7 @@ public void EndDialogueFunction()
             break;
     }
     }
-	`,
+    `,
 },
 
 {
@@ -1731,10 +2348,10 @@ private IEnumerator ShakeTimer(float _duration)
       },
 
       {
-	name: "Enemy.cs",
-	language: "C#",
-	description: "",
-	code: `
+    name: "Enemy.cs",
+    language: "C#",
+    description: "",
+    code: `
 public enum States
 {
     Patroling,
@@ -1859,22 +2476,22 @@ private void Die()
 {
     gameObject.SetActive(false);
     }
-	`
+    `
 },
 
 {
-	name: "KingBobOmb.cs",
-	language: "C#",
-	description: "",
-	code: `
+    name: "KingBobOmb.cs",
+    language: "C#",
+    description: "",
+    code: `
     public enum States
     {
-	Idle,
-	Walking,
-	Grabbing,
-	Throwing,
-	Grabbed,
-	Thrown,
+    Idle,
+    Walking,
+    Grabbing,
+    Throwing,
+    Grabbed,
+    Thrown,
     }
     
     public States state = States.Idle;
@@ -1884,112 +2501,112 @@ private void Die()
     private void Awake()
     {
         m_mario = FindAnyObjectByType<Mario>();
-	m_marioTransform = m_mario.transform;
-	agent = GetComponent<NavMeshAgent>();
-	m_animator = GetComponentInChildren<Animator>();
-	m_gameManager = FindAnyObjectByType<GameManager>();
-	m_textbox = FindAnyObjectByType<Textbox>();
+    m_marioTransform = m_mario.transform;
+    agent = GetComponent<NavMeshAgent>();
+    m_animator = GetComponentInChildren<Animator>();
+    m_gameManager = FindAnyObjectByType<GameManager>();
+    m_textbox = FindAnyObjectByType<Textbox>();
     }
     
     private void Update()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.5f, groundLayer);
-	
-	switch (state)
-	{
-		case States.Idle:
+    
+    switch (state)
+    {
+        case States.Idle:
             if (goToWalkTimer > 0)
-			{
-				goToWalkTimer -= Time.deltaTime;
-			}
-			else
+            {
+                goToWalkTimer -= Time.deltaTime;
+            }
+            else
                 {
-				state = States.Walking;
+                state = States.Walking;
                 }
-			break;
-			
-		case States.Walking:
+            break;
+            
+        case States.Walking:
             if (stage > 0 && stage < 3)
-			{
+            {
             agent.SetDestination(walkPoint);
             
             if (setWalkPointTimer > 0)
             {
-					setWalkPointTimer -= Time.deltaTime;
+                    setWalkPointTimer -= Time.deltaTime;
                     }
                     else
-				{
-					SetWalkPoint(m_marioTransform.position);
-					setWalkPointTimer = setWalkPointTimerDuration;
-				}
+                {
+                    SetWalkPoint(m_marioTransform.position);
+                    setWalkPointTimer = setWalkPointTimerDuration;
+                }
 
-				if (stage < 2)
-				{
+                if (stage < 2)
+                {
                 agent.angularSpeed = 75;
-				}
-				else
-				{
-					agent.angularSpeed = 180;
-					setWalkPointTimerDuration = 0.25f;
+                }
+                else
+                {
+                    agent.angularSpeed = 180;
+                    setWalkPointTimerDuration = 0.25f;
                     }    
-			}
-			else
+            }
+            else
                 {
             state = States.Idle;
-			}
-			break;
-		
+            }
+            break;
+        
             case States.Grabbed:
                 
-			break;
-		
-		case States.Thrown:
-			if (isGrounded)
-			{
-				state = States.Walking;
-				stage++;
-				m_gameManager.ScreenShake(10,10,0.25f);
+            break;
+        
+        case States.Thrown:
+            if (isGrounded)
+            {
+                state = States.Walking;
+                stage++;
+                m_gameManager.ScreenShake(10,10,0.25f);
                 }
                 break;
                 }
 
-	if (stage > 3)
-	{
+    if (stage > 3)
+    {
     m_textbox.StartDialogueSequence(m_loseDialogueSequence);
     stage = -1;
-	}
+    }
 }
 
 private void SetWalkPoint(Vector3 _walkPoint)
 {
-	walkPoint = _walkPoint;
+    walkPoint = _walkPoint;
     }
 
     public void StartFight()
 {
-	state = States.Walking;
-	stage = 1;
+    state = States.Walking;
+    stage = 1;
     }
     
     public void EndFight()
 {
-	GameManager.Instance.SpawnStar(m_kingBobOmbStar, new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z));
-	gameObject.SetActive(false);
+    GameManager.Instance.SpawnStar(m_kingBobOmbStar, new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z));
+    gameObject.SetActive(false);
 }
 `
 },
 
 {
-	name: "KoopaTheQuick.cs",
-	language: "C#",
-	description: "",
-	code: `
+    name: "KoopaTheQuick.cs",
+    language: "C#",
+    description: "",
+    code: `
 private void Update()
 {
-	print(racing);
-	
-	if (racing)
-	{
+    print(racing);
+    
+    if (racing)
+    {
     float _remainingDist = Vector3.Distance(transform.position, waypoints[m_currentWaypoint].position);
     
     if (_remainingDist <= 1f  &&  m_currentWaypoint < waypoints.Length - 1)
@@ -1998,671 +2615,54 @@ private void Update()
     SetWaypoint();
     }
     
-	}
-	
-	print(m_currentWaypoint);
+    }
+    
+    print(m_currentWaypoint);
     }
     
     public void StartRace()
 {
-	racing = true;
-	SetWaypoint(); 
-	m_raceManager= FindAnyObjectByType<RaceManager>();
-	m_raceManager.StartRace();
+    racing = true;
+    SetWaypoint(); 
+    m_raceManager= FindAnyObjectByType<RaceManager>();
+    m_raceManager.StartRace();
 }
 
 private void SetWaypoint()
 {
-	print("SET WAYPOINT 5 BIG BOOOOMB");
-	m_agent.destination = waypoints[m_currentWaypoint].position;
+    print("SET WAYPOINT 5 BIG BOOOOMB");
+    m_agent.destination = waypoints[m_currentWaypoint].position;
 }
 
 private void OnTriggerEnter(Collider other)
 {
-	if (other.CompareTag("Top Hitbox"))
-	{
-		if (m_raceManager.raceState == RaceManager.RaceStates.Racing)
-		{
-			m_raceManager.raceState = RaceManager.RaceStates.Lost;
-			
-			m_textbox.StartDialogueSequence(m_lostDialogue);
+    if (other.CompareTag("Top Hitbox"))
+    {
+        if (m_raceManager.raceState == RaceManager.RaceStates.Racing)
+        {
+            m_raceManager.raceState = RaceManager.RaceStates.Lost;
+            
+            m_textbox.StartDialogueSequence(m_lostDialogue);
             }
             
             if (m_raceManager.raceState == RaceManager.RaceStates.Won)
             {
-			m_textbox.StartDialogueSequence(m_wonDialogue);
+            m_textbox.StartDialogueSequence(m_wonDialogue);
             }
             }
             }
             
             public void WinRace()
             {
-	m_agent.enabled = false;
-	print("race gewonnen :O");
-	GameManager.Instance.SpawnStar(m_star, new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z));
-	racing = false;
-	gameObject.SetActive(false);
+    m_agent.enabled = false;
+    print("race gewonnen :O");
+    GameManager.Instance.SpawnStar(m_star, new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z));
+    racing = false;
+    gameObject.SetActive(false);
 }
-	`
+    `
 }
     ],
-  },
-
-  
-  // Bombs Per Minute (BPM) //
-  {
-      title: "Bombs Per Minute",
-      slug: "bpm",
-      banner: "/images/bpm banner.webp",
-      icon: "/images/game icons/bpm icon.webp",
-      date: "2025-10-06",
-      displayDate: formatDisplayDate("2025-10-06"),
-      platform: "Itch.io",
-      description:
-      "Bombs Per Minute is a rhythm game made with notes and bombs made in godot. It's a work in progress that still lacks the map editor and some score calculations, but I'm still proud of it. \n\nWhat i made: \n- Conductor script responsible for handling bpm, time signatures and beat calculations \n- Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file \n- Song manager script responsible for holding data like combo, multipliers, score and health \n- Note script that gets spawned by the Charter with a type that can be: Normal or Bomb \n- Lane script responsible for hit detection of the notes \n- Globals script responsible for holding global data like the current user's name\n- Database script to send the information of the map you beat to the database \n- Settings menu that saves data the Globals \n- Result screen that shows your score, accuracy, max combo and rank on the current song \n\nWork In Progress: \n- Map Editor (can only make the map json files at the moment) \n- More songs made with the new map editor so the game has playable content that isn't made in a text editor",
-  
-      //href: "https://linkerpink.itch.io/bombs-per-minute",
-      github: "https://github.com/Linkerpink/Bombs-Per-Minute",
-  
-      technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
-  
-      media: [
-      { type: "image", src: "/images/bpm.webp" },
-      { type: "youtubeId", src: "NfxPphgsxag", title: "Launch Trailer" },
-      ],
-  
-      featured: true,
-  
-      codeSnippets: [
-        {
-            name: "conductor.gd",
-            language: "gdscript",
-            description:
-            "This is the Conductor script responsible for handling bpm, time signatures and beat calculations",
-            code: `
-extends AudioStreamPlayer
-class_name Conductor
-
-#region Variables
-var song_bpm : int # The beats per minute in the song
-var song_measures : int # The amount of measures in a beat. For a 4/4 time signature, this would be 4
-var song_scroll_speed : float
-@export var song_audio : AudioStream
-@onready var charter = %Charter
-
-var song_position = 0.0
-var song_position_in_beats = 1
-var seconds_per_beat
-var last_reported_beat = 0
-var beats_before_start = 0
-var current_measure = 0
-
-var closest = 0
-var time_off_beat = 0.0
-
-@onready var start_timer : Timer = $"Start Timer"
-
-signal beat(position)
-signal measure(position)
-
-@onready var song_position_in_beats_text : RichTextLabel = $"../Song UI/MarginContainer/Debug UI/Song Position In Beats Text"
-@onready var current_measure_text : RichTextLabel = $"../Song UI/MarginContainer/Debug UI/Current Measure Text"
-
-@onready var song_manager : SongManager = %"Song Manager"
-#endregion
-
-func _ready() -> void:
-globals.set_results(0, 0, 0, 0, 0, 0, false)
-song_bpm = charter.map.bpm
-song_measures = charter.map.measures
-song_scroll_speed = charter.map.scroll_speed
-seconds_per_beat = 60.0 / song_bpm
-stream = charter.map.audio
-if song_audio != null:
-    stream = song_audio
-else:
-    push_error("No song audio selected for this song!")
-
-func _physics_process(delta: float) -> void:
-if playing:
-    song_position = get_playback_position() + AudioServer.get_time_since_last_mix()
-    song_position -= AudioServer.get_output_latency()
-    song_position_in_beats = int(floor(song_position / seconds_per_beat)) + beats_before_start
-    _report_beat()
-    _update_ui()
-if not playing and song_position_in_beats > 1:
-    var sm = song_manager
-    globals.set_results(sm.score, sm.accuracy, sm.best_combo, sm.notes_hit, sm.bombs_hit, sm.notes_missed, true)
-    get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
-
-func _report_beat():
-if last_reported_beat < song_position_in_beats:
-    if current_measure > song_measures - 1:
-        current_measure = 0
-    emit_signal("beat", song_position_in_beats)
-    emit_signal("measure", current_measure)
-    last_reported_beat = song_position_in_beats
-    current_measure += 1
-
-func note_to_time(measure: int, beat: int, subdivision: int, bpm: float, beats_per_measure: int, subdivision_size: int):
-var seconds_per_beat = 60.0 / bpm
-var total_beats = measure * beats_per_measure + beat + (float(subdivision) / subdivision_size)
-return total_beats * seconds_per_beat
-
-func play_with_beat_offset(_num):
-beats_before_start = _num
-start_timer.wait_time = seconds_per_beat
-start_timer.start()
-
-func play_from_beat(beat: int, measure: int = 0) -> void:
-var total_beats = measure * song_measures + beat
-var start_time = total_beats * seconds_per_beat
-
-play()
-seek(start_time)
-
-song_position = start_time
-song_position_in_beats = total_beats
-last_reported_beat = total_beats
-current_measure = measure
-
-func _on_beat(position: Variant) -> void:
-#print("beat")
-pass
-
-func _on_measure(position: Variant) -> void:
-#print(current_measure)
-pass
-
-func _on_start_timer_timeout() -> void:
-song_position_in_beats += 1
-if song_position_in_beats < beats_before_start - 1:
-    start_timer.start()
-elif song_position_in_beats == beats_before_start -1:
-    start_timer.wait_time = start_timer.wait_time - (AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency())
-    start_timer.start()
-else:
-    #play_from_beat(75)
-    play()
-    start_timer.stop()
-_report_beat()
-
-func _update_ui():
-song_position_in_beats_text.text = "Song position in beats: " + str(song_position_in_beats)
-current_measure_text.text = "Current measure: " + str(current_measure)
-pass
-
-`
-        },
-
-        {
-            name: "charter.gd",
-            language: "gdscript",
-            description:
-            "This is the Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file",
-            code: `
-            extends Node
-class_name Charter
-
-@export var map : Map
-@onready var note_scene : PackedScene = preload("res://scenes/note.tscn")
-@onready var conductor : Conductor = %Conductor
-@export var note_spawn_ahead : float = 2.0
-@onready var lanes : Array = %"Lanes Holder".get_children()
-
-var note_index := 0
-var active_notes := []
-
-func _ready() -> void:
-map = globals.current_map
-for note in map.notes:
-    note["time"] = conductor.note_to_time(
-        note["measure"],
-        note["beat"],
-        note["subdivision"],
-        map.bpm,
-        map.measures,
-        map.subdivision_size
-    )
-
-func _process(delta: float) -> void:
-if conductor.playing and note_index < map.notes.size():
-    var current_time = conductor.song_position
-    var next_note = map.notes[note_index]
-
-    if current_time >= next_note["time"] - note_spawn_ahead:
-        spawn_note(next_note)
-        note_index += 1
-
-func spawn_note(note_data: Dictionary):
-var note = note_scene.instantiate()
-add_child(note)
-
-var lane_node = lanes[note_data["lane"]]
-note.position = Vector2(lane_node.position.x, -720)
-
-note.set("hit_time", note_data["time"])
-note.set("type", note_data["type"])
-note.set("end_beat", note_data["end_beat"])
-note.set("end_subdivision", note_data["end_subdivision"])
-
-active_notes.append(note)
-
-`
-        },
-
-        {
-            name: "song_manager.gd",
-            language: "gdscript",
-            description:
-            "This is the Song manager script responsible for holding data like combo, multipliers, score and health",
-            code: `
-extends Node2D
-class_name SongManager
-
-var score : int = 0
-var accuracy : float = 100.0
-var combo : int = 0
-var best_combo : int = 0
-var combo_multiplier : int = 1
-
-var notes_hit : int
-var notes_missed : int = 0
-var bombs_hit : int = 0
-
-var score_text : RichTextLabel 
-var combo_text : RichTextLabel
-var combo_multiplier_text : RichTextLabel
-
-var hp : int = 100
-@onready var hp_progress_bar : TextureProgressBar = %"Song UI".find_child("Hp Progress Bar")
-
-var exit_timer = 0
-@onready var exit_progress_bar : TextureProgressBar = %"Song UI".find_child("Exit Progress Bar")
-
-@onready var charter : Charter = %Charter
-
-func _ready() -> void:
-score_text = get_tree().get_first_node_in_group("score_text")
-combo_text = get_tree().get_first_node_in_group("combo_text")
-combo_multiplier_text = get_tree().get_first_node_in_group("combo_multiplier_text")
-
-score_text.text = "Score: " + str(score)
-combo_text.text = "Combo: " + str(combo)
-combo_multiplier_text.text = "x[color=blue]" + str(combo_multiplier)
-
-func _process(delta: float) -> void:
-if Input.is_action_pressed("menu_back"):
-    exit_timer += delta
-elif exit_timer > 0:
-    exit_timer -= delta
-    
-exit_progress_bar.value = exit_timer * 200
-    
-if exit_timer >= 0.5:
-    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-
-func hit_note(_amount : int):
-notes_hit += 1
-score += _amount * combo_multiplier
-_handle_combo()
-_change_hp(2.5)
-#_calculate_accuracy()
-
-func hit_bomb():
-bombs_hit += 1
-break_combo()
-
-func miss_note():
-notes_missed += 1
-break_combo()
-_change_hp(-5)
-
-func break_combo():
-combo = 0
-combo_multiplier = 1
-score_text.text = "Score: " + str(score)
-combo_text.text = "combo: " + str(combo)
-_handle_combo_multiplier_text()
-
-func _change_hp(_value : int):
-hp += _value
-hp_progress_bar.value = hp
-
-if hp > 100:
-    hp = 100
-    
-if hp <= 0:
-    _die()
-    
-func _calculate_accuracy():
-var _remaining_notes = charter.map.notes.size() - charter.map.notes[charter.note_index].size()
-for note in charter.map.notes:
-    pass
-
-func _die():
-globals.set_results(score, accuracy, best_combo, notes_hit, bombs_hit, notes_missed, false)
-get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
-
-func _handle_combo():
-combo += 1
-
-if combo > best_combo:
-    best_combo = combo
-
-score_text.text = "Score: " + str(score)
-combo_text.text = "combo: " + str(combo)
-
-match combo:
-    0:
-        combo_multiplier = 1
-        _handle_combo_multiplier_text()
-    10:
-        combo_multiplier = 2
-        _handle_combo_multiplier_text()
-    20:
-        combo_multiplier = 3
-        _handle_combo_multiplier_text()
-    30:
-        combo_multiplier = 4
-        _handle_combo_multiplier_text()
-
-func _handle_combo_multiplier_text():
-match combo_multiplier:
-    1:
-        combo_multiplier_text.text = "x[color=cyan]" + str(combo_multiplier)
-    2:
-        combo_multiplier_text.text = "x[color=orange]" + str(combo_multiplier)
-    3:
-        combo_multiplier_text.text = "x[color=green]" + str(combo_multiplier)
-    4:
-        combo_multiplier_text.text = "x[color=purple]" + str(combo_multiplier)
-
-`
-        },
-
-        {
-            name: "note.gd",
-            language: "gdscript",
-            description:
-            "This is the Note script that gets spawned by the Charter with a type that can be: Normal or Bomb",
-            code: `
-extends Node2D
-
-var conductor : Conductor
-var scroll_speed : float
-var hit_time : float = 0.0
-var type : String = "note"
-var end_beat : int = 0
-var end_subdivision : int = 0
-
-@onready var normal : Node2D = %Normal
-@onready var bomb : Node2D = %Bomb
-@onready var setup_timer : Timer = %"Setup Timer"
-@onready var end_point : Node2D = %"End Point"
-@onready var line : Line2D = %Line2D
-
-signal hit_note
-
-func _ready() -> void:
-conductor = get_tree().get_first_node_in_group("conductor")
-scroll_speed = conductor.song_scroll_speed
-
-func _process(delta: float) -> void:
-if conductor == null:
-    push_error("conductor not found in note!")
-var time_until_hit = hit_time - conductor.song_position
-position.y = 200 - time_until_hit * scroll_speed
-
-#if type == "long":
-    #line.set_point_position(1,end_point.position)
-
-func _on_setup_timer_timeout() -> void:
-#if (end_beat > 0):
-    #type = "long"
-
-match type:
-    "note":
-        normal.show()
-        bomb.queue_free()
-    "bomb":
-        bomb.show()
-        normal.queue_free()
-    #"long":
-        #normal.show()
-        #bomb.queue_free()
-        #line.add_point(end_point.position)
-
-`
-        },
-
-        {
-            name: "lane.gd",
-            language: "gdscript",
-            description:
-            "This is the Lane script responsible for hit detection of the notes.",
-            code: `
-extends Node2D
-
-@export var hit_key : String
-@export var input_value : String
-@onready var sprite : Sprite2D = %"Hit Window Sprite"
-@onready var input_text : RichTextLabel = %"Input Text"
-
-@onready var hit_score_animation_player : AnimationPlayer = %"Hit Score Animation Player"
-@onready var hit_score_text : RichTextLabel = %"Hit Score Text"
-
-@onready var hit_effect_animation_player : AnimationPlayer = %"Hit Effect Animation Player"
-
-@onready var song_manager : SongManager = %"Song Manager"
-@onready var beat_indicator_scene : PackedScene = preload("res://scenes/beat_indicator.tscn")
-
-enum note_score_states
-{
-None,
-Perfect,
-Good,
-Okay,
-Bomb,
-}
-
-var note_score_state : note_score_states = note_score_states.None
-
-var colliding_note : Area2D
-
-func _ready() -> void:
-input_text.text = input_value
-
-func _process(delta: float) -> void:
-if Input.is_action_just_pressed(hit_key):
-    pass #Animate
-
-if Input.is_action_just_pressed(hit_key):
-    match note_score_state:
-        note_score_states.Perfect:
-            _hit_note(300)
-            hit_score_text.text = "[color=purple]Perfect!"
-        note_score_states.Good:
-            _hit_note(200)
-            hit_score_text.text = "[color=green]Good!"
-        note_score_states.Okay:
-            _hit_note(100)
-            hit_score_text.text = "[color=orange]OK."
-        note_score_states.Bomb:
-            _hit_bomb()
-            hit_score_text.text = "[shake][color=red]KABOOM!"
-        note_score_states.None:
-            _miss_note()
-            hit_score_text.text = "[color=red]Miss."
-
-func _hit_note(_amount : int): 
-print("hit noted")
-colliding_note.get_parent().get_parent().queue_free()
-colliding_note = null
-_play_hit_score_animation()
-song_manager.hit_note(_amount)
-hit_effect_animation_player.stop()
-hit_effect_animation_player.play("hit_effect")
-
-func _miss_note():
-_play_hit_score_animation()
-song_manager.miss_note()
-
-func _hit_bomb():
-print("hit_bomb")
-song_manager.hit_bomb()
-colliding_note.get_parent().queue_free()
-_play_hit_score_animation()
-colliding_note = null
-
-func _play_hit_score_animation():
-hit_score_animation_player.stop()
-hit_score_animation_player.play("hit_score")
-
-func _on_hit_window_area_entered(area: Area2D) -> void:
-if area.is_in_group("perfect"):
-    note_score_state = note_score_states.Perfect
-    colliding_note = area
-
-if area.is_in_group("good"):
-    if note_score_state != note_score_states.Perfect:
-        note_score_state = note_score_states.Good
-        colliding_note = area
-
-if area.is_in_group("okay"):
-    if note_score_state != note_score_states.Perfect and note_score_state != note_score_states.Good:
-        note_score_state = note_score_states.Okay
-        colliding_note = area
-
-if area.is_in_group("bomb"):
-    note_score_state = note_score_states.Bomb
-    colliding_note = area
-
-func _on_hit_window_area_exited(area: Area2D) -> void:
-if area.is_in_group("perfect"):
-    note_score_state = note_score_states.None
-
-if area.is_in_group("good"):
-    note_score_state = note_score_states.None
-
-if area.is_in_group("okay"):
-    note_score_state = note_score_states.None
-    
-if area.is_in_group("bomb"):
-    note_score_state = note_score_states.None
-
-colliding_note = null
-
-func _on_conductor_beat(position: Variant) -> void:
-pass
-#var _beat_indicator = beat_indicator_scene.instantiate()
-#add_child(_beat_indicator)
-
-func _on_miss_trigger_area_exited(area: Area2D) -> void:
-if area.is_in_group("okay"):
-    area.queue_free()
-    note_score_state = note_score_states.None
-    hit_score_text.text = "[color=red]Miss."
-    _miss_note()
-    
-if area.is_in_group("bomb"):
-    area.queue_free()
-
-`
-        },
-
-        {
-            name: "globals.gd",
-            language: "gdscript",
-            description:
-            "This is the Globals script responsible for holding global data like the current user's name",
-            code: `
-extends Node
-
-var users : Array[String] = ["Guest"]
-var current_user : String
-
-var current_map : Map
-var cm_rank : String = "SS"
-var cm_score : int
-var cm_best_combo : int
-var cm_accuracy : float
-var cm_notes_hit : int
-var cm_bombs_hit : int
-var cm_notes_missed : int
-
-var cm_passed : bool = false
-
-func _ready() -> void:
-current_user = users[0]
-
-func _process(delta: float) -> void:
-if Input.is_action_just_pressed("restart"):
-    get_tree().reload_current_scene()
-
-func add_user(_user : String):
-users.append(_user)
-
-func set_results(_score, _acc : float, _best_combo : int, _notes_hit : int, _bombs_hit : int, _notes_missed : int, _passed : bool):
-cm_score = _score
-cm_accuracy = _acc
-cm_best_combo = _best_combo
-cm_notes_hit = _notes_hit
-cm_bombs_hit = _bombs_hit
-cm_notes_missed = _notes_missed
-cm_passed = _passed
-
-`
-        },
-
-        {
-            name: "db.gd",
-            language: "gdscript",
-            description:
-            "This is the Database script to send the information of the map you beat to the database",
-            code: `
-extends Node
-
-var api_url = "http://localhost/bombs-per-minute/api.php"
-
-func send_score():
-	var data = {
-		"user": globals.current_user,
-		"map": globals.current_map.name,
-		"rank": globals.cm_rank,
-		"accuracy": globals.cm_accuracy,
-		"score": globals.cm_score,
-		"best_combo": globals.cm_best_combo,
-		"notes_hit": globals.cm_notes_hit,
-		"bombs_hit": globals.cm_bombs_hit,
-		"notes_missed": globals.cm_notes_missed
-	}
-
-	var http := HTTPRequest.new()
-	add_child(http)
-
-	var body = JSON.stringify(data)
-	var headers = ["Content-Type: application/json"]
-
-	http.request(api_url, headers, HTTPClient.METHOD_POST, body)
-	http.request_completed.connect(_on_request_completed)
-
-
-func _on_request_completed(result, response_code, headers, body):
-	if response_code == 200:
-		var text = body.get_string_from_utf8()
-		var parsed = JSON.parse_string(text)
-		if typeof(parsed) == TYPE_DICTIONARY:
-			print("Insert OK, id:", parsed.get("insert_id"))
-		else:
-			print("Unexpected response:", text)
-	else:
-		print("HTTP Error:", response_code)
-
-`
-        },
-
-      ]
   },
 
   // The Royal Spin //
@@ -4406,45 +4406,45 @@ private void ChasePlayer()
 //   ]
 // },
   
-// Open Pixel Art //
-  {
-    title: "Open Pixel Art",
-    slug: "open-pixel-art",
-    banner: "/images/open pixel art temp logo.png",
-    icon: "/images/open pixel art temp logo.png",
+// // Open Pixel Art //
+//   {
+//     title: "Open Pixel Art",
+//     slug: "open-pixel-art",
+//     banner: "/images/open pixel art temp logo.png",
+//     icon: "/images/open pixel art temp logo.png",
     
-    date: "not released",
-    displayDate: formatDisplayDate("not released"),
+//     date: "not released",
+//     displayDate: formatDisplayDate("not released"),
 
-    href: "",
-    github: "https://github.com/Linkerpink/Open-Pixel-Art",
+//     href: "",
+//     github: "https://github.com/Linkerpink/Open-Pixel-Art",
 
-    imgSrc: "/images/open pixel art temp logo.png",
-    platform: "Itch.io",
+//     imgSrc: "/images/open pixel art temp logo.png",
+//     platform: "Itch.io",
 
-    description:
-      "A free & open source pixel art tool, made with mobile in mind. \n\nThis tool was designed for my brother (Luca / SupercatLuigi Player) , who is my main artist for full release games that we want to develop. I don't want to show them on my portfolio yet. He likes working on touch devices instead of on pc, and we couldn't find a pixel art app that suited both our needs. So I made one myself.",
+//     description:
+//       "A free & open source pixel art tool, made with mobile in mind. \n\nThis tool was designed for my brother (Luca / SupercatLuigi Player) , who is my main artist for full release games that we want to develop. I don't want to show them on my portfolio yet. He likes working on touch devices instead of on pc, and we couldn't find a pixel art app that suited both our needs. So I made one myself.",
 
-    technologies: [
-        "/images/godot logo.svg",
-        "/images/gdscript logo.webp"
-    ],
+//     technologies: [
+//         "/images/godot logo.svg",
+//         "/images/gdscript logo.webp"
+//     ],
 
-    media: [
-      { type: "image", src: "/images/open pixel art temp logo.png" },
-    ],
+//     media: [
+//       { type: "image", src: "/images/open pixel art temp logo.png" },
+//     ],
 
-    featured: false,
+//     featured: false,
 
-    codeSnippets: [
-      {
-        name: "fire script",
-        language: "GDScript",
-        description: "ik ben beter.",
-        code: `insane code`,
-      },
-    ],
-},
+//     codeSnippets: [
+//       {
+//         name: "fire script",
+//         language: "GDScript",
+//         description: "ik ben beter.",
+//         code: `insane code`,
+//       },
+//     ],
+// },
 
   // Slimetastic Punchout //
   {
@@ -5123,53 +5123,53 @@ private void Die()
 //   ],
 // },
 
-  // Fnaf Unity Fortnite Official Game Godot //
-  {
-    title: "Fnaf Unity Fortnite Official Game Godot",
-    slug: "fnaf-unity-fortnite-official-game-godot",
-    banner: "/images/fnaf unity fortnite official game godot.webp",
-    icon: "/images/fnaf unity fortnite official game godot.webp",
+//   // Fnaf Unity Fortnite Official Game Godot //
+//   {
+//     title: "Fnaf Unity Fortnite Official Game Godot",
+//     slug: "fnaf-unity-fortnite-official-game-godot",
+//     banner: "/images/fnaf unity fortnite official game godot.webp",
+//     icon: "/images/fnaf unity fortnite official game godot.webp",
 
-    date: "not released",
-    displayDate: formatDisplayDate("not released"),
+//     date: "not released",
+//     displayDate: formatDisplayDate("not released"),
 
-    href: "https://github.com/Linkerpink/Fnaf-Unity-Fortnite-Official-Game-Godot",
-    github:
-      "https://github.com/Linkerpink/Fnaf-Unity-Fortnite-Official-Game-Godot",
+//     href: "https://github.com/Linkerpink/Fnaf-Unity-Fortnite-Official-Game-Godot",
+//     github:
+//       "https://github.com/Linkerpink/Fnaf-Unity-Fortnite-Official-Game-Godot",
 
-    imgSrc: "/images/fnaf unity fortnite official game godot.webp",
-    platform: "Itch.io",
+//     imgSrc: "/images/fnaf unity fortnite official game godot.webp",
+//     platform: "Itch.io",
 
-    description:
-      "horror \n\n Developers: \n[Noah van Uunen](https://linkerpink.vercel.app/)\n[Jesse Faassen](https://sites.google.com/view/jesse-faassen/home?authuser=0) \n\nArtists: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n[Jesse Faassen](https://sites.google.com/view/jesse-faassen/home?authuser=0)",
+//     description:
+//       "horror \n\n Developers: \n[Noah van Uunen](https://linkerpink.vercel.app/)\n[Jesse Faassen](https://sites.google.com/view/jesse-faassen/home?authuser=0) \n\nArtists: \n[Noah van Uunen](https://linkerpink.vercel.app/) \n[Jesse Faassen](https://sites.google.com/view/jesse-faassen/home?authuser=0)",
 
-    technologies: [
-      "/images/fnaf unity fortnite official game godot.webp",
-      "/images/unity logo.png",
-      "/images/fortnite.webp",
-      "/images/official.webp",
-      "/images/game.jpg",
-      "/images/godot logo.svg",
-    ],
+//     technologies: [
+//       "/images/fnaf unity fortnite official game godot.webp",
+//       "/images/unity logo.png",
+//       "/images/fortnite.webp",
+//       "/images/official.webp",
+//       "/images/game.jpg",
+//       "/images/godot logo.svg",
+//     ],
 
-    media: [
-      {
-        type: "image",
-        src: "/images/fnaf unity fortnite official game godot.webp",
-      },
-    ],
+//     media: [
+//       {
+//         type: "image",
+//         src: "/images/fnaf unity fortnite official game godot.webp",
+//       },
+//     ],
 
-    featured: false,
+//     featured: false,
 
-    codeSnippets: [
-      {
-        name: "horror script",
-        language: "C#",
-        description: "ik ben LETTERLIJK beter.",
-        code: `horror code`,
-      },
-    ],
-  },
+//     codeSnippets: [
+//       {
+//         name: "horror script",
+//         language: "C#",
+//         description: "ik ben LETTERLIJK beter.",
+//         code: `horror code`,
+//       },
+//     ],
+//   },
   
   // Bug Exterminator (half a spider in 3 weeks!!! jeremy mode and maxwell mode make me not wanna cry) //
   {
