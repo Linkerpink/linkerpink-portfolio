@@ -172,24 +172,24 @@ export default function ProjectDetails() {
               {/* View Project (dynamic platform) */}
               {project.href && (
                 <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold interactable-object select-none ${theme === 'secret' ? 'ring-2 ring-pink-400' : ''}`}
-                  draggable={false}
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold interactable-object select-none ${theme === 'secret' ? 'ring-2 ring-pink-400' : ''}`}
+                draggable={false}
                 >
                   <Image
                     src={
                       project.platform?.toLowerCase().includes("gx")
-                        ? "/images/gx games logo.jpg"
-                        : "/images/itch.io logo.png"
+                      ? "/images/gx games logo.jpg"
+                      : "/images/itch.io logo.png"
                     }
                     alt={`${project.platform || "Platform"} Logo`}
                     width={48}
                     height={48}
                     draggable={false}
                     className="rounded-md select-none"
-                  />
+                    />
                   View on {project.platform || "Platform"}
                 </a>
               )}
@@ -197,12 +197,12 @@ export default function ProjectDetails() {
               {/* GitHub */}
               {project.github && (
                 <a
-                  href={project.github}
+                href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`flex items-center gap-3 px-2.5 py-2 rounded-full bg-gradient-to-r from-gray-500 to-gray-900 text-white font-semibold interactable-object select-none ${theme === 'secret' ? 'ring-2 ring-pink-400' : ''}`}
                   draggable={false}
-                >
+                  >
                   <Image
                     src="/images/github logo.svg"
                     alt="GitHub Icon"
@@ -210,13 +210,34 @@ export default function ProjectDetails() {
                     height={48}
                     draggable={false}
                     className="rounded-md select-none"
-                  />
+                    />
                   View on GitHub
                 </a>
               )}
             </div>
           )}
         </header>
+          {/* Screenshots */}
+          {screenshots.length > 0 && (
+            <section className="mb-12">
+              <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
+                <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
+                Screenshots
+              </h2>
+              <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
+              <div className="flex flex-wrap justify-center gap-6">
+                {screenshots.map((img, i) => (
+                  <MediaCard
+                    key={i}
+                    imgSrc={img.src}
+                    title={project.title}
+                    size="small"
+                    />
+                  ))}
+              </div>
+            </section>
+          )}
+  
 
         {/* Description */}
         <section className="mb-10">
@@ -236,7 +257,7 @@ export default function ProjectDetails() {
         <section className="mb-10 user-select-none select-none">
           <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
             <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
-            Code Snippets
+            What I made
           </h2>
           <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
 
@@ -245,14 +266,14 @@ export default function ProjectDetails() {
               {project.codeSnippets.map(
                 ({ language, name, description, code }, i) => (
                   <div
-                    key={i}
+                  key={i}
                     className="mb-6 rounded-md overflow-hidden"
                   >
                     <CodeBlock
                       language={language}
                       name={name}
                       description={description}
-                    >
+                      >
                       {code}
                     </CodeBlock>
                   </div>
@@ -261,73 +282,52 @@ export default function ProjectDetails() {
             </section>
           )}
         </section>
+          {/* Videos / GIFs / YouTube */}
+          {videoLikeMedia.length > 0 && (
+            <section className="mb-12">
+              <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
+                <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
+                Related Videos
+              </h2>
+              <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
+              <div className="flex flex-wrap justify-center gap-6">
+                {videoLikeMedia.map((mediaItem, i) => {
+                  switch (mediaItem.type) {
+                    case "video":
+                      return (
+                        <MediaCard
+                          key={i}
+                          videoSrc={mediaItem.src}
+                          title={project.title}
+                          size="large"
+                        />
+                      );
+                    case "gif":
+                      return (
+                        <MediaCard
+                          key={i}
+                          gifSrc={mediaItem.src}
+                          title={`GIF ${i + 1}`}
+                          size="small"
+                        />
+                      );
+                    case "youtubeId":
+                      return (
+                        <MediaCard
+                          key={i}
+                          youtubeId={mediaItem.src}
+                          title={`Video ${i + 1}`}
+                          size="small"
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
+            </section>
+          )}
 
-        {/* Screenshots */}
-        {screenshots.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
-              <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
-              Screenshots
-            </h2>
-            <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
-            <div className="flex flex-wrap justify-center gap-6">
-              {screenshots.map((img, i) => (
-                <MediaCard
-                  key={i}
-                  imgSrc={img.src}
-                  title={project.title}
-                  size="small"
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Videos / GIFs / YouTube */}
-        {videoLikeMedia.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
-              Related Videos
-            </h2>
-            <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
-            <div className="flex flex-wrap justify-center gap-6">
-              {videoLikeMedia.map((mediaItem, i) => {
-                switch (mediaItem.type) {
-                  case "video":
-                    return (
-                      <MediaCard
-                        key={i}
-                        videoSrc={mediaItem.src}
-                        title={project.title}
-                        size="large"
-                      />
-                    );
-                  case "gif":
-                    return (
-                      <MediaCard
-                        key={i}
-                        gifSrc={mediaItem.src}
-                        title={`GIF ${i + 1}`}
-                        size="small"
-                      />
-                    );
-                  case "youtubeId":
-                    return (
-                      <MediaCard
-                        key={i}
-                        youtubeId={mediaItem.src}
-                        title={`Video ${i + 1}`}
-                        size="large"
-                      />
-                    );
-                  default:
-                    return null;
-                }
-              })}
-            </div>
-          </section>
-        )}
       </div>
     );
   }
