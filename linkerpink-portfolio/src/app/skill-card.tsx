@@ -3,11 +3,12 @@ import { useTheme } from './theme-context';
 
 type SkillCardProps = {
   name: string;
-  description: string;
+  skillLevel : string;
   logo: string;
+  description: string;
 };
 
-export default function SkillCard({ name, description, logo }: SkillCardProps) {
+export default function SkillCard({ name, skillLevel , logo, description }: SkillCardProps) {
   const { theme } = useTheme();
   const isSecretTheme = theme === 'secret';
   const isDarkTheme = theme === 'dark';
@@ -31,10 +32,8 @@ export default function SkillCard({ name, description, logo }: SkillCardProps) {
         >
           {/* Icon */}
           <div className="w-16 h-16 flex items-center justify-center overflow-hidden">
-            {/* Apply theme-aware filters to raster/SVG logos so they match the theme */}
             {(() => {
               const baseStyle: React.CSSProperties = { width: '100%', height: '100%' };
-              // Only apply color-changing filters to a small whitelist of SVG logos
               const isSvg = typeof logo === 'string' && logo.toLowerCase().includes('.svg');
               const whitelist = [
                 '/next.svg',
@@ -47,7 +46,7 @@ export default function SkillCard({ name, description, logo }: SkillCardProps) {
                 ? isDarkTheme
                   ? { filter: 'brightness(0) invert(1)' } // make whitelisted SVG icons light in dark mode
                   : isSecretTheme
-                  ? { filter: 'grayscale(100%) sepia(1) saturate(6) hue-rotate(-40deg) contrast(0.95)' } // pinkish tint for secret
+                  ? { filter: 'grayscale(100%) sepia(1) saturate(6) hue-rotate(-40deg) contrast(0.95)' }
                   : {}
                 : {};
               const borderStyle: React.CSSProperties = isSecretTheme ? { borderRadius: '75%' } : {};
@@ -70,16 +69,16 @@ export default function SkillCard({ name, description, logo }: SkillCardProps) {
           {/* Text */}
           <div className="ml-6 flex flex-col justify-center">
             <h3
-              className="text-lg font-semibold user-select-none select-none"
+              className="text-lg font-bold user-select-none select-none"
               style={isSecretTheme ? { color: '#faecb7', fontFamily: 'Smooch, cursive, Arial, sans-serif' } : {}}
             >
               {name}
             </h3>
             <p
-              className="text-sm user-select-none select-none"
-              style={isSecretTheme ? { color: '#faecb7', fontFamily: 'Smooch, cursive, Arial, sans-serif' } : {}}
+              className="text-3xl user-select-none select-none"
+              style={isSecretTheme ? { color: '#faecb7', fontFamily: 'Smooch, cursive, Arial, sans-serif' } : {color: '#fff768ff'}}
             >
-              {description}
+              {skillLevel}
             </p>
           </div>
         </div>

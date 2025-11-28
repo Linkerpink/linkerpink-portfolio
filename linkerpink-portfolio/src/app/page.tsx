@@ -234,7 +234,7 @@ export default function Home() {
           className={`pt-20 px-4 transition-all duration-300 ${isExpanded ? "blur-sm" : ""
             }`}
         >
-          <h2 className="text-4xl font-bold mb-3 text-center user-select-none select-none">My links</h2>
+          <h2 className="text-4xl font-bold mb-3 text-center user-select-none select-none">Contact Me</h2>
           <div className="flex flex-wrap justify-center max-w-4xl mx-auto px-4">
             {Links.map((link, i) => (
               <LinkCard key={i} logo={link.logo} href={link.href} />
