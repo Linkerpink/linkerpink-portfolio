@@ -21,7 +21,7 @@ import Skills from "./skills";
 import LinkCard from "./link-card";
 import Links from "./links";
 import { useTheme } from "./theme-context";
-import { CalculateTime } from "./calculate-time";
+//import { CalculateTime } from "./calculate-time";
 import { CalculateTimeYearOnly } from "./calculate-time";
 
 export default function Home() {
