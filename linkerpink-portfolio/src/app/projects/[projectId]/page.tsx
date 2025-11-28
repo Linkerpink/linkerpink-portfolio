@@ -1,7 +1,7 @@
   "use client";
 
 
-import MediaCard from "../media-card"; // adjust path as needed
+import MediaCard from "../media-card";
 import { allProjects } from "../all-projects";
 import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
@@ -94,10 +94,24 @@ export default function ProjectDetails() {
     notFound();
   }
 
-  const screenshots = (project.media ?? []).filter((m) => m.type === "image");
-  const videoLikeMedia = (project.media ?? []).filter((m) =>
-    ["video", "gif", "youtubeId"].includes(m.type)
+  const media = project.media ?? [];
+  // Ensure display order: images -> gifs -> youtube -> videos
+  const mediaOrder = ["image", "gif", "youtubeId", "video"];
+  const sortedMedia = [...media].sort(
+    (a, b) => mediaOrder.indexOf(a.type) - mediaOrder.indexOf(b.type)
   );
+
+  // Attach a per-type index to each media item so captions can show
+  // the media type and its sequential number (e.g. "Image 1", "GIF 2").
+  // Treat YouTube embeds as videos for numbering purposes so both
+  // share the same "Video N" sequence.
+  const typeCounters: Record<string, number> = { image: 0, gif: 0, video: 0 };
+  const mediaWithIndex = sortedMedia.map((m) => {
+    const rawType = m.type as string;
+    const key = rawType === "youtubeId" ? "video" : rawType;
+    typeCounters[key] = (typeCounters[key] || 0) + 1;
+    return { ...m, typeIndex: typeCounters[key] };
+  });
 
   // Theme-based card classes
   const cardBgClass = theme === 'dark' ? 'bg-[#232323]' : theme === 'secret' ? 'bg-pink-200' : 'bg-white';
@@ -217,23 +231,66 @@ export default function ProjectDetails() {
             </div>
           )}
         </header>
-          {/* Screenshots */}
-          {screenshots.length > 0 && (
+          {/* Combined Media (images, gifs, youtube embeds, videos last) */}
+          {sortedMedia.length > 0 && (
             <section className="mb-12">
               <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2 user-select-none select-none">
                 <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
-                Screenshots
+                Media
               </h2>
               <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
-              <div className="flex flex-wrap justify-center gap-6">
-                {screenshots.map((img, i) => (
-                  <MediaCard
-                    key={i}
-                    imgSrc={img.src}
-                    title={project.title}
-                    size="small"
-                    />
-                  ))}
+              <div className="flex flex-wrap justify-center gap-3">
+                {mediaWithIndex.map((mediaItem, i) => {
+                  const labelMap: Record<string, string> = {
+                    image: 'Image',
+                    gif: 'GIF',
+                    youtubeId: 'Video',
+                    video: 'Video',
+                  };
+                  const typeLabel = labelMap[mediaItem.type as string] || (mediaItem.type as string);
+                  const caption = `${typeLabel} ${mediaItem.typeIndex ?? i + 1}`;
+
+                  switch (mediaItem.type) {
+                    case "image":
+                      return (
+                        <MediaCard
+                          key={i}
+                          imgSrc={mediaItem.src}
+                          title={caption}
+                          size="small"
+                        />
+                      );
+                    case "gif":
+                      return (
+                        <MediaCard
+                          key={i}
+                          gifSrc={mediaItem.src}
+                          title={caption}
+                          size="small"
+                        />
+                      );
+                    case "youtubeId":
+                      return (
+                        <MediaCard
+                          key={i}
+                          youtubeId={mediaItem.src}
+                          title={caption}
+                          size="small"
+                        />
+                      );
+                    case "video":
+                      return (
+                        <MediaCard
+                          key={i}
+                          videoSrc={mediaItem.src}
+                          title={caption}
+                          size="large"
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                })}
               </div>
             </section>
           )}
@@ -283,52 +340,6 @@ export default function ProjectDetails() {
             </section>
           )}
         </section>
-          {/* Videos / GIFs / YouTube */}
-          {videoLikeMedia.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-semibold mb-3 flex items-center gap-2">
-                <span className="w-1.5 h-6 bg-[#F57C00] rounded-sm user-select-none select-none" />
-                Related Videos
-              </h2>
-              <hr className="border-t-2 mb-6" style={{ borderColor: hrBorderColor }} />
-              <div className="flex flex-wrap justify-center gap-6">
-                {videoLikeMedia.map((mediaItem, i) => {
-                  switch (mediaItem.type) {
-                    case "video":
-                      return (
-                        <MediaCard
-                          key={i}
-                          videoSrc={mediaItem.src}
-                          title={project.title}
-                          size="large"
-                        />
-                      );
-                    case "gif":
-                      return (
-                        <MediaCard
-                          key={i}
-                          gifSrc={mediaItem.src}
-                          title={`GIF ${i + 1}`}
-                          size="small"
-                        />
-                      );
-                    case "youtubeId":
-                      return (
-                        <MediaCard
-                          key={i}
-                          youtubeId={mediaItem.src}
-                          title={`Video ${i + 1}`}
-                          size="small"
-                        />
-                      );
-                    default:
-                      return null;
-                  }
-                })}
-              </div>
-            </section>
-          )}
-
       </div>
     );
   }

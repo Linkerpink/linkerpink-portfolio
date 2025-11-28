@@ -34,14 +34,12 @@ export const allProjects = [
     technologies: ["/images/unity logo.png", "/images/c sharp logo.svg"],
 
     media: [
-      { type: "image", src: "/images/robo rebellion.png" },
-      { type: "image", src: "/images/robo rebellion 2.png" },
-      { type: "image", src: "/images/robo rebellion 1.webp" },
-      { type: "image", src: "/images/robo rebellion 6.jpeg" },
-      { type: "image", src: "/images/robo rebellion 4.jpeg" },
-      { type: "image", src: "/images/robo rebellion 3.jpeg" },
-      { type: "youtubeId", src: "iHwMC_45iww", title: "Launch Trailer" },
-      { type: "youtubeId", src: "pjqwkHgBgVQ", title: "Launch Trailer" },
+        { type: "image", src: "/images/robo rebellion.png" },
+        { type: "image", src: "/images/robo rebellion 6.jpeg" },
+        { type: "image", src: "/images/robo rebellion 4.jpeg" },
+        { type: "image", src: "/images/robo rebellion 3.jpeg" },
+        { type: "youtubeId", src: "iHwMC_45iww", title: "Launch Trailer" },
+        { type: "youtubeId", src: "pjqwkHgBgVQ", title: "Launch Trailer" },
     ],
 
     featured: true,
@@ -605,8 +603,9 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
       technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
   
       media: [
-      { type: "image", src: "/images/bpm.webp" },
-      { type: "youtubeId", src: "NfxPphgsxag", title: "Launch Trailer" },
+        { type: "image", src: "/images/bpm.webp" },
+        { type: "youtubeId", src: "osJGkIWXR24", title: "Beta Gameplay" },
+        // { type: "youtubeId", src: "NfxPphgsxag", title: "Alpha Gameplay" },
       ],
   
       featured: true,

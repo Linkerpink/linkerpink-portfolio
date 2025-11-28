@@ -5,10 +5,9 @@ type SkillCardProps = {
   name: string;
   skillLevel : string;
   logo: string;
-  description: string;
 };
 
-export default function SkillCard({ name, skillLevel , logo, description }: SkillCardProps) {
+export default function SkillCard({ name, skillLevel , logo }: SkillCardProps) {
   const { theme } = useTheme();
   const isSecretTheme = theme === 'secret';
   const isDarkTheme = theme === 'dark';

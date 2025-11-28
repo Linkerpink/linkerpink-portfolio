@@ -34,9 +34,10 @@ const MediaCard: React.FC<MediaCardProps> = ({
     ? "w-full sm:w-1/2 md:w-1/3"
     : "w-full sm:w-1/2 md:w-1/4";
 
+  // Only show an overlay icon for images/gifs (zoom). Do not show
+  // an icon for video files or YouTube embeds per design request.
   let iconSrc: string | null = null;
   if (imgSrc || gifSrc) iconSrc = "/images/zoom icon.webp";
-  else if (videoSrc) iconSrc = "/images/video icon.webp";
 
   const handleClick = () => {
     if (imgSrc || gifSrc) {
@@ -63,7 +64,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
   return (
     <>
       <div
-        className={`horizontal-game ${widthClass} m-[1%] text-center select-none`}
+        className={`horizontal-game ${widthClass} m-1 text-center select-none`}
         style={
           isSecretTheme
             ? {
@@ -133,8 +134,8 @@ const MediaCard: React.FC<MediaCardProps> = ({
           )}
         </div>
 
-        {/* Only show title for video and YouTube */}
-        {(videoSrc || youtubeId) && (
+        {/* Show title/caption for all media types */}
+        {title && (
           <div
             className="mt-2 font-semibold"
             style={
