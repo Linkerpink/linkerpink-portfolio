@@ -52,6 +52,7 @@ export const allProjects = [
         language: "C#",
         description:
           "Here are some functions I made for the player. I was in control of the player movement, controller support, animation switching, state switching, player rotation / look at and dashing",
+        videoSrc: "/videos/test.mp4",
         code: `
 public enum PlayerState
 {
@@ -306,6 +307,7 @@ private void IdleState()
         language: "C#",
         description:
           "I was also in charge of the player interaction, pickups, keycards and inventory. the code blocks below are conntected with this one",
+        videoSrc: "/videos/test.mp4",
         code: `
 private void OnTriggerStay(Collider other)
 {
@@ -362,6 +364,7 @@ private void OnTriggerStay(Collider other)
         language: "C#",
         description:
           "This script shows the player inventory / weapon switching",
+        videoSrc: "/videos/test.mp4",
         code: `
         public enum Weapons
         {
@@ -457,6 +460,7 @@ private void SwitchWeapon()
         name: "KeyUI.cs",
         language: "C#",
         description: "This script shows the keycard stacking ui.",
+        videoSrc: "/videos/test.mp4",
         code: `
 private void Awake()
 {
@@ -516,6 +520,7 @@ private void PlayerInventory_OnKeysChanged(object sender, System.EventArgs e)
         language: "C#",
         description:
           "This is the camera manager I made for the game. This manager is able to switch cameras in a smooth way using CineMachine, and give screenshake when needed.",
+        videoSrc: "/videos/test.mp4",
         code: `
 private void Start()
 {
@@ -557,6 +562,7 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
         language: "C#",
         description:
         "Here are some functions I made in the GameManager that improve the gameplay experience. The rumble was made with enabling the motors of the controller if the player is playing with a controller, and stopping it in a certain amount of time.",
+        videoSrc: "/videos/test.mp4",
         code: `
         public void ControllerRumble(float leftMotorIntensity, float rightMotorIntensity, float time)
         {
@@ -611,6 +617,7 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
             language: "gdscript",
             description:
             "This is the Conductor script responsible for handling bpm, time signatures and beat calculations",
+            videoSrc: "/videos/test.mp4",
             code: `
 extends AudioStreamPlayer
 class_name Conductor
@@ -732,6 +739,7 @@ pass
             language: "gdscript",
             description:
             "This is the Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file",
+            videoSrc: "/videos/test.mp4",
             code: `
             extends Node
 class_name Charter
@@ -788,6 +796,7 @@ active_notes.append(note)
             language: "gdscript",
             description:
             "This is the Song manager script responsible for holding data like combo, multipliers, score and health",
+            videoSrc: "/videos/test.mp4",
             code: `
 extends Node2D
 class_name SongManager
@@ -918,6 +927,7 @@ match combo_multiplier:
             language: "gdscript",
             description:
             "This is the Note script that gets spawned by the Charter with a type that can be: Normal or Bomb",
+            videoSrc: "/videos/test.mp4",
             code: `
 extends Node2D
 
@@ -973,6 +983,7 @@ match type:
             language: "gdscript",
             description:
             "This is the Lane script responsible for hit detection of the notes.",
+            videoSrc: "/videos/test.mp4",
             code: `
 extends Node2D
 
@@ -1108,6 +1119,7 @@ if area.is_in_group("bomb"):
             language: "gdscript",
             description:
             "This is the Globals script responsible for holding global data like the current user's name",
+            videoSrc: "/videos/test.mp4",
             code: `
 extends Node
 
@@ -1152,6 +1164,7 @@ cm_passed = _passed
             language: "gdscript",
             description:
             "This is the Database script to send the information of the map you beat to the database",
+            videoSrc: "/videos/test.mp4",
             code: `
 extends Node
 
@@ -1230,6 +1243,7 @@ func _on_request_completed(result, response_code, headers, body):
         language: "C#",
         description:
         "This is the script that has taken the longest to make by far. This is the script for handling the player's movement, animations, attacks and interactions. It is a very long script so I will not show the variable declarations, because that in it self is already 100 lines. The player works with a state machine which decides what the player character should be doing. It has a few health functions that make sure you can take damage, die and give damage to the enemies. The player has 3 damage hitboxes, one for the cick and one for the punch. those are handled through the animations itself, the other one is more interesting, because that one checks if something is under the player, so if the player jumps on top of an enemy, the enemy will take damage. The player also has a few functions that make sure the player can interact with the environment, like interacting with dialogue triggers, picking up items and collecting coins.",
+        videoSrc: "/videos/test.mp4",
         code: `
         private void Update()
         {
@@ -1915,6 +1929,7 @@ private void OnTriggerExit(Collider other)
           name: "DialogueSequence.cs",
           language: "C#",
           description: "This is the Scriptable Object in charge of making a sequence of dialogue that the textbox will follow. It has a string array where you can add different pages of dialogue to in the editor. It has values for the color that the textbox needs to be. It also has possible ending functions, like opening a cannon, starting / ending fights and starting a race",
+          videoSrc: "/videos/test.mp4",
           code: `
           public string[] dialogue;
           
@@ -1992,6 +2007,7 @@ public void EndDialogueFunction()
         name: "Textbox.cs",
         language: "C#",
         description: "This is the textbox script that loads in the information from the DialogueSequence that is given to the textbox.",
+        videoSrc: "/videos/test.mp4",
         code: `
 private void Update()
 {
@@ -2058,6 +2074,7 @@ public void OnSubmit(InputAction.CallbackContext _context)
         language: "C#",
         description:
           "This is the script that handles the state of the game, star selection and loading the level accordingly based on the star that is selected. It also has the screenshake function I made for Robo Rebellion.",
+          videoSrc: "/videos/test.mp4",
           code: `
 private void Update()
 {
@@ -2351,6 +2368,7 @@ private IEnumerator ShakeTimer(float _duration)
     name: "Enemy.cs",
     language: "C#",
     description: "",
+    videoSrc: "/videos/test.mp4",
     code: `
 public enum States
 {
@@ -2483,6 +2501,7 @@ private void Die()
     name: "KingBobOmb.cs",
     language: "C#",
     description: "",
+    videoSrc: "/videos/test.mp4",
     code: `
     public enum States
     {
@@ -2600,6 +2619,7 @@ private void SetWalkPoint(Vector3 _walkPoint)
     name: "KoopaTheQuick.cs",
     language: "C#",
     description: "",
+    videoSrc: "/videos/test.mp4",
     code: `
 private void Update()
 {
@@ -2698,6 +2718,7 @@ private void OnTriggerEnter(Collider other)
 	name: "SettingsManager.cs",
 	language: "C#",
 	description: "This is the script that manages player settings. The current player settings and default player settings are stored in a Scriptable Object, that then gets loaded when the game loads a scene.",
+	videoSrc: "/videos/test.mp4",
 	code: `
     private void Start()
     {
@@ -3034,6 +3055,7 @@ private IEnumerator DisableShopUICoroutine()
 	name: "RussianRoulette.cs",
 	language: "C#",
 	description: "This is the script for handling russian roulette. Some of the functions are used in animations as events.",
+	videoSrc: "/videos/test.mp4",
 	code: `
     public void StartRussianRouletteSetup()
     {
@@ -3167,6 +3189,7 @@ private IEnumerator GoToEnding(float _delay)
 	name: "AudioManager.cs",
 	language: "C#",
 	description: "This is the script that handles the functions for sounds. It is based on the simple sound system I made for my game: Shy.",
+	videoSrc: "/videos/test.mp4",
 	code: `
 private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 { 
@@ -3262,6 +3285,7 @@ public void SetVolume(float _volume, string _name)
 	name: "PlayerObject: Step",
 	language: "GML",
 	description: "This is the Step event of the player object. It handles the player movement, time switching and attacking.",
+	videoSrc: "/videos/test.mp4",
 	code: `
     //day and night switching
     timekey = keyboard_check_pressed (ord("C"))// or (gamepad_button_check_pressed(0, gp_face3));
@@ -3470,6 +3494,7 @@ if day == false
 	name: "CameraObject: Step",
 	language: "GML",
 	description: "This is the step event of the CameraObject that handles the camera movement, following the player, and screenshake effects.",
+	videoSrc: "/videos/test.mp4",
 	code: `
 // cam update
 if (instance_exists(follow))
@@ -3517,6 +3542,7 @@ if room = MainGameRoom5
 	name: "TextObject: Draw",
 	language: "GML",
 	description: "This is the Draw event of the TextObject that displays text on the screen. It handles the textbox, text speed, and page flipping.",
+	videoSrc: "/videos/test.mp4",
 	code: `
 accept_key = keyboard_check_pressed(vk_space);
 
@@ -3612,6 +3638,7 @@ draw_text_ext_color(textbox_x - text_x_offset[page] -70 + border, textbox_y + _f
 	name: "GameTextScript.gml",
 	language: "GML",
 	description: "This is the script that holds all the dialogue for the game. It is used by the TextObject to display text on the screen when needed.",
+	videoSrc: "/videos/test.mp4",
 	code: `
 /// param text_id
 function scr_game_text(_text_id) 
@@ -3760,6 +3787,7 @@ function scr_game_text(_text_id)
 	name: "BossObject",
 	language: "GML",
 	description: "These are the scripts for the boss fight. The boss has a very simple AI that chooses a random numver every second. if it's 0, it will attack the player with fireballs. If it's another number it will move either up, down, left or right",
+	videoSrc: "/videos/test.mp4",
 	code: `
 Create:
 bosshp = 100;
@@ -3884,6 +3912,7 @@ if moving == 0 and PlayerObject.day == true
         name: "insane script",
         language: "tsx",
         description: "ik was beter.",
+        videoSrc: "/videos/test.mp4",
         code: `insane code`,
     },
 ],
@@ -3921,6 +3950,7 @@ if moving == 0 and PlayerObject.day == true
 	name: "EmoteWheel.cs",
 	language: "C#",
 	description: "This is the script that handles the emote wheel. Most of it is made in unity's canvas.",
+	videoSrc: "/videos/test.mp4",
 	code: `
 void Update()
 {
@@ -3971,6 +4001,7 @@ public void ChangeEnableEmoteWheel()
 	name: "Emote.cs",
 	language: "C#",
 	description: "This is the script for making the player emote when they have selected an emote from the wheel, and then changes the camera acordingly",
+	videoSrc: "/videos/test.mp4",
 	code: `
     public void EmoteDab()
     {

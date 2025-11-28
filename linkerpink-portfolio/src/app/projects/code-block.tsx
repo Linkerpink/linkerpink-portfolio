@@ -13,6 +13,7 @@ interface CodeBlockProps {
   name: string;
   description?: string;
   children: string;
+  videoSrc?: string;
 }
 
 function useIsMobile(breakpoint = 768) {
@@ -33,6 +34,7 @@ export default function CodeBlock({
   name,
   description,
   children,
+  videoSrc,
 }: CodeBlockProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
@@ -41,75 +43,90 @@ export default function CodeBlock({
   const { theme } = useTheme();
 
   // Theme-based classes
-  const headerBgClass = theme === 'dark'
-    ? 'bg-gradient-to-r from-[#232323] to-[#1a1a1a]'
-    : theme === 'secret'
-    ? 'bg-gradient-to-r from-pink-300 to-pink-400'
-    : 'bg-gradient-to-r from-gray-50 to-gray-100';
+  const headerBgClass =
+    theme === "dark"
+      ? "bg-gradient-to-r from-[#232323] to-[#1a1a1a]"
+      : theme === "secret"
+      ? "bg-gradient-to-r from-pink-300 to-pink-400"
+      : "bg-gradient-to-r from-gray-50 to-gray-100";
 
-  const headerTextClass = theme === 'dark'
-    ? 'text-white'
-    : theme === 'secret'
-    ? 'text-pink-900'
-    : 'text-gray-900';
+  const headerTextClass =
+    theme === "dark"
+      ? "text-white"
+      : theme === "secret"
+      ? "text-pink-900"
+      : "text-gray-900";
 
-  const headerHoverClass = theme === 'dark'
-    ? 'hover:bg-gradient-to-r hover:from-orange-700 hover:to-orange-800'
-    : theme === 'secret'
-    ? 'hover:bg-gradient-to-r hover:from-pink-400 hover:to-pink-500'
-    : 'hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200';
+  const headerHoverClass =
+    theme === "dark"
+      ? "hover:bg-gradient-to-r hover:from-orange-700 hover:to-orange-800"
+      : theme === "secret"
+      ? "hover:bg-gradient-to-r hover:from-pink-400 hover:to-pink-500"
+      : "hover:bg-gradient-to-r hover:from-orange-100 hover:to-orange-200";
 
-  const descriptionBgClass = theme === 'dark'
-    ? 'bg-[#232323] text-gray-200'
-    : theme === 'secret'
-    ? 'bg-pink-200 text-pink-900'
-    : 'bg-gray-100 text-[#5F5F5F]';
+  const descriptionBgClass =
+    theme === "dark"
+      ? "bg-[#232323] text-gray-200"
+      : theme === "secret"
+      ? "bg-pink-200 text-pink-900"
+      : "bg-gray-100 text-[#5F5F5F]";
 
-  const codeBgClass = theme === 'dark'
-    ? 'bg-[#1a1a1a] text-gray-300'
-    : theme === 'secret'
-    ? 'bg-pink-100 text-pink-900'
-    : 'bg-gray-50 text-[#5F5F5F]';
+  const codeBgClass =
+    theme === "dark"
+      ? "bg-[#1a1a1a] text-gray-300"
+      : theme === "secret"
+      ? "bg-pink-100 text-pink-900"
+      : "bg-gray-50 text-[#5F5F5F]";
 
-  const containerBgClass = theme === 'dark'
-    ? 'bg-[#232323]'
-    : theme === 'secret'
-    ? 'bg-pink-100'
-    : 'bg-white';
+  const containerBgClass =
+    theme === "dark"
+      ? "bg-[#232323]"
+      : theme === "secret"
+      ? "bg-pink-100"
+      : "bg-white";
 
-  const accentColor = theme === 'dark' ? '#FF8C00' : theme === 'secret' ? '#ec4899' : '#F57C00';
-  const buttonColor = theme === 'dark' ? '#FF8C00' : theme === 'secret' ? '#be194e' : '#F57C00';
+  const accentColor =
+    theme === "dark" ? "#FF8C00" : theme === "secret" ? "#ec4899" : "#F57C00";
+  const buttonColor =
+    theme === "dark" ? "#FF8C00" : theme === "secret" ? "#be194e" : "#F57C00";
 
   // Dynamically apply highlight.js theme based on current theme
   useEffect(() => {
-    const styleId = 'highlight-theme-style';
+    const styleId = "highlight-theme-style";
     let style = document.getElementById(styleId) as HTMLStyleElement;
-    
+
     if (!style) {
-      style = document.createElement('style');
+      style = document.createElement("style");
       style.id = styleId;
       document.head.appendChild(style);
     }
 
-    if (theme === 'dark') {
-      document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
-        (link as HTMLLinkElement).disabled = true;
-      });
+    if (theme === "dark") {
+      document
+        .querySelectorAll('link[href*="highlight.js/styles"]')
+        .forEach((link) => {
+          (link as HTMLLinkElement).disabled = true;
+        });
       style.textContent = `
         @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
       `;
-    } else if (theme === 'secret') {
-      document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
-        (link as HTMLLinkElement).disabled = true;
-      });
+    } else if (theme === "secret") {
+      document
+        .querySelectorAll('link[href*="highlight.js/styles"]')
+        .forEach((link) => {
+          (link as HTMLLinkElement).disabled = true;
+        });
       style.textContent = `
         @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16-cupcake.css");
       `;
     } else {
-      document.querySelectorAll('link[href*="highlight.js/styles"]').forEach((link) => {
-        (link as HTMLLinkElement).disabled = false;
-      });
-      style.textContent = '@import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/kimbie-light.css");';
+      document
+        .querySelectorAll('link[href*="highlight.js/styles"]')
+        .forEach((link) => {
+          (link as HTMLLinkElement).disabled = false;
+        });
+      style.textContent =
+        '@import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/kimbie-light.css");';
     }
 
     return () => {
@@ -123,6 +140,14 @@ export default function CodeBlock({
     if (isOpen && isMobile && !hasOpened) {
       setHasOpened(true);
     }
+    if (isOpen && blockRef.current) {
+      setTimeout(() => {
+        blockRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
   }, [isOpen, isMobile, hasOpened]);
 
   useEffect(() => {
@@ -134,17 +159,43 @@ export default function CodeBlock({
         });
       }, 300);
     }
-  }, [isOpen, isMobile, hasOpened]);
+  }, [isOpen, isMobile, hasOpened, blockRef]);
 
   const content = (
     <article className="flex flex-col">
       {description && (
-        <div className={`${descriptionBgClass} whitespace-pre-line px-6 py-3 text-sm leading-relaxed`}>
+        <div
+          className={`${descriptionBgClass} whitespace-pre-line px-6 py-3 text-sm leading-relaxed`}
+        >
           {description}
         </div>
       )}
-      <div className={`${codeBgClass} p-6 whitespace-pre-line text-sm leading-relaxed font-mono`}>
-        <Highlight className={language}>{children.trim()}</Highlight>
+
+      {/* Container for both video and code */}
+      <div className={`${codeBgClass}`}>
+        {videoSrc && (
+          <div className="p-4 md:p-6 flex justify-center items-center">
+            <div className="w-full max-w-3xl rounded-lg overflow-hidden shadow-lg">
+              <video
+                src={videoSrc}
+                className="w-full h-auto aspect-video object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Code block */}
+        <div
+          className={`p-6 whitespace-pre-line text-sm leading-relaxed font-mono ${
+            videoSrc ? "pt-4" : ""
+          }`}
+        >
+          <Highlight className={language}>{children.trim()}</Highlight>
+        </div>
       </div>
     </article>
   );
@@ -247,7 +298,9 @@ export default function CodeBlock({
               transition={{ type: "spring", stiffness: 250, damping: 20 }}
               className="fixed inset-0 z-[999] bg-white flex flex-col"
             >
-              <header className={`relative flex items-center px-5 py-6 ${headerBgClass} ${headerTextClass} font-mono text-base font-semibold shadow-md`}>
+              <header
+                className={`relative flex items-center px-5 py-6 ${headerBgClass} ${headerTextClass} font-mono text-base font-semibold shadow-md`}
+              >
                 <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
                   {language} — {name}
                 </span>
@@ -263,12 +316,40 @@ export default function CodeBlock({
               <div className="flex-1 overflow-auto">
                 <article className="min-h-full flex flex-col">
                   {description && (
-                    <div className={`${descriptionBgClass} leading-relaxed whitespace-pre-line px-6 py-3 text-sm`}>
+                    <div
+                      className={`${descriptionBgClass} leading-relaxed whitespace-pre-line px-6 py-3 text-sm`}
+                    >
                       {description}
                     </div>
                   )}
-                  <div className={`${codeBgClass} p-6 leading-relaxed whitespace-pre-line text-sm font-mono`}>
-                    <Highlight className={language}>{children.trim()}</Highlight>
+
+                  {/* Container for both video and code */}
+                  <div className={`${codeBgClass} flex-1`}>
+                    {videoSrc && (
+                      <div className="p-4 flex justify-center items-center">
+                        <div className="w-full max-w-3xl rounded-lg overflow-hidden shadow-lg">
+                          <video
+                            src={videoSrc}
+                            className="w-full h-auto aspect-video object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Code block */}
+                    <div
+                      className={`p-6 whitespace-pre-line text-sm leading-relaxed font-mono ${
+                        videoSrc ? "pt-4" : ""
+                      }`}
+                    >
+                      <Highlight className={language}>
+                        {children.trim()}
+                      </Highlight>
+                    </div>
                   </div>
                 </article>
               </div>

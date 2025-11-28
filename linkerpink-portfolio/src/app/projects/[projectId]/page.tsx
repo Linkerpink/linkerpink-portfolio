@@ -128,7 +128,7 @@ export default function ProjectDetails() {
       <header className="mb-10 flex flex-col md:flex-row gap-4 items-center">
         {/* Left: Icon + Title Block */}
         <div className={`flex-1 ${cardBgClass} rounded-3xl p-5 ${theme === 'secret' ? 'border-4 border-pink-400' : ''}`}>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col md:flex-row items-center md:items-center gap-4">
             {project.icon && (
               <Image
                 src={project.icon}
@@ -139,7 +139,7 @@ export default function ProjectDetails() {
                 draggable={false}
               />
             )}
-            <div>
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h1 className="text-2xl font-extrabold leading-tight user-select-none select-none">
                 {project.title}
               </h1>
@@ -148,7 +148,7 @@ export default function ProjectDetails() {
               </p>
 
               {project.technologies.length > 0 && (
-                <div className="mt-3 flex gap-2 flex-wrap ">
+                <div className="mt-3 flex gap-2 flex-wrap justify-center md:justify-start">
                   {project.technologies.map((icon, i) => (
                     <Image
                       key={i}
@@ -264,7 +264,7 @@ export default function ProjectDetails() {
           {project.codeSnippets && project.codeSnippets.length > 0 && (
             <section className="mb-8">
               {project.codeSnippets.map(
-                ({ language, name, description, code }, i) => (
+                ({ language, name, description, code, videoSrc }, i) => (
                   <div
                   key={i}
                     className="mb-6 rounded-md overflow-hidden"
@@ -273,6 +273,7 @@ export default function ProjectDetails() {
                       language={language}
                       name={name}
                       description={description}
+                      videoSrc={videoSrc}
                       >
                       {code}
                     </CodeBlock>
