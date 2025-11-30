@@ -594,7 +594,7 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
       displayDate: formatDisplayDate("2025-10-06"),
       platform: "Itch.io",
       description:
-      "Bombs Per Minute is a rhythm game made with notes and bombs made in godot. It's a work in progress that still lacks the map editor and some score calculations, but I'm still proud of it. \n\nWhat i made: \n- Conductor script responsible for handling bpm, time signatures and beat calculations \n- Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file \n- Song manager script responsible for holding data like combo, multipliers, score and health \n- Note script that gets spawned by the Charter with a type that can be: Normal or Bomb \n- Lane script responsible for hit detection of the notes \n- Globals script responsible for holding global data like the current user's name\n- Database script to send the information of the map you beat to the database \n- Settings menu that saves data the Globals \n- Result screen that shows your score, accuracy, max combo and rank on the current song \n\nWork In Progress: \n- Map Editor (can only make the map json files at the moment) \n- More songs made with the new map editor so the game has playable content that isn't made in a text editor",
+      "Bombs Per Minute is a rhythm game made with notes and bombs made in godot. It's a work in progress that still lacks the map editor and some score calculations, but I'm still proud of it. \n\nWork In Progress: \n- Map Editor (can only make the map json files at the moment) \n- More songs made with the new map editor so the game has playable content that isn't made in a text editor",
   
       //href: "https://linkerpink.itch.io/bombs-per-minute",
       github: "https://github.com/Linkerpink/Bombs-Per-Minute",
@@ -1216,7 +1216,7 @@ func _on_request_completed(result, response_code, headers, body):
     displayDate: formatDisplayDate("2025-04-17"),
     platform: "Itch.io",
     description:
-      "This is a remake of Super Mario 64 made in Unity using C#, but made in about 4 weeks of time for a school project. This game was made purely for fun and with love for the original game, I was not trying to make a full and polished remake with intent of having people playing this instead of the original. \n\nI remade the outside of the castle, a bit of the inside of the castle, and bob omb battlefield. Most models were ripped from the original game, but the animations were made by myself, because I could not find the original animations and mixamo animations didn't feel right with capturing the spirit of the original. \n\nWhat I made: \n- Player movement, attacks, animations, interactions etc \n- Scriptable Object based dialogue system that connects a dialogue sequence to the textbox, and spawns them accordingly \n- Scriptable Object based star system \n- GameManager script that handles the state of the game, star selection and loading the level accordingly based on the star that is selected. \n- Base enemy script that enemies could be built off of \n- Boss fight with King Bob Omb \n- Race with Koopa The Quick \n- Scene transitions \n- Cutscene system \n- Billboarded sprites",
+      "This is a remake of Super Mario 64 made in Unity using C#, but made in about 4 weeks of time for a school project. This game was made purely for fun and with love for the original game, I was not trying to make a full and polished remake with intent of having people playing this instead of the original. \n\nI remade the outside of the castle, a bit of the inside of the castle, and bob omb battlefield. Most models were ripped from the original game, but the animations were made by myself, because I could not find the original animations and mixamo animations didn't feel right with capturing the spirit of the original.",
     href: "https://linkerpink.itch.io/not-suepr-maria-63",
     github: "https://github.com/Linkerpink/NOT-Suepr-Maria-63",
     
@@ -2675,6 +2675,16 @@ private void OnTriggerEnter(Collider other)
     gameObject.SetActive(false);
 }
     `
+},
+
+{
+    name: "Cutscene System",
+    language: "C#",
+    description: "This is a simple cutscene system I made for the game. It changes cinemachine cameras and can have a few actions like spawning a star when the animation is finished.",
+    videoSrc: "/videos/nsm63/cutscene.mp4",
+    code: `
+
+    `
 }
     ],
   },
@@ -2699,7 +2709,6 @@ private void OnTriggerEnter(Collider other)
       { type: "image", src: "/images/the royal spin logo.png" },
       { type: "image", src: "/images/trs 1.jpg" },
       { type: "image", src: "/images/trs 2.jpg" },
-      { type: "image", src: "/images/trs 3.jpg" },
       { type: "image", src: "/images/trs 4.jpg" },
       { type: "image", src: "/images/trs 5.jpg" },
       { type: "youtubeId", src: "T5x7aK-R4FY", title: "Gameplay Video" },
@@ -2712,7 +2721,7 @@ private void OnTriggerEnter(Collider other)
 	name: "SettingsManager.cs",
 	language: "C#",
 	description: "This is the script that manages player settings. The current player settings and default player settings are stored in a Scriptable Object, that then gets loaded when the game loads a scene.",
-	videoSrc: "/videos/test.mp4",
+	videoSrc: "/videos/trs/settings.mp4",
 	code: `
     private void Start()
     {
@@ -3049,7 +3058,7 @@ private IEnumerator DisableShopUICoroutine()
 	name: "RussianRoulette.cs",
 	language: "C#",
 	description: "This is the script for handling russian roulette. Some of the functions are used in animations as events.",
-	videoSrc: "/videos/test.mp4",
+    videoSrc: "/videos/trs/russian roulette.mp4",
 	code: `
     public void StartRussianRouletteSetup()
     {
@@ -3183,7 +3192,6 @@ private IEnumerator GoToEnding(float _delay)
 	name: "AudioManager.cs",
 	language: "C#",
 	description: "This is the script that handles the functions for sounds. It is based on the simple sound system I made for my game: Shy.",
-	videoSrc: "/videos/test.mp4",
 	code: `
 private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 { 
