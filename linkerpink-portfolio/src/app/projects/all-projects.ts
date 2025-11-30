@@ -1,3 +1,5 @@
+import { video } from "framer-motion/client";
+
 function formatDisplayDate(date: string): string {
   if (date.toLowerCase() === "not released") return "Not Released";
   const d = new Date(date);
@@ -580,6 +582,80 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
 }
 `,
 },
+
+{
+        name: "Main Menu Camera Sequences",
+        language: "C#",
+        description:
+        "Here is the camera sequence I made for the main menu. It switches between multiple cameras using CineMachine and coroutines.",
+        videoSrc: "/videos/robo rebellion/main menu cams.mp4",
+        code: `
+            private void ChooseRandomCamera()
+            {
+                int rnd;
+                do
+                {
+                    rnd = Random.Range(0, 5);
+                } while (rnd == lastRnd);
+
+                lastRnd = rnd;
+
+                Debug.Log(rnd);
+
+                switch (rnd)
+                {
+                    case 0:
+                        camera0.Priority = 10;
+                        camera1.Priority = 0;
+                        camera2.Priority = 0;
+                        camera3.Priority = 0;
+                        camera4.Priority = 0;
+                        break;
+
+                    case 1:
+                        camera0.Priority = 0;
+                        camera1.Priority = 10;
+                        camera2.Priority = 0;
+                        camera3.Priority = 0;
+                        camera4.Priority = 0;
+                        break;
+
+                    case 2:
+                        camera0.Priority = 0;
+                        camera1.Priority = 0;
+                        camera2.Priority = 10;
+                        camera3.Priority = 0;
+                        camera4.Priority = 0;
+                        break;
+
+                    case 3:
+                        camera0.Priority = 0;
+                        camera1.Priority = 0;
+                        camera2.Priority = 0;
+                        camera3.Priority = 10;
+                        camera4.Priority = 0;
+                        break;
+
+                    case 4:
+                        camera0.Priority = 0;
+                        camera1.Priority = 0;
+                        camera2.Priority = 0;
+                        camera3.Priority = 0;
+                        camera4.Priority = 10;
+                        break;
+                }
+            }
+
+            private IEnumerator ChooseRandomCameraTimer()
+            {
+                while (true)
+                {
+                    ChooseRandomCamera();
+                    yield return new WaitForSeconds(20f);
+                }
+            }
+    `,
+    },
 ],
 },
 
@@ -2699,7 +2775,7 @@ private void OnTriggerEnter(Collider other)
     displayDate: formatDisplayDate("2025-07-14"),
     platform: "Itch.io",
     description:
-    "The Royal Spin is a game made by a group of 4 students. \n\nGamble and drink your heart out to pay rent and turn the tide with powerful spell cards. In this game you play Slots, Roulette and Russian Roulette. The goal is buying keys to escape. \n\nDevelopers: \n[Mark Biesheuvel](https://sites.google.com/view/mark-biesheuvel-portfolio) \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nArtists: \n[Belle Bunnik](https://www.artstation.com/bellebunnik) \n[Jordy Andriessen](https://www.artstation.com/sekerio) \n\nWhat I made: \n- Game Settings \n- Shop \n- GameManager script that holds the game state and displays the items in the player's inventory at that moment \n- Russian Roulette \n- Rent system \n- Sound System \n- Keys & Doors \n- Main Menu camera sequences",
+    "The Royal Spin is a game made by a group of 4 students. \n\nGamble and drink your heart out to pay rent and turn the tide with powerful spell cards. In this game you play Slots, Roulette and Russian Roulette. The goal is buying keys to escape. \n\nDevelopers: \n[Mark Biesheuvel](https://sites.google.com/view/mark-biesheuvel-portfolio) \n[Noah van Uunen](https://linkerpink.vercel.app/) \n\nArtists: \n[Belle Bunnik](https://www.artstation.com/bellebunnik) \n[Jordy Andriessen](https://www.artstation.com/sekerio)",
     href: "https://linkerpink.itch.io/the-royal-spin",
     github: "https://github.com/MarkBSH/Suicide-Squad",
 
@@ -3249,6 +3325,77 @@ public void SetVolume(float _volume, string _name)
 	`
 },
 
+{
+        name: "Main Menu Camera Sequences",
+        language: "C#",
+        description:
+        "Here is the camera sequence I made for the main menu. It switches between multiple cameras using CineMachine and coroutines.",
+        videoSrc: "/videos/trs/main menu cams.mp4",
+        code: `
+private void SwitchMenuCamera()
+{
+    if (m_currentCam < m_menuCameras.Length - 1)
+    {
+        m_currentCam++;
+    }
+    else
+    {
+        int _currentCam = m_currentCam;
+        m_currentCam = m_currentCam = Random.Range(0, m_menuCameras.Length);
+        if (m_currentCam == _currentCam)
+        {
+            m_currentCam = m_currentCam = Random.Range(0, m_menuCameras.Length);
+        }
+    }
+    
+    for (int i = 0; i < m_menuCameras.Length; i++)
+    {
+        if (i != m_currentCam)
+        {
+            m_menuCameras[i].gameObject.SetActive(false);
+        }
+        else
+        {
+            m_menuCameras[i].gameObject.SetActive(true);
+        }
+    }
+}
+    `,
+},
+
+{
+    name: "Shop",
+    language: "C#",
+    description:
+    "",
+    videoSrc: "/videos/trs/shop.mp4",
+    code: `
+
+`,
+},
+
+{
+    name: "keys and doors",
+    language: "C#",
+    description:
+    "",
+    videoSrc: "/videos/trs/keys and doors.mp4",
+    code: `
+
+`,
+},
+
+{
+    name: "rent system",
+    language: "C#",
+    description:
+    "",
+    videoSrc: "/videos/trs/rent.mp4",
+    code: `
+
+`,
+},
+
     ],
   },
   
@@ -3287,7 +3434,6 @@ public void SetVolume(float _volume, string _name)
 	name: "PlayerObject: Step",
 	language: "GML",
 	description: "This is the Step event of the player object. It handles the player movement, time switching and attacking.",
-	videoSrc: "/videos/test.mp4",
 	code: `
     //day and night switching
     timekey = keyboard_check_pressed (ord("C"))// or (gamepad_button_check_pressed(0, gp_face3));
@@ -3496,7 +3642,6 @@ if day == false
 	name: "CameraObject: Step",
 	language: "GML",
 	description: "This is the step event of the CameraObject that handles the camera movement, following the player, and screenshake effects.",
-	videoSrc: "/videos/test.mp4",
 	code: `
 // cam update
 if (instance_exists(follow))
@@ -3544,7 +3689,6 @@ if room = MainGameRoom5
 	name: "TextObject: Draw",
 	language: "GML",
 	description: "This is the Draw event of the TextObject that displays text on the screen. It handles the textbox, text speed, and page flipping.",
-	videoSrc: "/videos/test.mp4",
 	code: `
 accept_key = keyboard_check_pressed(vk_space);
 
@@ -3640,7 +3784,6 @@ draw_text_ext_color(textbox_x - text_x_offset[page] -70 + border, textbox_y + _f
 	name: "GameTextScript.gml",
 	language: "GML",
 	description: "This is the script that holds all the dialogue for the game. It is used by the TextObject to display text on the screen when needed.",
-	videoSrc: "/videos/test.mp4",
 	code: `
 /// param text_id
 function scr_game_text(_text_id) 
@@ -3789,7 +3932,6 @@ function scr_game_text(_text_id)
 	name: "BossObject",
 	language: "GML",
 	description: "These are the scripts for the boss fight. The boss has a very simple AI that chooses a random numver every second. if it's 0, it will attack the player with fireballs. If it's another number it will move either up, down, left or right",
-	videoSrc: "/videos/test.mp4",
 	code: `
 Create:
 bosshp = 100;
@@ -3911,11 +4053,10 @@ if moving == 0 and PlayerObject.day == true
     
     codeSnippets: [
       {
-        name: "insane script",
+        name: "",
         language: "tsx",
-        description: "ik was beter.",
-        videoSrc: "/videos/test.mp4",
-        code: `insane code`,
+        description: "",
+        code: ``,
     },
 ],
 },
