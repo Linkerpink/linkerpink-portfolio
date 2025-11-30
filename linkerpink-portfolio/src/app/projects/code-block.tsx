@@ -136,10 +136,6 @@ export default function CodeBlock({
     };
   }, [theme]);
 
-  // Removed automatic scrollIntoView behavior — it caused incorrect scrolling
-  // when opening/closing code snippets. Keeping UI stable without auto-scroll.
-
-  // Inject per-block scrollbar styles so the scrollbar/thumb is visible when opened
   useEffect(() => {
     const styleId = `codeblock-scroll-style-${idRef.current}`;
     let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;

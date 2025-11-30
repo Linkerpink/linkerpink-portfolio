@@ -4107,7 +4107,7 @@ if moving == 0 and PlayerObject.day == true
     title: "Shy",
     slug: "shy",
     banner: "/images/Shy Render No Bullshit Ai _Art_ Banner.webp",
-    icon: "/images/Shy Render No Bullshit Ai _Art_.webp",
+    icon: "/images/game icons/shy icon.webp",
     date: "2024-05-26",
     displayDate: formatDisplayDate("2024-05-26"),
     href: "https://linkerpink.itch.io/shy/",
@@ -4115,7 +4115,7 @@ if moving == 0 and PlayerObject.day == true
     imgSrc: "/images/Shy Render No Bullshit Ai _Art_.webp",
     platform: "Itch.io",
     
-    description: "Shy is a stealth game where you need to get keys and try to escape while not getting cought by the guards. Press B to emote. \n\nWhat I made: \n- Emote wheel. \n- Freelook Camera \n- GameManager \n- Audio System \n- Player \n- Guards \n- Keys & Doors",
+    description: "Shy is a stealth game where you need to get keys and try to escape while not getting cought by the guards. Press B to emote.",
 
     technologies: ["/images/unity logo.png", "/images/c sharp logo.svg"],
 
@@ -4664,13 +4664,13 @@ private void ChasePlayer()
     title: "Slimetastic Punchout",
     slug: "slimetastic-punchout",
     banner: "/images/slimetastic punchout cover art.png",
-    icon: "/images/slimetastic punchout cover art.png",
+    icon: "/images/game icons/slimetastic punchout icon.webp",
 
     date: "2024-12-5",
     displayDate: formatDisplayDate("2024-12-5"),
 
     href: "https://nielscraft12.itch.io/slimetastic-punchout",
-    github: "https://github.com/GLU-CSD/shy-Linkerpink",
+    github: "https://github.com/NielsCraft12/Slimetastic-Punchout/tree/main",
 
     imgSrc: "/images/slimetastic punchout cover art.png",
     platform: "Itch.io",

@@ -9,6 +9,8 @@ const GAME_ICONS_POOL = [
   "/images/game icons/robo rebellion icon.webp",
   "/images/game icons/bpm icon.webp",
   "/images/game icons/when time collides icon.webp",
+  "/images/game icons/shy icon.webp",
+  "/images/game icons/slimetastic punchout icon.webp",
   "/images/game icons/shmup 2 icon.webp",
   "/images/game icons/not not balatro icon.webp",
 ];
@@ -17,6 +19,8 @@ const SECRET_GAME_ICONS_POOL = [
   "/images/game icons/robo rebellion icon.webp",
   "/images/game icons/bpm icon.webp",
   "/images/game icons/when time collides icon.webp",
+  "/images/game icons/shy icon.webp",
+  "/images/game icons/slimetastic punchout icon.webp",
   "/images/game icons/shmup 2 icon.webp",
   "/images/game icons/not not balatro icon.webp",
 ];
