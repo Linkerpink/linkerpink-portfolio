@@ -615,7 +615,7 @@ public void ChangeCamera(CinemachineVirtualCamera oldCam, CinemachineVirtualCame
             language: "gdscript",
             description:
             "This is the Conductor script responsible for handling bpm, time signatures and beat calculations",
-            videoSrc: "/videos/test.mp4",
+            videoSrc: "/videos/bpm/conductor.mp4",
             code: `
 extends AudioStreamPlayer
 class_name Conductor
@@ -737,7 +737,7 @@ pass
             language: "gdscript",
             description:
             "This is the Charter script responsible for placing notes and bombs in the level based on the beat calculations from the Conductor and note data from the map file",
-            videoSrc: "/videos/test.mp4",
+            videoSrc: "/videos/bpm/charter.mp4",
             code: `
             extends Node
 class_name Charter
@@ -794,7 +794,7 @@ active_notes.append(note)
             language: "gdscript",
             description:
             "This is the Song manager script responsible for holding data like combo, multipliers, score and health",
-            videoSrc: "/videos/test.mp4",
+            videoSrc: "/videos/bpm/song manager.mp4",
             code: `
 extends Node2D
 class_name SongManager
@@ -925,7 +925,7 @@ match combo_multiplier:
             language: "gdscript",
             description:
             "This is the Note script that gets spawned by the Charter with a type that can be: Normal or Bomb",
-            videoSrc: "/videos/test.mp4",
+            videoSrc: "/videos/bpm/note.mp4",
             code: `
 extends Node2D
 
@@ -981,7 +981,6 @@ match type:
             language: "gdscript",
             description:
             "This is the Lane script responsible for hit detection of the notes.",
-            videoSrc: "/videos/test.mp4",
             code: `
 extends Node2D
 
@@ -1117,7 +1116,6 @@ if area.is_in_group("bomb"):
             language: "gdscript",
             description:
             "This is the Globals script responsible for holding global data like the current user's name",
-            videoSrc: "/videos/test.mp4",
             code: `
 extends Node
 
@@ -1162,7 +1160,7 @@ cm_passed = _passed
             language: "gdscript",
             description:
             "This is the Database script to send the information of the map you beat to the database",
-            videoSrc: "/videos/test.mp4",
+            videoSrc: "/videos/bpm/db.mp4",
             code: `
 extends Node
 
