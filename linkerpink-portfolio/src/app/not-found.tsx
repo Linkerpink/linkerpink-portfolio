@@ -32,7 +32,7 @@ const messages = [
   },
   {
     text: "The quota didn't get reached, just like the page you're looking for.",
-    image: "/images/not not balatro icon.webp",
+    image: "/images/game icons/not not balatro icon.webp",
   },
   {
     text: "Even the image could not be found...",

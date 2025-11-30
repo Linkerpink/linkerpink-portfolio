@@ -4039,7 +4039,7 @@ if moving == 0 and PlayerObject.day == true
 
     github: "https://github.com/Linkerpink/linkerpink.github.io",
 
-    description: "This is the website you are currently looking at. It is made with Next.js, TypeScript, and Tailwind CSS. It is a portfolio website that showcases my development projects, skills, and experiences. The site includes some easter eggs, Good luck finding them all :) \n\nThe design of the website is based off the Nintendo Wii U eshop design, Wii U Operating System design and Nintendo Switch eshop design, modified to my own liking. I chose for this type of design because Nintendo has always had great designs for their consoles. The Wii U is my favorite console and defined a big part of my youth and life. \n\nWhat I made: \n- Home Page \n- All Projects Page \n- Project Details Page \n- Re usable Project component \n- Re usable Code Snippet component \n- Theme Support \n- Responsive design \n- Animations \n- Easter Eggs",
+    description: "This is the website you are currently looking at. It is made with Next.js, TypeScript, and Tailwind CSS. It is a portfolio website that showcases my development projects, skills, and experiences. The site includes some easter eggs, Good luck finding them all :) \n\nThe design of the website is based off the Nintendo Wii U eshop design, Wii U Operating System design and Nintendo Switch eshop design, modified to my own liking. I chose for this type of design because Nintendo has always had great designs for their consoles. The Wii U is my favorite console and defined a big part of my youth and life. \n\nProfile Art by: Luca van Uunen (@supercatluigiplayer4180)",
 
     technologies: [
       "/next.svg",
@@ -4052,11 +4052,52 @@ if moving == 0 and PlayerObject.day == true
     featured: true,
     
     codeSnippets: [
-      {
-        name: "",
+    {
+        name: "Project Card Component",
         language: "tsx",
         description: "",
-        code: ``,
+        videoSrc: "/videos/portfolio/project card.mp4",
+        code: `
+
+        `,
+    },
+
+    {
+        name: "Code Snippet Component",
+        language: "tsx",
+        description: "",
+        videoSrc: "/videos/portfolio/code snippet.mp4",
+        code: `
+
+        `,
+    },
+
+    {
+        name: "Custom 404 Page",
+        language: "tsx",
+        description: "",
+        videoSrc: "/videos/portfolio/404.mp4",
+        code: ``
+    },
+
+    {
+        name: "Theme Support",
+        language: "tsx",
+        description: "",
+        videoSrc: "/videos/portfolio/themes.mp4",
+        code: `
+
+        `,
+    },
+
+    {
+        name: "Responsive Design",
+        language: "tsx",
+        description: "",
+        videoSrc: "/videos/portfolio/responsive.mp4",
+        code: `
+
+        `,
     },
 ],
 },
@@ -4089,11 +4130,10 @@ if moving == 0 and PlayerObject.day == true
     featured: false,
 
     codeSnippets: [
-        {
+    {
 	name: "EmoteWheel.cs",
 	language: "C#",
 	description: "This is the script that handles the emote wheel. Most of it is made in unity's canvas.",
-	videoSrc: "/videos/test.mp4",
 	code: `
 void Update()
 {
@@ -4144,7 +4184,6 @@ public void ChangeEnableEmoteWheel()
 	name: "Emote.cs",
 	language: "C#",
 	description: "This is the script for making the player emote when they have selected an emote from the wheel, and then changes the camera acordingly",
-	videoSrc: "/videos/test.mp4",
 	code: `
     public void EmoteDab()
     {
