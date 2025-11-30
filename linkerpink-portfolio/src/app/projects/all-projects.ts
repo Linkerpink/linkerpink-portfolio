@@ -1241,7 +1241,7 @@ func _on_request_completed(result, response_code, headers, body):
         language: "C#",
         description:
         "This is the script that has taken the longest to make by far. This is the script for handling the player's movement, animations, attacks and interactions. It is a very long script so I will not show the variable declarations, because that in it self is already 100 lines. The player works with a state machine which decides what the player character should be doing. It has a few health functions that make sure you can take damage, die and give damage to the enemies. The player has 3 damage hitboxes, one for the cick and one for the punch. those are handled through the animations itself, the other one is more interesting, because that one checks if something is under the player, so if the player jumps on top of an enemy, the enemy will take damage. The player also has a few functions that make sure the player can interact with the environment, like interacting with dialogue triggers, picking up items and collecting coins.",
-        videoSrc: "/videos/test.mp4",
+        videoSrc: "/videos/nsm63/mario movement.mp4",
         code: `
         private void Update()
         {
@@ -1927,7 +1927,7 @@ private void OnTriggerExit(Collider other)
           name: "DialogueSequence.cs",
           language: "C#",
           description: "This is the Scriptable Object in charge of making a sequence of dialogue that the textbox will follow. It has a string array where you can add different pages of dialogue to in the editor. It has values for the color that the textbox needs to be. It also has possible ending functions, like opening a cannon, starting / ending fights and starting a race",
-          videoSrc: "/videos/test.mp4",
+          videoSrc: "/videos/nsm63/dialogue.mp4",
           code: `
           public string[] dialogue;
           
@@ -2005,7 +2005,6 @@ public void EndDialogueFunction()
         name: "Textbox.cs",
         language: "C#",
         description: "This is the textbox script that loads in the information from the DialogueSequence that is given to the textbox.",
-        videoSrc: "/videos/test.mp4",
         code: `
 private void Update()
 {
@@ -2072,7 +2071,6 @@ public void OnSubmit(InputAction.CallbackContext _context)
         language: "C#",
         description:
           "This is the script that handles the state of the game, star selection and loading the level accordingly based on the star that is selected. It also has the screenshake function I made for Robo Rebellion.",
-          videoSrc: "/videos/test.mp4",
           code: `
 private void Update()
 {
@@ -2365,8 +2363,8 @@ private IEnumerator ShakeTimer(float _duration)
       {
     name: "Enemy.cs",
     language: "C#",
-    description: "",
-    videoSrc: "/videos/test.mp4",
+    description: "The enemy can patrol around randomly until it sees Maria, at which point it will charge at him. If it takes enough damage, it will die. If the enemy hits Maria it will damage him.",
+    videoSrc: "/videos/nsm63/enemy.mp4",
     code: `
 public enum States
 {
@@ -2498,8 +2496,8 @@ private void Die()
 {
     name: "KingBobOmb.cs",
     language: "C#",
-    description: "",
-    videoSrc: "/videos/test.mp4",
+    description: "This is the King Bob Omb boss fight of the game. It will move towards Maria and try to grab him. If it grabs him, Maria can throw him. After being thrown 3 times, King Bob Omb will be defeated and drop a star.",
+    videoSrc: "/videos/nsm63/king bob omb.mp4",
     code: `
     public enum States
     {
@@ -2617,7 +2615,7 @@ private void SetWalkPoint(Vector3 _walkPoint)
     name: "KoopaTheQuick.cs",
     language: "C#",
     description: "",
-    videoSrc: "/videos/test.mp4",
+    videoSrc: "/videos/nsm63/koopa.mp4",
     code: `
 private void Update()
 {
