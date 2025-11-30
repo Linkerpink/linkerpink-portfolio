@@ -320,10 +320,12 @@ export default function ProjectDetails() {
 
           {project.codeSnippets && project.codeSnippets.length > 0 && (
             <section className="mb-8">
-              {project.codeSnippets.map(
-                ({ language, name, description, code, videoSrc }, i) => (
+              {project.codeSnippets.map((snippet, i) => {
+                const { language, name, description, code } = snippet as any;
+                const videoSrc = "videoSrc" in snippet ? (snippet as any).videoSrc : undefined;
+                return (
                   <div
-                  key={i}
+                    key={i}
                     className="mb-6 rounded-md overflow-hidden"
                   >
                     <CodeBlock
@@ -331,12 +333,12 @@ export default function ProjectDetails() {
                       name={name}
                       description={description}
                       videoSrc={videoSrc}
-                      >
+                    >
                       {code}
                     </CodeBlock>
                   </div>
-                )
-              )}
+                );
+              })}
             </section>
           )}
         </section>
