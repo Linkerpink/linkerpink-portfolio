@@ -206,8 +206,7 @@ export default function Home() {
             <h3 className="text-base sm:text-lg">
               I am an {CalculateTimeYearOnly("2007-04-20")}-year-old game developer from the Netherlands. 
               I enjoy programming and seeing my ideas come to life. 
-              I started gamedev in early 2022 and made a few games and prototypes before getting inspired to study game development at college.
-              development at Grafisch Lyceum Utrecht.
+              I started gamedev in early 2022. I made a few games and prototypes before getting inspired to study game development at college.
               Outside of game dev, I enjoy
               playing guitar, editing videos, listening to music and playing games.
             </h3>
