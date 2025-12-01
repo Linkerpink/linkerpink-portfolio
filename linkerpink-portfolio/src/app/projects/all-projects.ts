@@ -307,7 +307,7 @@ private void IdleState()
         language: "C#",
         description:
           "I was also in charge of the player interaction, pickups, keycards and inventory. the code blocks below are conntected with this one",
-        videoSrc: "/videos/robo rebellion/interaction.mp4",
+        videoSrc: "/compressed videos/robo rebellion/interaction.webm",
         code: `
 private void OnTriggerStay(Collider other)
 {
