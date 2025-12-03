@@ -4956,9 +4956,7 @@ private Vector3 GetCenterPoint()
 
   media: [
         { type: "image", src: "/images/shmup 2.webp" },
-        { type: "image", src: "/images/shmup 2 1.jpeg" },
         { type: "image", src: "/images/shmup 2 5.jpeg" },
-        { type: "image", src: "/images/shmup 2 3.jpeg" },
         { type: "image", src: "/images/shmup 2 4.jpeg" },
         { type: "image", src: "/images/shmup 2 7.jpeg" },
         { type: "youtubeId", src: "4wd0sW7k4PU", title: "Gameplay Video" },
@@ -6060,7 +6058,6 @@ private IEnumerator LerpFontSize(float targetFontSize, float duration)
       date: "2025-01-27",
       displayDate: formatDisplayDate("2025-01-27"),
   
-      href: "https://linkerpink.itch.io/not-not-balatro",
       github: "https://github.com/Linkerpink/Poker-Roguelike",
   
       imgSrc: "/images/not not balatro.webp",
