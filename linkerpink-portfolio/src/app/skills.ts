@@ -26,6 +26,18 @@ const Skills = [
         description: `experience: ${CalculateTime("2025-8-3")}`,
     },
     {
+        name: "Roblox Studio",
+        skillLevel: "★★★☆☆☆",
+        logo: "/images/roblox studio logo.png",
+        description: `experience: ${CalculateTime("2025-8-3")}`,
+    },
+    {
+        name: "Lua",
+        skillLevel: "★★★☆☆☆",
+        logo: "/images/lua logo.svg",
+        description: `experience: ${CalculateTime("2025-8-3")}`,
+    },
+    {
         name: "GameMaker Studio / GML",
         skillLevel: "★★★☆☆☆",
         logo: "/images/gamemaker studio logo.svg",
