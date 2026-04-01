@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 function formatDisplayDate(date: string): string {
   if (date.toLowerCase() === "not released") return "Not Released";
   const d = new Date(date);
@@ -4089,18 +4087,56 @@ if moving == 0 and PlayerObject.day == true
 
         `,
     },
-
+    
     {
         name: "Responsive Design",
         language: "tsx",
         description: "",
         videoSrc: "/videos/portfolio/responsive.mp4",
         code: `
-
+        
         `,
     },
 ],
 },
+
+
+// Development Console //
+{
+    title: "Development Console",
+    slug: "dev-console",
+    banner: "/images/dev console temp.jpg",
+    icon: "/images/dev console temp.jpg",
+    date: "not released",
+    displayDate: formatDisplayDate("not released"),
+    github: "https://github.com/Linkerpink/Developer-Console-GD",
+    imgSrc: "/images/dev console temp.jpg",
+    platform: "Itch.io",
+    
+    description: "# Welcome to the console made by Linkerpink!\nThis is a console / terminal window you can put into your project. This console will be able to run some pre made commands, but you can also add your own commands to it if you please. \n\n## inspiration: \nthis console / terminal is mostly inspired by the source engine's console, but also a bit by classic terminal windows like command prompt or the linux terminal.",
+
+    technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+
+    media: [
+        { type: "image", src: "/images/dev console temp.jpg" },
+        { type: "youtubeId", src: "", title: "Gameplay Video" },
+    ],
+
+    featured: false,
+
+    codeSnippets: [
+    {
+        name: "console.gd",
+        language: "gdscript",
+        description: "OMG!",
+        code: `
+
+    `
+    },
+
+],
+},
+
 
 // Shy //
 {
@@ -4590,6 +4626,41 @@ private void ChasePlayer()
 
 ],
 },
+
+// Unreal Shooter
+{
+  title: "Unreal Shooter",
+  slug: "unreal-shooter",
+  banner: "/images/eng.png",
+  icon: "/images/eng.png",
+  date: "not released",
+  displayDate: formatDisplayDate("not released"),
+  platform: "Itch.io",
+  description:
+  "",
+  
+  href: "",
+  github: "https://github.com/Linkerpink/Movement-Shooter",
+  
+  technologies: ["/images/unreal engine logo.svg"],
+  
+  media: [
+    { type: "image", src: "/images/eng.png" },
+  ],
+
+  featured: false,
+
+  codeSnippets: [
+      {
+        name: "fire script",
+        language: "BluePrints",
+        description: "ik ben beter.",
+        videoSrc: "/videos/robo rebellion/interaction.mp4",
+        code: ``,
+      },
+    ],
+},
+
 
 // Risk It For The Biscuit //
 // {
