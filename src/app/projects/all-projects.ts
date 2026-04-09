@@ -3395,10 +3395,155 @@ private void SwitchMenuCamera()
 },
 
     ],
-  },
-  
-  // When Time Collides //
-  {
+},
+
+
+// Developer Console //
+{
+    title: "Developer Console",
+    slug: "dev-console",
+    banner: "/images/dev console banner.webp",
+    icon: "/images/game icons/dev console icon.webp",
+    date: "not released",
+    displayDate: formatDisplayDate("not released"),
+    github: "https://github.com/Linkerpink/Developer-Console-GD",
+    imgSrc: "/images/dev console temp.jpg",
+    platform: "Itch.io",
+    
+    description: "# Welcome to the console made by Linkerpink!\nThis is a console / terminal window you can put into your project. This console will be able to run some pre made commands, but you can also add your own commands to it if you please. \n\n## inspiration: \nthis console / terminal is mostly inspired by the source engine's console, but also a bit by classic terminal windows like command prompt or the linux terminal. \n\n[Documentation](https://linkerpink.github.io/docs/console)",
+
+    technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
+
+    media: [
+        { type: "image", src: "/images/dev console temp.jpg" },
+        { type: "youtubeId", src: "", title: "Gameplay Video" },
+    ],
+
+    featured: true,
+
+    codeSnippets: [
+    {
+        name: "console.gd",
+        language: "gdscript",
+        description: "These are the main functions for the console, without all of the commands. It has functions for opening and closing the console, printing to the console and to the screen and checking for commands.",
+        code: `
+func _ready() -> void:
+	u_text = line_edit.text
+	default_console_window_size = console_window.size
+	_close_console()
+	start_console()
+	_add_all_commands()
+
+
+func _add_all_commands():
+	var dir := DirAccess.open("res://console/commands")
+	if dir == null: printerr("Could not open folder"); return
+	dir.list_dir_begin()
+	for file: String in dir.get_files():
+		var resource := load(dir.get_current_dir() + "/" + file)
+		commands.append(resource)
+
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("console_open"):
+		_open_console()
+	
+	if Input.is_action_just_pressed("console_close"):
+		_close_console()
+	
+	if Input.is_action_just_pressed("console_enter"):
+		_submit_to_console()
+
+
+#region Common Console Functions
+func start_console():
+	await get_tree().create_timer(0.1).timeout
+	console_window.position = Vector2(12, 36)
+	console_text.add_theme_font_size_override("normal_font_size", default_console_font_size)
+	user_font_size = default_console_font_size
+	console_window.size = default_console_window_size
+	console_text.text = ""
+	print_welcome_message()
+
+
+func _open_console():
+	console_window.visible = true
+	open = true
+	line_edit.edit()
+
+
+func _close_console():
+	console_window.visible = false
+	open = false
+
+
+func _submit_to_console():
+	u_text = line_edit.text
+	if _check_commands():
+		if not u_text.begins_with("clear"):
+			if not u_text == "":
+				print_to_console("[color=green]>> User: [/color]" + "[color=cyan]" + u_text + "[/color]", 0)
+	elif u_text == "":
+				print_error_to_console("Type something in the Console.", 0)
+	else:
+				print_error_to_console(u_text + " is not a valid command!", 0)
+	line_edit.clear()
+	line_edit.edit()
+
+
+func print_to_console(_message : String, _delay : float):
+	await get_tree().create_timer(_delay).timeout
+	console_text.text += _message + "\n"
+
+
+func print_to_screen(_message : String, _delay : float, _delete_delay : float):
+	await get_tree().create_timer(_delay).timeout
+	
+	if screen_text_message_container.get_child_count() > 0:
+		screen_text_message_container.remove_child(screen_text_message_container.get_child(0))
+	
+	var _sm = screen_text_message_label_scene.instantiate()
+	screen_text_message_container.add_child(_sm)
+	_sm.text = _message
+	
+	await get_tree().create_timer(_delete_delay).timeout
+	_sm.queue_free()
+
+
+func print_error_to_console(_message : String, _delay : float):
+	print_to_console("[color=red]" + _message + "[/color]", _delay)
+
+
+func _create_line():
+	return "---------------------------------------------------------------------------------------------------"
+
+
+func _get_name_from_path(_path):
+	var path = _path.get_path()
+	return str(path.right(-path.rfind("/") - 1).left(-5))
+#endregion
+
+
+#region Check Commands
+func _check_commands():
+	for c : Command in commands:
+		if c.function_to_trigger != "":
+			if u_text.begins_with(c.name):
+				active_command = c
+				call(c.function_to_trigger)
+				return true
+		else:
+			printerr("No function to trigger from command. Please insert a Function to Trigger in your command")
+	
+    `
+    },
+
+],
+},
+
+
+// When Time Collides //
+{
     title: "When Time Collides",
     slug: "when-time-collides",
     banner: "/images/When Time Collides HD Cover Art.png",
@@ -3922,12 +4067,12 @@ function scr_game_text(_text_id)
 		scr_text("WARNING! Dangerous area ahead...");
 		break;
 	}
-}
-`
+    }
+    `
 },
 
 {
-	name: "BossObject",
+    name: "BossObject",
 	language: "GML",
 	description: "These are the scripts for the boss fight. The boss has a very simple AI that chooses a random numver every second. if it's 0, it will attack the player with fireballs. If it's another number it will move either up, down, left or right",
 	code: `
@@ -4047,7 +4192,7 @@ if moving == 0 and PlayerObject.day == true
 
     media: [{ type: "image", src: "/images/portfolio site cover temp.png" }],
     
-    featured: true,
+    featured: false,
     
     codeSnippets: [
     {
@@ -4101,41 +4246,6 @@ if moving == 0 and PlayerObject.day == true
 },
 
 
-// Development Console //
-{
-    title: "Development Console",
-    slug: "dev-console",
-    banner: "/images/dev console temp.jpg",
-    icon: "/images/dev console temp.jpg",
-    date: "not released",
-    displayDate: formatDisplayDate("not released"),
-    github: "https://github.com/Linkerpink/Developer-Console-GD",
-    imgSrc: "/images/dev console temp.jpg",
-    platform: "Itch.io",
-    
-    description: "# Welcome to the console made by Linkerpink!\nThis is a console / terminal window you can put into your project. This console will be able to run some pre made commands, but you can also add your own commands to it if you please. \n\n## inspiration: \nthis console / terminal is mostly inspired by the source engine's console, but also a bit by classic terminal windows like command prompt or the linux terminal.",
-
-    technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp"],
-
-    media: [
-        { type: "image", src: "/images/dev console temp.jpg" },
-        { type: "youtubeId", src: "", title: "Gameplay Video" },
-    ],
-
-    featured: false,
-
-    codeSnippets: [
-    {
-        name: "console.gd",
-        language: "gdscript",
-        description: "OMG!",
-        code: `
-
-    `
-    },
-
-],
-},
 
 
 // Shy //
@@ -4631,13 +4741,12 @@ private void ChasePlayer()
 {
   title: "Unreal Shooter",
   slug: "unreal-shooter",
-  banner: "/images/eng.png",
-  icon: "/images/eng.png",
+  banner: "/images/unreal shooter temp.jpeg",
+  icon: "/images/unreal shooter temp.jpeg",
   date: "not released",
   displayDate: formatDisplayDate("not released"),
-  platform: "Itch.io",
   description:
-  "",
+  "A little shooter I made to learn Unreal Engine.",
   
   href: "",
   github: "https://github.com/Linkerpink/Movement-Shooter",
@@ -4645,7 +4754,8 @@ private void ChasePlayer()
   technologies: ["/images/unreal engine logo.svg"],
   
   media: [
-    { type: "image", src: "/images/eng.png" },
+    { type: "image", src: "/images/unreal shooter temp.jpeg" },
+    { type: "youtubeId", src: "A_IMuospOq4", title: "Gameplay Video" },
   ],
 
   featured: false,
