@@ -215,7 +215,7 @@ export default function CodeBlock({
             setIsOpen((v) => !v);
           }
         }}
-        className={`flex justify-between items-center px-5 py-3 font-black cursor-pointer select-none rounded-t-xl shadow-sm transition-colors duration-300 ease-in-out ${headerBgClass} ${headerTextClass} ${headerHoverClass}
+        className={`flex justify-between items-center px-5 py-3 font-black cursor-pointer rounded-t-xl shadow-sm transition-colors duration-300 ease-in-out ${headerBgClass} ${headerTextClass} ${headerHoverClass}
           ${isOpen && !isMobile ? " sticky top-0 z-50" : ""}`}
         style={{
           borderTopLeftRadius: "1.5rem",
@@ -230,7 +230,7 @@ export default function CodeBlock({
 
         <motion.button
           aria-label={isOpen ? "Collapse code" : "Expand code"}
-          className="font-bold text-2xl leading-none select-none cursor-pointer"
+          className="font-bold text-2xl leading-none cursor-pointer"
           style={{ color: buttonColor }}
           animate={{ rotate: isOpen ? 0 : 90, scale: isOpen ? 1 : 1.2 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -307,7 +307,7 @@ export default function CodeBlock({
                 <button
                   aria-label="Close fullscreen code"
                   onClick={() => setIsOpen(false)}
-                  className="ml-auto text-[#F57C00] font-bold text-6xl leading-none select-none"
+                  className="ml-auto text-[#F57C00] font-bold text-6xl leading-none"
                 >
                   ×
                 </button>

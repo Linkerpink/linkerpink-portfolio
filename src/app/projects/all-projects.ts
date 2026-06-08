@@ -4246,6 +4246,507 @@ if moving == 0 and PlayerObject.day == true
 },
 
 
+// Denios AR Viewer
+{
+  title: "Denios AR Viewer",
+  slug: "denios-ar-viewer",
+  banner: "/images/denios banner.webp",
+  icon: "/images/game icons/denios icon.webp",
+  date: "not released",
+  displayDate: formatDisplayDate("not released"),
+  description:
+  "This is an AR viewer I made during an internship at [Denios](https://www.denios.com/en/). Denios is a company that sells products for the storage of hazardous materials, airflow solutions and more. \n\nThe AR viewer allows customers to see how a VARIO-Flow would look in their own environment before buying it. The project is split into 2 parts. Part 1 is the configurator and model viewer made in Godot. Part 2 is the AR viewer made in HTML using [Google's model viewer library](https://modelviewer.dev/). This is the web part where the user will be sent to when wanting to view the model in AR.",
+  
+  href: "",
+  
+  technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp", "/images/html logo.png"],
+  
+  media: [
+    { type: "image", src: "/images/denios model viewer.png" },
+    { type: "image", src: "/images/denios welcome.png" },
+    { type: "image", src: "/images/denios cranes.png" },
+    { type: "image", src: "/images/denios ar horizontal.jpg" },
+    { type: "youtubeId", src: "poC6a3Wa5h0", title: "Video" },
+    { type: "youtubeId", src: "s5usGT6hXgM", title: "Video" },
+  ],
+
+  featured: false,
+
+  codeSnippets: [
+      {
+        name: "landing_page.gd",
+        language: "GDScript",
+        description: "This is the script for language selections, ui scaling, a help menu and a button to start configurating the model.",
+        videoSrc: "/videos/denios/landing page.mp4",
+        code: `
+        func _ready() -> void:
+    if globals.language == null:
+        _set_language("english")
+        choose_language_window.show()
+    _set_gui_scale()
+    help_window.hide()
+
+
+func _set_gui_scale():
+	if DisplayServer.window_get_size().x > DisplayServer.window_get_size().y:
+		globals.set_gui_scale(1.0, false)
+		choose_language_label.add_theme_font_size_override("normal_font_size", 72)
+		
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y:
+		globals.set_gui_scale(1.75, true)
+		choose_language_label.add_theme_font_size_override("normal_font_size", 72 / 1.75)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y / 1.5:
+		globals.set_gui_scale(2.5, true)
+		choose_language_label.add_theme_font_size_override("normal_font_size", 72 / 2.5)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y / 2:
+		globals.set_gui_scale(3.5, true)
+		choose_language_label.add_theme_font_size_override("normal_font_size", 72 / 3.5)
+	
+	if globals.mobile_gui:
+		pc_ui.hide()
+		mobile_ui.show()
+		pc_grid.hide()
+		mobile_grid.show()
+	else:
+		pc_ui.show()
+		mobile_ui.hide()
+		pc_grid.show()
+		mobile_grid.hide()
+
+
+func _set_language(_language : String):
+	globals.set_language(_language)
+	
+	if not globals.mobile_gui:
+		for c :Button in pc_grid.get_children():
+			if c.name == globals.language:
+				c.self_modulate.v = 2
+			else:
+				c.self_modulate.v = 1
+	else:
+		for c :Button in mobile_grid.get_children():
+			if c.name == globals.language:
+				c.self_modulate.v = 2
+			else:
+				c.self_modulate.v = 1
+        `,
+      },
+
+      {
+        name: "config_page.gd",
+        language: "GDScript",
+        description: "This is the script for the configurator. It has functions for setting the options to the current config, changing the config when selecting an option and a function for scaling the UI.",
+        videoSrc: "/videos/denios/config page.mp4",
+        code: `
+        func _ready() -> void:
+	#_set_to_defaults()
+	_load_config()
+	_set_gui_scale()
+
+
+func _set_gui_scale():
+	if DisplayServer.window_get_size().x > DisplayServer.window_get_size().y:
+		globals.set_gui_scale(1.0, false)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y:
+		globals.set_gui_scale(1.75, true)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y / 1.5:
+		globals.set_gui_scale(2.5, true)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y / 2:
+		globals.set_gui_scale(3.5, true)
+
+func _set_to_defaults():
+	globals.config_width = 90
+	globals.config_height = 110
+	globals.config_depth = 60
+	globals.config_frame = true
+
+
+func _load_config():
+	await get_tree().create_timer(0.1)
+	_set_width_option_button()
+	_set_height_option_button()
+	_set_depth_option_button()
+	_set_frame_option_button()
+
+
+#region set option button button functions
+func _set_width_option_button():
+	match globals.config_width:
+			90:
+				width_options.select(0)
+			120:
+				width_options.select(1)
+			150:
+				width_options.select(2)
+			180:
+				width_options.select(3)
+			210:
+				width_options.select(4)
+			240:
+				width_options.select(5)
+
+
+func _set_height_option_button():
+	match globals.config_height:
+			110:
+				height_options.select(0)
+			140:
+				height_options.select(1)
+
+
+func _set_depth_option_button():
+	match globals.config_depth:
+			60:
+				depth_options.select(0)
+			75:
+				depth_options.select(1)
+			85:
+				depth_options.select(2)
+
+
+func _set_frame_option_button():
+	match globals.config_frame:
+			true:
+				frame_options.select(0)
+			false:
+				frame_options.select(1)
+#endregion
+
+
+#region selection functions
+func _on_width_options_item_selected(index: int) -> void:
+	match index:
+		0:
+			globals.config_width = 90
+		1:
+			globals.config_width = 120
+		2:
+			globals.config_width = 150
+		3:
+			globals.config_width = 180
+		4:
+			globals.config_width = 210
+		5:
+			globals.config_width = 240
+
+
+func _on_height_options_item_selected(index: int) -> void:
+	match index:
+		0:
+			globals.config_height = 110
+		1:
+			globals.config_height = 140
+
+
+func _on_depth_options_item_selected(index: int) -> void:
+	match index:
+		0:
+			globals.config_depth = 60
+		1:
+			globals.config_depth = 75
+		2:
+			globals.config_depth = 85
+
+
+func _on_frame_options_item_selected(index: int) -> void:
+	match index:
+		0:
+			globals.config_frame = true
+		1:
+			globals.config_frame = false
+
+        `,
+      },
+
+      {
+        name: "model_viewer.gd",
+        language: "GDScript",
+        description: "This is the script for the model viewer. It has functions for setting the correct model and link based on the config, a function for scaling the UI and a function for opening the AR viewer when pressing the button.",
+        videoSrc: "/videos/denios/model viewer.mp4",
+        code: `
+ @export var ar_site_link : String # The start of the link the user's supposed to go to. Example: "https://linkerpink.github.io/"
+
+
+func _ready() -> void:
+	_set_gui_scale()
+	_load_based_on_config()
+	
+	qr_code_menu.hide()
+
+
+func _set_gui_scale():
+	if DisplayServer.window_get_size().x > DisplayServer.window_get_size().y:
+		globals.set_gui_scale(1.0, false)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y:
+		globals.set_gui_scale(1.75, true)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y / 1.5:
+		globals.set_gui_scale(2.5, true)
+	
+	if DisplayServer.window_get_size().x < DisplayServer.window_get_size().y / 2:
+		globals.set_gui_scale(3.5, true)
+	
+	if globals.mobile_gui:
+		gui.hide()
+		mobile_gui.show()
+	else:
+		gui.show()
+		mobile_gui.hide()
+
+
+func _load_based_on_config():
+	for c : Node3D in models.get_children():
+		c.hide()
+	
+	# Setting correct offset
+	if not globals.config_frame:
+		if globals.config_height == 110:
+			pcam.set_follow_offset(Vector3(0,0.55,0))
+		elif globals.config_height == 140:
+			pcam.set_follow_offset(Vector3(0,0.75,0))
+	else:
+			pcam.set_follow_offset(Vector3(0,1.05,0))
+	
+	# Setting correct config_string
+	if globals.config_frame:
+		config_string = str(globals.config_width) + "x" + str(globals.config_height) + "x" + str(globals.config_depth) + "-wf"
+	else:
+		config_string = str(globals.config_width) + "x" + str(globals.config_height) + "x" + str(globals.config_depth)
+	
+	# Setting correct model
+	for c in models.get_children():
+			if c.name == config_string:
+				c.show()
+			else:
+				c.hide()
+	
+	# Setting correct crane model
+	var _crane_models_children : Array = crane_models.get_children()
+	
+	for i in globals.config_connection.size():
+		if globals.config_connection[i] == 1:
+			_crane_models_children[i].show()
+		else:
+			_crane_models_children[i].hide()
+	
+	if globals.config_frame:
+		crane_models.position.y = .94
+	else:
+		crane_models.position.y = 0
+	
+	# Setting correct link
+	var _config_connection_str : String = str(globals.config_connection).remove_chars("[], ")
+	
+	uri = ar_site_link + config_string + "-" + _config_connection_str + ".html"
+	globals.qr_text = uri
+
+
+func _on_ar_viewer_button_pressed() -> void:
+	OS.shell_open(uri)
+        `,
+      },
+
+      {
+        name: "cam.gd",
+        language: "GDScript",
+        description: "This is the script for the camera. It has functions for setting the correct camera position and rotation based on the config, zooming in and out with the scroll wheel or buttons and dragging to rotate the camera.",
+        code: `
+func _ready():
+	if not globals.mobile_gui:
+		view_option_button =  $"../GUI/ViewOptionButton"
+		target_zoom = max_zoom + 1
+	else:
+		view_option_button = $"../MobileGUI/VBoxContainer/ViewOptionButton"
+		target_zoom = max_zoom + 2.5
+	
+	pcam.spring_length = zoom
+	
+	await get_tree().create_timer(0.1).timeout
+	view_option_button.selected = current_view
+
+
+func _process(delta: float) -> void:
+	# Input
+	if Input.is_action_just_pressed("zoom_in") and target_zoom > max_zoom:
+		_zoom_cam(-zoom_sensitivity)
+	
+	if Input.is_action_just_pressed("zoom_out") and target_zoom < min_zoom:
+		_zoom_cam(zoom_sensitivity)
+	
+	if Input.is_action_pressed("drag"):
+		is_dragging = true
+	
+	if Input.is_action_just_released("drag"):
+		is_dragging = false
+	
+	if zoom != target_zoom:
+		zoom = lerp(zoom, target_zoom, 10 * delta)
+		pcam.spring_length = zoom
+	
+	var pcam_rot_deg = pcam.get_third_person_rotation_degrees()
+	if pcam.get_third_person_rotation_degrees() != target_rotation and current_view != 6:
+		var new_rot : Vector3
+		new_rot = lerp(pcam_rot_deg, target_rotation, 10 * delta)
+		pcam.set_third_person_rotation_degrees(new_rot)
+
+
+func _unhandled_input(event) -> void:
+	# Trigger whenever the mouse moves.
+	if event is InputEventMouseMotion and is_dragging:
+		var pcam_rotation_degrees: Vector3
+
+		pcam_rotation_degrees = pcam.get_third_person_rotation_degrees()
+		pcam_rotation_degrees.x -= event.relative.y * mouse_sensitivity
+		pcam_rotation_degrees.x = clampf(pcam_rotation_degrees.x, min_pitch, max_pitch)
+		pcam_rotation_degrees.y -= event.relative.x * mouse_sensitivity
+		pcam_rotation_degrees.y = wrapf(pcam_rotation_degrees.y, min_yaw, max_yaw)
+		
+		pcam.set_third_person_rotation_degrees(pcam_rotation_degrees)
+		
+		_set_view(6)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMagnifyGesture:
+		if event.factor > 1:
+			_zoom_cam(1)
+		else:
+			_zoom_cam(-1)
+
+
+func _zoom_cam(amount):
+	target_zoom += amount
+
+
+func _on_zoom_out_button_pressed() -> void:
+	if target_zoom < min_zoom:
+		_zoom_cam(zoom_sensitivity)
+
+
+func _on_zoom_in_button_pressed() -> void:
+	if target_zoom > max_zoom:
+		_zoom_cam(-zoom_sensitivity)
+
+
+func _set_view(index: int) -> void:
+	current_view = index
+	view_option_button.selected = current_view
+	
+	match index:
+		0: # Front
+			target_rotation = Vector3.ZERO
+		1: # Back
+			target_rotation = Vector3(0,180,0)
+		2: # Left
+			target_rotation = Vector3(0,-90,0)
+		3: # Right
+			target_rotation = Vector3(0,90,0)
+		4: # Top
+			target_rotation = Vector3(-89,0,0)
+		5: # Bottom
+			target_rotation = Vector3(89,0,0)
+        `,
+      },
+
+      {
+        name: "ar viewer",
+        language: "HTML",
+        description: "This is the script for the camera. It has functions for setting the correct camera position and rotation based on the config, zooming in and out with the scroll wheel or buttons and dragging to rotate the camera.",
+        videoSrc: "/videos/denios/ar showcase.mov",
+        code: `
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js"></script>
+
+  <style>
+    body, html {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      overflow: hidden; font-family: sans-serif;
+    }
+
+    model-viewer {
+      width: 100%; height: 100%;
+      background-color: #f4f4f4;
+    }
+
+    /* Hide the small default Google button */
+    model-viewer::part(default-ar-button) {
+      display: none;
+    }
+
+    #custom-ar-button {
+      background: rgba(32,97,174,1);
+      background-image: url("public/sprites/ar.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 42px 42px;
+
+      color: rgba(223, 223, 223, 1);
+      border: none;
+      padding: 28px 28px;
+      font-size: 16px;
+      font-weight: bold;
+
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      cursor: pointer;
+      z-index: 100;
+    }
+
+
+    #close-button {
+      position: absolute;
+      border: none;
+      font-size: xx-large;
+      top: 15px;
+      left: 15px;
+      z-index: 200;
+      background: rgba(32,97,174,1);
+      color: rgba(223, 223, 223, 1);
+      width: 56px;
+      height: 56px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <button id="close-button" onclick="window.close()">X</button>
+
+  <model-viewer 
+    id="model-viewer" 
+    src="model path/model.gltf"
+    ar 
+    ar-modes="scene-viewer quick-look" 
+    camera-controls 
+    touch-action="pan-y"
+    ar-placement="floor"
+    alt="3D Flow Model">
+
+    <button slot="ar-button" id="custom-ar-button"></button>
+
+  </model-viewer>
+
+  <script>
+    const modelViewer = document.querySelector("#model-viewer");
+
+    // Optional: Log which mode is being used
+    modelViewer.addEventListener('ar-status', (event) => {
+      console.log("AR Status:", event.detail.status);
+    });
+  </script>
+        `,
+      },
+    ],
+},
 
 
 // Shy //
