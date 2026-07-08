@@ -4262,7 +4262,7 @@ if moving == 0 and PlayerObject.day == true
   technologies: ["/images/godot logo.svg", "/images/gdscript logo.webp", "/images/html logo.png"],
   
   media: [
-    { type: "image", src: "/images/denios model viewer.png" },
+    { type: "image", src: "/images/denios model viewer.jpg" },
     { type: "image", src: "/images/denios welcome.png" },
     { type: "image", src: "/images/denios cranes.png" },
     { type: "image", src: "/images/denios ar horizontal.jpg" },
